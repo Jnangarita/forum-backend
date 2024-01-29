@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.SaveTopicDTO;
+import com.forum.app.dto.TopicDTO;
 import com.forum.app.entity.Topic;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.TopicRepository;
@@ -31,5 +32,15 @@ public class TopicService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException("Error creating a new question");
 		}
+	}
+
+	public TopicDTO getTopic(Long id) {
+		Topic topic = topicRepository.getReferenceById(id);
+		Long idCategory = topic.getIdCategory();
+		String question = topic.getQuestion();
+		Long idUser = topic.getIdUser();
+		LocalDateTime creationDate = topic.getCreationDate();
+		boolean deleted = topic.isDeleted();
+		return new TopicDTO(id, idCategory, question, idUser, creationDate, deleted);
 	}
 }
