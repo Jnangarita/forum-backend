@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicDTO;
+import com.forum.app.dto.UpdateTopicDTO;
 import com.forum.app.entity.Topic;
 import com.forum.app.service.TopicService;
 
@@ -36,6 +38,12 @@ public class TopicController {
 	@GetMapping("/{id}")
 	public ResponseEntity<TopicDTO> getTopic(@PathVariable Long id) {
 		TopicDTO topic = topicService.getTopic(id);
+		return ResponseEntity.ok(topic);
+	}
+
+	@PutMapping
+	public ResponseEntity<TopicDTO> updateTopic(@RequestBody @Valid UpdateTopicDTO payload) {
+		TopicDTO topic = topicService.updateTopic(payload);
 		return ResponseEntity.ok(topic);
 	}
 }

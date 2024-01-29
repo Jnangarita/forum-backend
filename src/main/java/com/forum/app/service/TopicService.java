@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicDTO;
+import com.forum.app.dto.UpdateTopicDTO;
 import com.forum.app.entity.Topic;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.TopicRepository;
@@ -30,7 +31,7 @@ public class TopicService {
 			newTopic.setDeleted(false);
 			return topicRepository.save(newTopic);
 		} catch (Exception e) {
-			throw new OwnRuntimeException("Error creating a new question");
+			throw new OwnRuntimeException("Error Creating New Question");
 		}
 	}
 
@@ -42,5 +43,22 @@ public class TopicService {
 		LocalDateTime creationDate = topic.getCreationDate();
 		boolean deleted = topic.isDeleted();
 		return new TopicDTO(id, idCategory, question, idUser, creationDate, deleted);
+	}
+
+	@Transactional
+	public TopicDTO updateTopic(UpdateTopicDTO payload) {
+		try {
+			Topic topic = topicRepository.getReferenceById(payload.getIdQuestion());
+			topic.setIdCategory(payload.getIdCategory());
+			topic.setQuestion(payload.getQuestion());
+			Long idCategory = topic.getIdCategory();
+			String question = topic.getQuestion();
+			Long idUser = topic.getIdUser();
+			LocalDateTime creationDate = topic.getCreationDate();
+			boolean deleted = topic.isDeleted();
+			return new TopicDTO(payload.getIdQuestion(), idCategory, question, idUser, creationDate, deleted);
+		} catch (Exception e) {
+			throw new OwnRuntimeException("Error Updating Question");
+		}
 	}
 }
