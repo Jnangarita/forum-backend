@@ -1,6 +1,7 @@
 package com.forum.app.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -45,5 +46,11 @@ public class TopicController {
 	public ResponseEntity<TopicDTO> updateTopic(@RequestBody @Valid UpdateTopicDTO payload) {
 		TopicDTO topic = topicService.updateTopic(payload);
 		return ResponseEntity.ok(topic);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<Topic>> getTopicList() {
+		List<Topic> topicList = topicService.getTopicList();
+		return ResponseEntity.ok(topicList);
 	}
 }

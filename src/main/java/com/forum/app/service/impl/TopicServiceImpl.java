@@ -1,6 +1,7 @@
 package com.forum.app.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -64,5 +65,10 @@ public class TopicServiceImpl implements TopicService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException("Error Updating Question");
 		}
+	}
+
+	@Override
+	public List<Topic> getTopicList() {
+		return topicRepository.findByDeletedFalse();
 	}
 }

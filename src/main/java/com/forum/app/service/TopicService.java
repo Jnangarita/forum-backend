@@ -1,5 +1,7 @@
 package com.forum.app.service;
 
+import java.util.List;
+
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicDTO;
 import com.forum.app.dto.UpdateTopicDTO;
@@ -11,4 +13,6 @@ public interface TopicService {
 	TopicDTO getTopic(Long id);
 
 	TopicDTO updateTopic(UpdateTopicDTO payload);
+
+	List<Topic> getTopicList();
 }
