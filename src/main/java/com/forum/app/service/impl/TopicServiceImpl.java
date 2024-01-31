@@ -71,4 +71,11 @@ public class TopicServiceImpl implements TopicService {
 	public List<Topic> getTopicList() {
 		return topicRepository.findByDeletedFalse();
 	}
+
+	@Transactional
+	@Override
+	public void deleteTopic(Long id) {
+		Topic topic = topicRepository.getReferenceById(id);
+		topic.setDeleted(true);
+	}
 }

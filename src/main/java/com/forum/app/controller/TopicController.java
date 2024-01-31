@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,5 +53,11 @@ public class TopicController {
 	public ResponseEntity<List<Topic>> getTopicList() {
 		List<Topic> topicList = topicService.getTopicList();
 		return ResponseEntity.ok(topicList);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteTopic(@PathVariable Long id) {
+		topicService.deleteTopic(id);
+		return ResponseEntity.noContent().build();
 	}
 }

@@ -15,4 +15,6 @@ public interface TopicService {
 	TopicDTO updateTopic(UpdateTopicDTO payload);
 
 	List<Topic> getTopicList();
+
+	void deleteTopic(Long id);
 }
