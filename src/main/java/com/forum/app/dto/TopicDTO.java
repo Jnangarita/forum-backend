@@ -13,15 +13,17 @@ public class TopicDTO {
 	private String question;
 	private Long idUser;
 	private LocalDateTime creationDate;
+	private LocalDateTime modificationDate;
 	private boolean deleted;
 
 	public TopicDTO(Long id, Long idCategory, String question, Long idUser, LocalDateTime creationDate,
-			boolean deleted) {
+			LocalDateTime modificationDate, boolean deleted) {
 		this.id = id;
 		this.idCategory = idCategory;
 		this.question = question;
 		this.idUser = idUser;
 		this.creationDate = creationDate;
+		this.modificationDate = modificationDate;
 		this.deleted = deleted;
 	}
 }

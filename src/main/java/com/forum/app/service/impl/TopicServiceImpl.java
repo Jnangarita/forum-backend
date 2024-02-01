@@ -21,12 +21,13 @@ public class TopicServiceImpl implements TopicService {
 	@Autowired
 	private TopicRepository topicRepository;
 
+	LocalDateTime currentDate = LocalDateTime.now();
+
 	@Transactional
 	@Override
 	public Topic createTopic(SaveTopicDTO payload) {
 		try {
 			Topic newTopic = new Topic();
-			LocalDateTime currentDate = LocalDateTime.now();
 			newTopic.setIdCategory(payload.getIdCategory());
 			newTopic.setQuestion(payload.getQuestion());
 			newTopic.setIdUser(payload.getIdUser());
@@ -45,8 +46,9 @@ public class TopicServiceImpl implements TopicService {
 		String question = topic.getQuestion();
 		Long idUser = topic.getIdUser();
 		LocalDateTime creationDate = topic.getCreationDate();
+		LocalDateTime modificationDate = topic.getModificationDate();
 		boolean deleted = topic.isDeleted();
-		return new TopicDTO(id, idCategory, question, idUser, creationDate, deleted);
+		return new TopicDTO(id, idCategory, question, idUser, creationDate, modificationDate, deleted);
 	}
 
 	@Transactional
@@ -56,12 +58,15 @@ public class TopicServiceImpl implements TopicService {
 			Topic topic = topicRepository.getReferenceById(payload.getIdQuestion());
 			topic.setIdCategory(payload.getIdCategory());
 			topic.setQuestion(payload.getQuestion());
+			topic.setModificationDate(currentDate);
 			Long idCategory = topic.getIdCategory();
 			String question = topic.getQuestion();
 			Long idUser = topic.getIdUser();
 			LocalDateTime creationDate = topic.getCreationDate();
+			LocalDateTime modificationDate = topic.getModificationDate();
 			boolean deleted = topic.isDeleted();
-			return new TopicDTO(payload.getIdQuestion(), idCategory, question, idUser, creationDate, deleted);
+			return new TopicDTO(payload.getIdQuestion(), idCategory, question, idUser, creationDate, modificationDate,
+					deleted);
 		} catch (Exception e) {
 			throw new OwnRuntimeException("Error Updating Question");
 		}

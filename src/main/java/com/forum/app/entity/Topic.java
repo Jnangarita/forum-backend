@@ -33,6 +33,9 @@ public class Topic {
 	@Column(name = "fecha_creacion")
 	private LocalDateTime creationDate;
 
+	@Column(name = "fecha_modificacion")
+	private LocalDateTime modificationDate;
+
 	@Column(name = "eliminado")
 	private boolean deleted;
 }
