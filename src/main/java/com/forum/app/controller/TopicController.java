@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.SaveTopicDTO;
-import com.forum.app.dto.TopicDTO;
+import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
-import com.forum.app.entity.Topic;
 import com.forum.app.service.TopicService;
 
 @RestController
@@ -30,28 +29,28 @@ public class TopicController {
 	private TopicService topicService;
 
 	@PostMapping
-	public ResponseEntity<Topic> createTopic(@RequestBody @Valid SaveTopicDTO payload,
+	public ResponseEntity<TopicResponseDTO> createTopic(@RequestBody @Valid SaveTopicDTO payload,
 			UriComponentsBuilder uriComponentsBuilder) {
-		Topic topic = topicService.createTopic(payload);
+		TopicResponseDTO topic = topicService.createTopic(payload);
 		URI url = uriComponentsBuilder.path("api/topics/{id}").buildAndExpand(topic.getId()).toUri();
 		return ResponseEntity.created(url).body(topic);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<TopicDTO> getTopic(@PathVariable Long id) {
-		TopicDTO topic = topicService.getTopic(id);
+	public ResponseEntity<TopicResponseDTO> getTopic(@PathVariable Long id) {
+		TopicResponseDTO topic = topicService.getTopic(id);
 		return ResponseEntity.ok(topic);
 	}
 
 	@PutMapping
-	public ResponseEntity<TopicDTO> updateTopic(@RequestBody @Valid UpdateTopicDTO payload) {
-		TopicDTO topic = topicService.updateTopic(payload);
+	public ResponseEntity<TopicResponseDTO> updateTopic(@RequestBody @Valid UpdateTopicDTO payload) {
+		TopicResponseDTO topic = topicService.updateTopic(payload);
 		return ResponseEntity.ok(topic);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Topic>> getTopicList() {
-		List<Topic> topicList = topicService.getTopicList();
+	public ResponseEntity<List<TopicResponseDTO>> getTopicList() {
+		List<TopicResponseDTO> topicList = topicService.getTopicList();
 		return ResponseEntity.ok(topicList);
 	}
 
