@@ -13,6 +13,7 @@ import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
 import com.forum.app.entity.Topic;
+import com.forum.app.enumeration.QuestionStatus;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.TopicRepository;
 import com.forum.app.service.TopicService;
@@ -32,6 +33,7 @@ public class TopicServiceImpl implements TopicService {
 			newTopic.setIdCategory(payload.getIdCategory());
 			newTopic.setQuestion(payload.getQuestion());
 			newTopic.setIdUser(payload.getIdUser());
+			newTopic.setQuestionStatus(QuestionStatus.UNRESOLVED.getStatus());
 			newTopic.setCreationDate(currentDate);
 			newTopic.setDeleted(false);
 			Topic topic = topicRepository.save(newTopic);
@@ -65,7 +67,7 @@ public class TopicServiceImpl implements TopicService {
 	public List<TopicResponseDTO> getTopicList() {
 		List<Topic> listSavedTopics = topicRepository.findByDeletedFalse();
 		List<TopicResponseDTO> topicList = new ArrayList<>();
-		for(Topic topic : listSavedTopics) {
+		for (Topic topic : listSavedTopics) {
 			TopicResponseDTO topicDto = new TopicResponseDTO(topic);
 			topicList.add(topicDto);
 		}

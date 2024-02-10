@@ -3,6 +3,7 @@ CREATE TABLE pregunta (
     id_categoria INT,
     pregunta TEXT,
     id_usuario INT,
+    estado_pregunta VARCHAR(1),
     fecha_creacion TIMESTAMP,
     fecha_modificacion TIMESTAMP,
     eliminado BOOLEAN,

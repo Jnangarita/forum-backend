@@ -30,6 +30,9 @@ public class Topic {
 	@Column(name = "id_usuario")
 	private Long idUser;
 
+	@Column(name = "estado_pregunta")
+	private char questionStatus;
+
 	@Column(name = "fecha_creacion")
 	private LocalDateTime creationDate;
 
