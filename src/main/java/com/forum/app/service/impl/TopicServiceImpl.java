@@ -3,10 +3,13 @@ package com.forum.app.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.SaveTopicDTO;
@@ -23,7 +26,12 @@ public class TopicServiceImpl implements TopicService {
 	@Autowired
 	private TopicRepository topicRepository;
 
+	@Autowired
+	private MessageSource messageSource;
+
 	LocalDateTime currentDate = LocalDateTime.now();
+
+	Locale locale = LocaleContextHolder.getLocale();
 
 	@Transactional
 	@Override
@@ -39,7 +47,7 @@ public class TopicServiceImpl implements TopicService {
 			Topic topic = topicRepository.save(newTopic);
 			return new TopicResponseDTO(topic);
 		} catch (Exception e) {
-			throw new OwnRuntimeException("Error Creating New Question");
+			throw new OwnRuntimeException(messageSource.getMessage("forum.message.error.new.question", null, locale) + e);
 		}
 	}
 
@@ -59,7 +67,7 @@ public class TopicServiceImpl implements TopicService {
 			topic.setModificationDate(currentDate);
 			return new TopicResponseDTO(topic);
 		} catch (Exception e) {
-			throw new OwnRuntimeException("Error Updating Question");
+			throw new OwnRuntimeException(messageSource.getMessage("forum.message.error.update.question", null, locale) + e);
 		}
 	}
 
