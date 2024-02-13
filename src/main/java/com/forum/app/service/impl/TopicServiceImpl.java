@@ -35,7 +35,7 @@ public class TopicServiceImpl implements TopicService {
 		newTopic.setIdCategory(payload.getIdCategory());
 		newTopic.setQuestion(payload.getQuestion());
 		newTopic.setIdUser(payload.getIdUser());
-		newTopic.setQuestionStatus(QuestionStatus.UNRESOLVED.getStatus());
+		newTopic.setQuestionStatus(QuestionStatus.UNANSWERED.getStatus());
 		newTopic.setCreationDate(currentDate);
 		newTopic.setDeleted(false);
 		Topic topic = topicRepository.save(newTopic);

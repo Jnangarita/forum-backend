@@ -1,8 +1,8 @@
 package com.forum.app.enumeration;
 
 public enum QuestionStatus {
-	RESOLVED('R'),
-	UNRESOLVED('U');
+	ANSWERED('A'),
+	UNANSWERED('U');
 
 	private char status;
 
