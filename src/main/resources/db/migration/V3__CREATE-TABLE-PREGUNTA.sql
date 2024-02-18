@@ -8,5 +8,5 @@ CREATE TABLE pregunta (
     fecha_modificacion TIMESTAMP,
     eliminado BOOLEAN,
     CONSTRAINT fk_categoria FOREIGN KEY (id_categoria) REFERENCES categoria(id),
-    CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+    CONSTRAINT fk_usuario_pregunta FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 );
