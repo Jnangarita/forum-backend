@@ -15,13 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.forum.app.dto.BadRequestDTO;
 import com.forum.app.dto.ErrorDTO;
 import com.forum.app.dto.GeneralErrorDTO;
 
 @RestControllerAdvice
-public class TopicExceptionHandler {
+public class ForumExceptionHandler {
 	@Autowired
 	private MessageSource messageSource;
 
@@ -47,5 +48,15 @@ public class TopicExceptionHandler {
 		String description = e.getMostSpecificCause().getMessage();
 		GeneralErrorDTO errorDTO = new GeneralErrorDTO(HttpStatus.BAD_REQUEST.value(), message, description);
 		return ResponseEntity.badRequest().body(errorDTO);
+	}
+
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<GeneralErrorDTO> handleMethodArgumentTypeMismatchException(
+			MethodArgumentTypeMismatchException e) {
+		Integer code = HttpStatus.BAD_REQUEST.value();
+		String message = messageSource.getMessage("forum.message.error.failed.convert.value.type", null, locale);
+		String description = e.getMessage();
+		GeneralErrorDTO badRequest = new GeneralErrorDTO(code, message, description);
+		return ResponseEntity.badRequest().body(badRequest);
 	}
 }
