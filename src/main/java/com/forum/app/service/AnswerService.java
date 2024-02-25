@@ -5,4 +5,6 @@ import com.forum.app.dto.AnswerResponseDTO;
 
 public interface AnswerService {
 	AnswerResponseDTO createAnswer(AnswerDTO payload);
+
+	AnswerResponseDTO getAnswerById(Long id);
 }

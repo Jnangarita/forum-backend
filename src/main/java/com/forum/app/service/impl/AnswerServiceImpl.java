@@ -33,4 +33,10 @@ public class AnswerServiceImpl implements AnswerService {
 		Answer answer = answerRepository.save(newAnswer);
 		return new AnswerResponseDTO(answer);
 	}
+
+	@Override
+	public AnswerResponseDTO getAnswerById(Long id) {
+		Answer answer = answerRepository.getReferenceById(id);
+		return new AnswerResponseDTO(answer);
+	}
 }

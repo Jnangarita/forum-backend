@@ -6,6 +6,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +25,16 @@ public class AnswerController {
 	private AnswerService answerService;
 
 	@PostMapping
-	public ResponseEntity<AnswerResponseDTO> createTopic(@RequestBody @Valid AnswerDTO payload,
+	public ResponseEntity<AnswerResponseDTO> createAnswer(@RequestBody @Valid AnswerDTO payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		AnswerResponseDTO answer = answerService.createAnswer(payload);
 		URI url = uriComponentsBuilder.path("api/answers/{id}").buildAndExpand(answer.getId()).toUri();
 		return ResponseEntity.created(url).body(answer);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<AnswerResponseDTO> getAnswer(@PathVariable Long id) {
+		AnswerResponseDTO answer = answerService.getAnswerById(id);
+		return ResponseEntity.ok(answer);
 	}
 }
