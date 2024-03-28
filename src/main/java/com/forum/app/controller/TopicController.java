@@ -23,7 +23,7 @@ import com.forum.app.dto.UpdateTopicDTO;
 import com.forum.app.service.TopicService;
 
 @RestController
-@RequestMapping("api/topics")
+@RequestMapping("${spring.data.rest.basePath}/topics")
 public class TopicController {
 	@Autowired
 	private TopicService topicService;

@@ -24,7 +24,7 @@ import com.forum.app.entity.Answer;
 import com.forum.app.service.AnswerService;
 
 @RestController
-@RequestMapping("api/answers")
+@RequestMapping("${spring.data.rest.basePath}/answers")
 public class AnswerController {
 	@Autowired
 	private AnswerService answerService;
