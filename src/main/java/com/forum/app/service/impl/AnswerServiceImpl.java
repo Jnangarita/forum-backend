@@ -1,6 +1,8 @@
 package com.forum.app.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.AnswerDTO;
 import com.forum.app.dto.AnswerResponseDTO;
+import com.forum.app.dto.UpdateAnswerDTO;
 import com.forum.app.entity.Answer;
 import com.forum.app.enumeration.AnswerStatus;
 import com.forum.app.repository.AnswerRepository;
@@ -35,8 +38,38 @@ public class AnswerServiceImpl implements AnswerService {
 	}
 
 	@Override
-	public AnswerResponseDTO getAnswerById(Long id) {
-		Answer answer = answerRepository.getReferenceById(id);
+	public Answer getAnswerById(Long id) {
+		return answerRepository.getReferenceById(id);
+	}
+
+	@Transactional
+	@Override
+	public AnswerResponseDTO updateAnswer(UpdateAnswerDTO payload) {
+		LocalDateTime currenDate = LocalDateTime.now();
+		Answer updateAnswer = getAnswerById(payload.getIdAnswer());
+		updateAnswer.setAnswerTxt(payload.getAnswerTxt());
+		updateAnswer.setModificationDate(currenDate);
+		Answer answer = answerRepository.save(updateAnswer);
 		return new AnswerResponseDTO(answer);
+	}
+
+	@Override
+	public List<AnswerResponseDTO> getAnswerList() {
+		List<Answer> savedAnswerList = answerRepository.findByDeletedFalse();
+		List<AnswerResponseDTO> answerList = new ArrayList<>();
+		for(Answer answer : savedAnswerList) {
+			AnswerResponseDTO answerDto = new AnswerResponseDTO(answer);
+			answerList.add(answerDto);
+		}
+		return answerList;
+	}
+
+	@Transactional
+	@Override
+	public void deleteAnswer(Long id) {
+		Answer answer = getAnswerById(id);
+		if(!answer.isDeleted()) {
+			answer.setDeleted(true);
+		}
 	}
 }
