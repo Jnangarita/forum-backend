@@ -32,7 +32,7 @@ public class TopicController {
 	public ResponseEntity<TopicResponseDTO> createTopic(@RequestBody @Valid SaveTopicDTO payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		TopicResponseDTO topic = topicService.createTopic(payload);
-		URI url = uriComponentsBuilder.path("api/topics/{id}").buildAndExpand(topic.getId()).toUri();
+		URI url = uriComponentsBuilder.path("api/forum/topics/{id}").buildAndExpand(topic.getId()).toUri();
 		return ResponseEntity.created(url).body(topic);
 	}
 

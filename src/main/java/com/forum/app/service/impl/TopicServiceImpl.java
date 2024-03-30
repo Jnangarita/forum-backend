@@ -24,13 +24,12 @@ public class TopicServiceImpl implements TopicService {
 	@Autowired
 	private TopicRepository topicRepository;
 
-	LocalDateTime currentDate = LocalDateTime.now();
-
 	Locale locale = LocaleContextHolder.getLocale();
 
 	@Transactional
 	@Override
 	public TopicResponseDTO createTopic(SaveTopicDTO payload) {
+		LocalDateTime currentDate = LocalDateTime.now();
 		Topic newTopic = new Topic();
 		newTopic.setIdCategory(payload.getIdCategory());
 		newTopic.setQuestion(payload.getQuestion());
@@ -51,6 +50,7 @@ public class TopicServiceImpl implements TopicService {
 	@Transactional
 	@Override
 	public TopicResponseDTO updateTopic(UpdateTopicDTO payload) {
+		LocalDateTime currentDate = LocalDateTime.now();
 		Topic topic = topicRepository.getReferenceById(payload.getIdQuestion());
 		topic.setIdCategory(payload.getIdCategory());
 		topic.setQuestion(payload.getQuestion());

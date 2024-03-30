@@ -20,7 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.forum.app.dto.AnswerDTO;
 import com.forum.app.dto.AnswerResponseDTO;
 import com.forum.app.dto.UpdateAnswerDTO;
-import com.forum.app.entity.Answer;
 import com.forum.app.service.AnswerService;
 
 @RestController
@@ -33,13 +32,13 @@ public class AnswerController {
 	public ResponseEntity<AnswerResponseDTO> createAnswer(@RequestBody @Valid AnswerDTO payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		AnswerResponseDTO answer = answerService.createAnswer(payload);
-		URI url = uriComponentsBuilder.path("api/answers/{id}").buildAndExpand(answer.getId()).toUri();
+		URI url = uriComponentsBuilder.path("api/forum/answers/{id}").buildAndExpand(answer.getId()).toUri();
 		return ResponseEntity.created(url).body(answer);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Answer> getAnswer(@PathVariable Long id) {
-		Answer answer = answerService.getAnswerById(id);
+	public ResponseEntity<AnswerResponseDTO> getAnswer(@PathVariable Long id) {
+		AnswerResponseDTO answer = answerService.getAnswerById(id);
 		return ResponseEntity.ok(answer);
 	}
 

@@ -10,7 +10,9 @@ import com.forum.app.entity.Answer;
 public interface AnswerService {
 	AnswerResponseDTO createAnswer(AnswerDTO payload);
 
-	Answer getAnswerById(Long id);
+	AnswerResponseDTO getAnswerById(Long id);
+
+	Answer findAnswerById(Long id);
 
 	AnswerResponseDTO updateAnswer(UpdateAnswerDTO payload);
 

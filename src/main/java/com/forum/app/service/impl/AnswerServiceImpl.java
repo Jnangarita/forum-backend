@@ -38,7 +38,13 @@ public class AnswerServiceImpl implements AnswerService {
 	}
 
 	@Override
-	public Answer getAnswerById(Long id) {
+	public AnswerResponseDTO getAnswerById(Long id) {
+		Answer answer = findAnswerById(id);
+		return new AnswerResponseDTO(answer);
+	}
+
+	@Override
+	public Answer findAnswerById(Long id) {
 		return answerRepository.getReferenceById(id);
 	}
 
@@ -46,7 +52,7 @@ public class AnswerServiceImpl implements AnswerService {
 	@Override
 	public AnswerResponseDTO updateAnswer(UpdateAnswerDTO payload) {
 		LocalDateTime currenDate = LocalDateTime.now();
-		Answer updateAnswer = getAnswerById(payload.getIdAnswer());
+		Answer updateAnswer = findAnswerById(payload.getIdAnswer());
 		updateAnswer.setAnswerTxt(payload.getAnswerTxt());
 		updateAnswer.setModificationDate(currenDate);
 		Answer answer = answerRepository.save(updateAnswer);
@@ -67,7 +73,7 @@ public class AnswerServiceImpl implements AnswerService {
 	@Transactional
 	@Override
 	public void deleteAnswer(Long id) {
-		Answer answer = getAnswerById(id);
+		Answer answer = findAnswerById(id);
 		if(!answer.isDeleted()) {
 			answer.setDeleted(true);
 		}
