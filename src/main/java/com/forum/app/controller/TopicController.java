@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,11 +29,14 @@ public class TopicController {
 	@Autowired
 	private TopicService topicService;
 
+	@Value("${spring.data.rest.basePath}")
+	private String basePath;
+
 	@PostMapping
 	public ResponseEntity<TopicResponseDTO> createTopic(@RequestBody @Valid SaveTopicDTO payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		TopicResponseDTO topic = topicService.createTopic(payload);
-		URI url = uriComponentsBuilder.path("api/forum/topics/{id}").buildAndExpand(topic.getId()).toUri();
+		URI url = uriComponentsBuilder.path(basePath + "/topics/{id}").buildAndExpand(topic.getId()).toUri();
 		return ResponseEntity.created(url).body(topic);
 	}
 

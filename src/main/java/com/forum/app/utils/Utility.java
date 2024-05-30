@@ -1,0 +1,37 @@
+package com.forum.app.utils;
+
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.dao.DataIntegrityViolationException;
+
+@Component
+public class Utility {
+
+	private final MessageSource messageSource;
+
+	public Utility(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+
+	public String getCustomErrorMessage(DataIntegrityViolationException e) {
+		String description = e.getMessage();
+		if (description != null) {
+			Pattern pattern = Pattern.compile("FOREIGN KEY \\(`(.*?)`\\) REFERENCES `(.*?)`");
+			Matcher matcher = pattern.matcher(description);
+			if (matcher.find()) {
+				String fieldName = matcher.group(1);
+				String tableName = matcher.group(2);
+				Locale locale = LocaleContextHolder.getLocale();
+				String message = messageSource.getMessage("forum.message.error.foreign.key.constraint.description",
+						null, locale);
+				description = String.format(message, fieldName, tableName);
+			}
+		}
+		return description;
+	}
+}

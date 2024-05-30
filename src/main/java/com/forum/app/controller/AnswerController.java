@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,11 +29,14 @@ public class AnswerController {
 	@Autowired
 	private AnswerService answerService;
 
+	@Value("${spring.data.rest.basePath}")
+	private String basePath;
+
 	@PostMapping
 	public ResponseEntity<AnswerResponseDTO> createAnswer(@RequestBody @Valid AnswerDTO payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		AnswerResponseDTO answer = answerService.createAnswer(payload);
-		URI url = uriComponentsBuilder.path("api/forum/answers/{id}").buildAndExpand(answer.getId()).toUri();
+		URI url = uriComponentsBuilder.path(basePath + "/answers/{id}").buildAndExpand(answer.getId()).toUri();
 		return ResponseEntity.created(url).body(answer);
 	}
 
@@ -43,19 +47,19 @@ public class AnswerController {
 	}
 
 	@PutMapping
-	public ResponseEntity<AnswerResponseDTO> updateAnswer(@RequestBody @Valid UpdateAnswerDTO payload){
+	public ResponseEntity<AnswerResponseDTO> updateAnswer(@RequestBody @Valid UpdateAnswerDTO payload) {
 		AnswerResponseDTO answer = answerService.updateAnswer(payload);
 		return ResponseEntity.ok(answer);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<AnswerResponseDTO>> getAnswerList(){
+	public ResponseEntity<List<AnswerResponseDTO>> getAnswerList() {
 		List<AnswerResponseDTO> answerList = answerService.getAnswerList();
 		return ResponseEntity.ok(answerList);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteAnswer(@PathVariable Long id){
+	public ResponseEntity<Void> deleteAnswer(@PathVariable Long id) {
 		answerService.deleteAnswer(id);
 		return ResponseEntity.noContent().build();
 	}

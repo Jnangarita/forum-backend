@@ -5,6 +5,7 @@ import java.util.List;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
+import com.forum.app.entity.Topic;
 
 public interface TopicService {
 	TopicResponseDTO createTopic(SaveTopicDTO payload);
@@ -16,4 +17,6 @@ public interface TopicService {
 	List<TopicResponseDTO> getTopicList();
 
 	void deleteTopic(Long id);
+
+	Topic getTopicById(Long id);
 }
