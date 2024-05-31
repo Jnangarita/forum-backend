@@ -111,7 +111,9 @@ public class TopicServiceImpl implements TopicService {
 	public void deleteTopic(Long id) {
 		try {
 			Topic topic = getTopicById(id);
-			topic.setDeleted(true);
+			if (!topic.isDeleted()) {
+				topic.setDeleted(true);
+			}
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
