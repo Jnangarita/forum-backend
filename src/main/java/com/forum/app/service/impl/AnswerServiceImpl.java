@@ -19,6 +19,7 @@ import com.forum.app.dto.AnswerResponseDTO;
 import com.forum.app.dto.UpdateAnswerDTO;
 import com.forum.app.entity.Answer;
 import com.forum.app.enumeration.AnswerStatus;
+import com.forum.app.enumeration.GeneralEnum;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.AnswerRepository;
 import com.forum.app.service.AnswerService;
@@ -33,7 +34,7 @@ public class AnswerServiceImpl implements AnswerService {
 
 	Locale locale = LocaleContextHolder.getLocale();
 
-	String generalErrorMessage = "forum.message.error.general";
+	String generalErrorMessage = GeneralEnum.GENERAL_ERROR_MESSAGE.getMessageKey();
 
 	@Transactional
 	@Override

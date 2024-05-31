@@ -18,6 +18,7 @@ import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
 import com.forum.app.entity.Topic;
+import com.forum.app.enumeration.GeneralEnum;
 import com.forum.app.enumeration.QuestionStatus;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.TopicRepository;
@@ -33,7 +34,7 @@ public class TopicServiceImpl implements TopicService {
 
 	Locale locale = LocaleContextHolder.getLocale();
 
-	String generalErrorMessage = "forum.message.error.general";
+	String generalErrorMessage = GeneralEnum.GENERAL_ERROR_MESSAGE.getMessageKey();
 
 	@Transactional
 	@Override
