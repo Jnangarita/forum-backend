@@ -24,7 +24,7 @@ import com.forum.app.dto.UpdateAnswerDTO;
 import com.forum.app.service.AnswerService;
 
 @RestController
-@RequestMapping("${spring.data.rest.basePath}/answers")
+@RequestMapping("${spring.data.rest.basePath}/v1/answers")
 public class AnswerController {
 	@Autowired
 	private AnswerService answerService;
