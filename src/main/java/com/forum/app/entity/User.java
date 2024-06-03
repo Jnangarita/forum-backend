@@ -19,7 +19,6 @@ import java.util.List;
 @Entity
 @Table(name = "usuario")
 public class User implements UserDetails {
-
 	/**
 	 * 
 	 */
@@ -27,10 +26,10 @@ public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 
 	@Column(name = "nombre_usuario", unique = true, nullable = false, length = 50)
-	private String userName;
+	private String fullName;
 
 	@Column(name = "correo_electronico", unique = true, nullable = false, length = 50)
 	private String email;
@@ -45,7 +44,7 @@ public class User implements UserDetails {
 	private LocalDateTime updatedAt;
 
 	@Column(name = "eliminado")
-	private Boolean deleted;
+	private boolean deleted;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
