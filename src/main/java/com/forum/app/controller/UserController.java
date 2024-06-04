@@ -22,6 +22,8 @@ import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.service.UserService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("${spring.data.rest.basePath}/v1/users")
 public class UserController {
@@ -40,24 +42,28 @@ public class UserController {
 	}
 
 	@GetMapping("/{id}")
+	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
 		UserResponseDTO user = userService.getUserById(id);
 		return ResponseEntity.ok(user);
 	}
 
 	@PutMapping("/{id}")
+	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody @Valid UserDTO payload) {
 		UserResponseDTO user = userService.updateUser(id, payload);
 		return ResponseEntity.ok(user);
 	}
 
 	@GetMapping
+	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<List<UserResponseDTO>> getUserList() {
 		List<UserResponseDTO> userList = userService.getUserList();
 		return ResponseEntity.ok(userList);
 	}
 
 	@DeleteMapping("/{id}")
+	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();

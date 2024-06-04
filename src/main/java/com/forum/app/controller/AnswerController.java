@@ -23,8 +23,11 @@ import com.forum.app.dto.AnswerResponseDTO;
 import com.forum.app.dto.UpdateAnswerDTO;
 import com.forum.app.service.AnswerService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("${spring.data.rest.basePath}/v1/answers")
+@SecurityRequirement(name = "bearer-key")
 public class AnswerController {
 	@Autowired
 	private AnswerService answerService;

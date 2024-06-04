@@ -23,8 +23,11 @@ import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
 import com.forum.app.service.TopicService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("${spring.data.rest.basePath}/v1/topics")
+@SecurityRequirement(name = "bearer-key")
 public class TopicController {
 	@Autowired
 	private TopicService topicService;
