@@ -3,14 +3,11 @@ package com.forum.app.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +20,15 @@ import com.forum.app.enumeration.GeneralEnum;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.AnswerRepository;
 import com.forum.app.service.AnswerService;
+import com.forum.app.utils.Utility;
 
 @Service
 public class AnswerServiceImpl implements AnswerService {
 	@Autowired
-	private AnswerRepository answerRepository;
+	private Utility utility;
 
 	@Autowired
-	private MessageSource messageSource;
-
-	Locale locale = LocaleContextHolder.getLocale();
+	private AnswerRepository answerRepository;
 
 	String generalErrorMessage = GeneralEnum.GENERAL_ERROR_MESSAGE.getMessageKey();
 
@@ -53,8 +49,7 @@ public class AnswerServiceImpl implements AnswerService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 
@@ -66,8 +61,7 @@ public class AnswerServiceImpl implements AnswerService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 
@@ -91,8 +85,7 @@ public class AnswerServiceImpl implements AnswerService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 
@@ -107,8 +100,7 @@ public class AnswerServiceImpl implements AnswerService {
 			}
 			return answerList;
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 
@@ -123,8 +115,7 @@ public class AnswerServiceImpl implements AnswerService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 }

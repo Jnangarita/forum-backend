@@ -34,4 +34,8 @@ public class Utility {
 		}
 		return description;
 	}
+
+	public String getMessage(String messageKey, Object[] arr) {
+		return messageSource.getMessage(messageKey, arr, LocaleContextHolder.getLocale());
+	}
 }

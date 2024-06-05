@@ -3,14 +3,11 @@ package com.forum.app.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +20,15 @@ import com.forum.app.enumeration.QuestionStatus;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.TopicRepository;
 import com.forum.app.service.TopicService;
+import com.forum.app.utils.Utility;
 
 @Service
 public class TopicServiceImpl implements TopicService {
 	@Autowired
-	private MessageSource messageSource;
+	private Utility utility;
 
 	@Autowired
 	private TopicRepository topicRepository;
-
-	Locale locale = LocaleContextHolder.getLocale();
 
 	String generalErrorMessage = GeneralEnum.GENERAL_ERROR_MESSAGE.getMessageKey();
 
@@ -53,8 +49,7 @@ public class TopicServiceImpl implements TopicService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 
@@ -66,8 +61,7 @@ public class TopicServiceImpl implements TopicService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 
@@ -86,8 +80,7 @@ public class TopicServiceImpl implements TopicService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 
@@ -102,8 +95,7 @@ public class TopicServiceImpl implements TopicService {
 			}
 			return topicList;
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 
@@ -118,8 +110,7 @@ public class TopicServiceImpl implements TopicService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			String message = messageSource.getMessage(generalErrorMessage, null, locale);
-			throw new OwnRuntimeException(message);
+			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
 		}
 	}
 
