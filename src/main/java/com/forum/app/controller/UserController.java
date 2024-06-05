@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -22,6 +24,8 @@ import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
@@ -33,7 +37,9 @@ public class UserController {
 	@Value("${spring.data.rest.basePath}")
 	private String basePath;
 
+	@Operation(summary = "Save a user")
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserDTO payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		UserResponseDTO user = userService.createUser(payload);
@@ -41,30 +47,41 @@ public class UserController {
 		return ResponseEntity.created(url).body(user);
 	}
 
+	@Operation(summary = "Get a user by id")
 	@GetMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
+	public ResponseEntity<UserResponseDTO> getUserById(
+			@Parameter(description = "Id of the user to search") @PathVariable Long id) {
 		UserResponseDTO user = userService.getUserById(id);
 		return ResponseEntity.ok(user);
 	}
 
+	@Operation(summary = "Update a user")
 	@PutMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody @Valid UserDTO payload) {
+	public ResponseEntity<UserResponseDTO> updateUser(
+			@Parameter(description = "Id of the user to search") @PathVariable Long id,
+			@RequestBody @Valid UserDTO payload) {
 		UserResponseDTO user = userService.updateUser(id, payload);
 		return ResponseEntity.ok(user);
 	}
 
+	@Operation(summary = "Get user list")
 	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<List<UserResponseDTO>> getUserList() {
 		List<UserResponseDTO> userList = userService.getUserList();
 		return ResponseEntity.ok(userList);
 	}
 
+	@Operation(summary = "Delete a user")
 	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteUser(@Parameter(description = "Id of the user to search") @PathVariable Long id) {
 		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();
 	}

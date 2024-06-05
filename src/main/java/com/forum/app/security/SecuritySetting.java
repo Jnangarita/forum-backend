@@ -21,11 +21,10 @@ public class SecuritySetting {
 	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, SecurityFilter securityFilter) throws Exception {
 		return httpSecurity.csrf(csrf -> csrf.disable())
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-						.antMatchers(HttpMethod.POST, "/**/login").permitAll()
-						.antMatchers(HttpMethod.POST, "/**/users").permitAll()
-						.antMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-						.anyRequest().authenticated())
+				.authorizeHttpRequests(authorizeRequests -> authorizeRequests.antMatchers(HttpMethod.POST, "/**/login")
+						.permitAll().antMatchers(HttpMethod.POST, "/**/users").permitAll()
+						.antMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll().anyRequest()
+						.authenticated())
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
 
