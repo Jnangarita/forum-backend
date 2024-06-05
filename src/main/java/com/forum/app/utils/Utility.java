@@ -1,6 +1,5 @@
 package com.forum.app.utils;
 
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,9 +25,7 @@ public class Utility {
 			if (matcher.find()) {
 				String fieldName = matcher.group(1);
 				String tableName = matcher.group(2);
-				Locale locale = LocaleContextHolder.getLocale();
-				String message = messageSource.getMessage("forum.message.error.foreign.key.constraint.description",
-						null, locale);
+				String message = getMessage("forum.message.error.foreign.key.constraint.description", null);
 				description = String.format(message, fieldName, tableName);
 			}
 		}
