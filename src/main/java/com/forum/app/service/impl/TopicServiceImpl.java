@@ -15,7 +15,6 @@ import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
 import com.forum.app.entity.Topic;
-import com.forum.app.enumeration.GeneralEnum;
 import com.forum.app.enumeration.QuestionStatus;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.TopicRepository;
@@ -29,8 +28,6 @@ public class TopicServiceImpl implements TopicService {
 
 	@Autowired
 	private TopicRepository topicRepository;
-
-	String generalErrorMessage = GeneralEnum.GENERAL_ERROR_MESSAGE.getMessageKey();
 
 	@Transactional
 	@Override
@@ -49,7 +46,7 @@ public class TopicServiceImpl implements TopicService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.question", null));
 		}
 	}
 
@@ -61,7 +58,7 @@ public class TopicServiceImpl implements TopicService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.question", null));
 		}
 	}
 
@@ -80,7 +77,7 @@ public class TopicServiceImpl implements TopicService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.question", null));
 		}
 	}
 
@@ -95,7 +92,7 @@ public class TopicServiceImpl implements TopicService {
 			}
 			return topicList;
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.question", null));
 		}
 	}
 
@@ -110,7 +107,7 @@ public class TopicServiceImpl implements TopicService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.deleting.question", null));
 		}
 	}
 

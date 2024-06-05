@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -72,5 +73,15 @@ public class ForumExceptionHandler {
 		String description = utility.getMessage("forum.message.error.invalid.value", new Object[] { pathDescription });
 		GeneralErrorDTO badRequest = new GeneralErrorDTO(code, message, description);
 		return ResponseEntity.badRequest().body(badRequest);
+	}
+
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<GeneralErrorDTO> handleGenericException(Exception e) {
+		Integer code = HttpStatus.INTERNAL_SERVER_ERROR.value();
+		String message = utility.getMessage("forum.message.error.general", null);
+		String description = e.getMessage();
+		GeneralErrorDTO internalServerError = new GeneralErrorDTO(code, message, description);
+		return ResponseEntity.internalServerError().body(internalServerError);
 	}
 }

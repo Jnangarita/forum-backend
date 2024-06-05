@@ -16,7 +16,6 @@ import com.forum.app.dto.AnswerResponseDTO;
 import com.forum.app.dto.UpdateAnswerDTO;
 import com.forum.app.entity.Answer;
 import com.forum.app.enumeration.AnswerStatus;
-import com.forum.app.enumeration.GeneralEnum;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.AnswerRepository;
 import com.forum.app.service.AnswerService;
@@ -29,8 +28,6 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Autowired
 	private AnswerRepository answerRepository;
-
-	String generalErrorMessage = GeneralEnum.GENERAL_ERROR_MESSAGE.getMessageKey();
 
 	@Transactional
 	@Override
@@ -49,7 +46,7 @@ public class AnswerServiceImpl implements AnswerService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.answer", null));
 		}
 	}
 
@@ -61,7 +58,7 @@ public class AnswerServiceImpl implements AnswerService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.answer", null));
 		}
 	}
 
@@ -85,7 +82,7 @@ public class AnswerServiceImpl implements AnswerService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.answer", null));
 		}
 	}
 
@@ -100,7 +97,7 @@ public class AnswerServiceImpl implements AnswerService {
 			}
 			return answerList;
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.answer", null));
 		}
 	}
 
@@ -115,7 +112,7 @@ public class AnswerServiceImpl implements AnswerService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.deleting.answer", null));
 		}
 	}
 }

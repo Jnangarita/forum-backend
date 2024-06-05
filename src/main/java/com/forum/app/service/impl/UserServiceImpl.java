@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.entity.User;
-import com.forum.app.enumeration.GeneralEnum;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.UserRepository;
 import com.forum.app.service.UserService;
@@ -31,8 +30,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	String generalErrorMessage = GeneralEnum.GENERAL_ERROR_MESSAGE.getMessageKey();
-
 	@Transactional
 	@Override
 	public UserResponseDTO createUser(UserDTO payload) {
@@ -47,7 +44,7 @@ public class UserServiceImpl implements UserService {
 			User user = userRepository.save(newUser);
 			return new UserResponseDTO(user);
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.user", null));
 		}
 	}
 
@@ -59,7 +56,7 @@ public class UserServiceImpl implements UserService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.user", null));
 		}
 	}
 
@@ -83,7 +80,7 @@ public class UserServiceImpl implements UserService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.user", null));
 		}
 	}
 
@@ -98,7 +95,7 @@ public class UserServiceImpl implements UserService {
 			}
 			return userList;
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.user", null));
 		}
 	}
 
@@ -113,7 +110,7 @@ public class UserServiceImpl implements UserService {
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage(generalErrorMessage, null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.deleting.user", null));
 		}
 	}
 }
