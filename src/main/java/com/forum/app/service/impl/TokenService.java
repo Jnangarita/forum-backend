@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +18,14 @@ import com.forum.app.utils.Utility;
 
 @Service
 public class TokenService {
-	@Value("${api.security.token.key}")
-	private String tokenKey;
 
-	@Autowired
-	private Utility utility;
+	private final String tokenKey;
+	private final Utility utility;
+
+	public TokenService(@Value("${api.security.token.key}") String tokenKey, Utility utility) {
+		this.tokenKey = tokenKey;
+		this.utility = utility;
+	}
 
 	public String generateToken(User user) {
 		try {

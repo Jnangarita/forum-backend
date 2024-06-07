@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +32,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RequestMapping("${spring.data.rest.basePath}/v1/answers")
 @SecurityRequirement(name = "bearer-key")
 public class AnswerController {
-	@Autowired
-	private AnswerService answerService;
 
-	@Value("${spring.data.rest.basePath}")
-	private String basePath;
+	private final AnswerService answerService;
+	private final String basePath;
+
+	public AnswerController(AnswerService answerService, @Value("${spring.data.rest.basePath}") String basePath) {
+		this.answerService = answerService;
+		this.basePath = basePath;
+	}
 
 	@Operation(summary = "Save an answer")
 	@PostMapping

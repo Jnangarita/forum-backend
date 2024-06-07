@@ -2,7 +2,6 @@ package com.forum.app.controller;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,13 +24,15 @@ import io.swagger.v3.oas.annotations.Operation;
 @RequestMapping("${spring.data.rest.basePath}/auth/login")
 public class AuthenticationController {
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+	private final AuthenticationManager authenticationManager;
+	private final TokenService tokenService;
 
-	@Autowired
-	private TokenService tokenService;
+	public AuthenticationController(AuthenticationManager authenticationManager, TokenService tokenService) {
+		this.authenticationManager = authenticationManager;
+		this.tokenService = tokenService;
+	}
 
-	@Operation(summary = "Authenticate the user")
+	@Operation(summary = "Authenticate user")
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<JwtTokenDTO> authenticateUser(@RequestBody @Valid AuthenticateUserDTO payload) {

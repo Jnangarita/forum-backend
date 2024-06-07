@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +23,12 @@ import com.forum.app.utils.Utility;
 
 @RestControllerAdvice
 public class ForumExceptionHandler {
-	@Autowired
-	private Utility utility;
+
+	private final Utility utility;
+
+	public ForumExceptionHandler(Utility utility) {
+		this.utility = utility;
+	}
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<Void> entityNotFound(EntityNotFoundException e) {

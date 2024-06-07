@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +32,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RequestMapping("${spring.data.rest.basePath}/v1/topics")
 @SecurityRequirement(name = "bearer-key")
 public class TopicController {
-	@Autowired
-	private TopicService topicService;
 
-	@Value("${spring.data.rest.basePath}")
-	private String basePath;
+	private final TopicService topicService;
+	private final String basePath;
+
+	public TopicController(TopicService topicService, @Value("${spring.data.rest.basePath}") String basePath) {
+		this.topicService = topicService;
+		this.basePath = basePath;
+	}
 
 	@Operation(summary = "Save a question")
 	@PostMapping

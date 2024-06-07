@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +22,14 @@ import com.forum.app.utils.Utility;
 
 @Service
 public class AnswerServiceImpl implements AnswerService {
-	@Autowired
-	private Utility utility;
 
-	@Autowired
-	private AnswerRepository answerRepository;
+	private final Utility utility;
+	private final AnswerRepository answerRepository;
+
+	public AnswerServiceImpl(Utility utility, AnswerRepository answerRepository) {
+		this.utility = utility;
+		this.answerRepository = answerRepository;
+	}
 
 	@Transactional
 	@Override

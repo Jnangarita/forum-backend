@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +30,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @RequestMapping("${spring.data.rest.basePath}/v1/users")
 public class UserController {
-	@Autowired
-	private UserService userService;
 
-	@Value("${spring.data.rest.basePath}")
-	private String basePath;
+	private final UserService userService;
+	private final String basePath;
+
+	public UserController(UserService userService, @Value("${spring.data.rest.basePath}") String basePath) {
+		this.userService = userService;
+		this.basePath = basePath;
+	}
 
 	@Operation(summary = "Save a user")
 	@PostMapping
