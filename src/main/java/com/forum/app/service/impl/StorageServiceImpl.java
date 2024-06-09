@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.stream.Stream;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -70,5 +71,15 @@ public class StorageServiceImpl implements StorageService {
 	@Override
 	public Path load(String filename) {
 		return rootLocation.resolve(filename);
+	}
+
+	@Override
+	public Stream<Path> loadAllFiles() {
+		try {
+			return Files.walk(this.rootLocation, 1).filter(path -> !path.equals(this.rootLocation))
+					.map(this.rootLocation::relativize);
+		} catch (IOException e) {
+			throw new OwnRuntimeException("Failed to read stored files " + e);
+		}
 	}
 }
