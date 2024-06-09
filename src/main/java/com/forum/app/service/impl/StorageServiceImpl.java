@@ -2,11 +2,14 @@ package com.forum.app.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,5 +50,25 @@ public class StorageServiceImpl implements StorageService {
 		} catch (IOException e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.storage.folder", null) + e);
 		}
+	}
+
+	@Override
+	public Resource loadFile(String fileName) {
+		try {
+			Path file = load(fileName);
+			Resource resource = new UrlResource(file.toUri());
+			if (resource.exists() || resource.isReadable()) {
+				return resource;
+			} else {
+				throw new OwnRuntimeException("Could not read file: " + fileName);
+			}
+		} catch (MalformedURLException e) {
+			throw new OwnRuntimeException("Could not read file: " + fileName + " " + e);
+		}
+	}
+
+	@Override
+	public Path load(String filename) {
+		return rootLocation.resolve(filename);
 	}
 }
