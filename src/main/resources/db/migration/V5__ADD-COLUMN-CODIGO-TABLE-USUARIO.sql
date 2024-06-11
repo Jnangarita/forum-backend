@@ -1,0 +1,2 @@
+ALTER TABLE usuario
+ADD COLUMN codigo VARCHAR(10) AFTER id;
