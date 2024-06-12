@@ -82,4 +82,14 @@ public class StorageServiceImpl implements StorageService {
 			throw new OwnRuntimeException("Failed to read stored files " + e);
 		}
 	}
+
+	@Override
+	public void deleteFile(String fileName) {
+		try {
+			Path filePath = load(fileName);
+			Files.delete(filePath);
+		} catch (IOException e) {
+			throw new OwnRuntimeException("File not found: " + fileName);
+		}
+	}
 }
