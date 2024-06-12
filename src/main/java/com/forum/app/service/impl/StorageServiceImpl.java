@@ -61,10 +61,11 @@ public class StorageServiceImpl implements StorageService {
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
 			} else {
-				throw new OwnRuntimeException("Could not read file: " + fileName);
+				throw new OwnRuntimeException(utility.getMessage("forum.message.error.read.file", null) + fileName);
 			}
 		} catch (MalformedURLException e) {
-			throw new OwnRuntimeException("Could not read file: " + fileName + " " + e);
+			throw new OwnRuntimeException(
+					utility.getMessage("forum.message.error.url.format.not.correct", null) + fileName + " " + e);
 		}
 	}
 
@@ -79,7 +80,7 @@ public class StorageServiceImpl implements StorageService {
 			return Files.walk(this.rootLocation, 1).filter(path -> !path.equals(this.rootLocation))
 					.map(this.rootLocation::relativize);
 		} catch (IOException e) {
-			throw new OwnRuntimeException("Failed to read stored files " + e);
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.failed.read.stored.files", null) + e);
 		}
 	}
 
@@ -89,7 +90,7 @@ public class StorageServiceImpl implements StorageService {
 			Path filePath = load(fileName);
 			Files.delete(filePath);
 		} catch (IOException e) {
-			throw new OwnRuntimeException("File not found: " + fileName);
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.file.not.found", null) + fileName);
 		}
 	}
 }

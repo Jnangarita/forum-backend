@@ -59,8 +59,11 @@ public class FileUploadController {
 				.body(utility.getMessage("forum.message.info.file.uploaded.successfully", new Object[] { fileName }));
 	}
 
+	@Operation(summary = "Get a file by name")
 	@GetMapping("/{fileName:.+}")
-	public ResponseEntity<Resource> getFile(@PathVariable String fileName) {
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<Resource> getFile(
+			@Parameter(description = "Name of the file to search") @PathVariable String fileName) {
 		Resource file = storageService.loadFile(fileName);
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
@@ -69,6 +72,7 @@ public class FileUploadController {
 
 	@Operation(summary = "Get list of saved files")
 	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<List<FileDTO>> listUploadedFiles(Model model) {
 		List<FileDTO> fileDTOs = storageService.loadAllFiles().map(path -> {
 			FileDTO fileDTO = new FileDTO();
