@@ -7,5 +7,5 @@ CREATE TABLE documento (
     fecha_creacion TIMESTAMP,
     fecha_modificacion TIMESTAMP,
     eliminado BOOLEAN,
-    CONSTRAINT fk_documento_usuario FOREIGN KEY (codigo_usuario) REFERENCES usuario(codigo)
+    CONSTRAINT fk_documento_usuario FOREIGN KEY (id_documento) REFERENCES usuario(id)
 );
