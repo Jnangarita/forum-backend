@@ -15,13 +15,13 @@ public interface StorageService {
 
 	DocumentResponseDTO save(MultipartFile file, String documentType, Long idUser);
 
-	Resource loadFile(String fileName);
+	Resource loadFile(String fileName, String fileName2);
 
-	Path load(String filename);
+	Path load(String userCode, String filename);
 
-	Stream<Path> loadAllFiles();
+	Stream<Path> loadAllFiles(String userCode);
 
-	void deleteFile(String fileName);
+	void deleteFile(String userCode, String fileName);
 
 	Document setDocumentData(String code, String documentType, String documentName, String path);
 }

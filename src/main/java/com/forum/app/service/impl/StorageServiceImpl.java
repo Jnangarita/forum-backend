@@ -77,9 +77,9 @@ public class StorageServiceImpl implements StorageService {
 	}
 
 	@Override
-	public Resource loadFile(String fileName) {
+	public Resource loadFile(String userCode, String fileName) {
 		try {
-			Path file = load(fileName);
+			Path file = load(userCode, fileName);
 			Resource resource = new UrlResource(file.toUri());
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
@@ -94,27 +94,29 @@ public class StorageServiceImpl implements StorageService {
 	}
 
 	@Override
-	public Path load(String filename) {
-		return rootLocation.resolve(filename);
+	public Path load(String userCode, String filename) {
+		return rootLocation.resolve(userCode).resolve(filename).normalize().toAbsolutePath();
 	}
 
 	@Override
-	public Stream<Path> loadAllFiles() {
+	public Stream<Path> loadAllFiles(String userCode) {
 		try {
-			return Files.walk(this.rootLocation, 1).filter(path -> !path.equals(this.rootLocation))
-					.map(this.rootLocation::relativize);
+			Path userDirectory = this.rootLocation.resolve(userCode).normalize().toAbsolutePath();
+			return Files.walk(userDirectory, 1).filter(path -> !path.equals(userDirectory))
+					.map(userDirectory::relativize);
 		} catch (IOException e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.failed.read.stored.files", null) + e);
 		}
 	}
 
 	@Override
-	public void deleteFile(String fileName) {
+	public void deleteFile(String userCode, String fileName) {
 		try {
-			Path filePath = load(fileName);
+			Path filePath = load(userCode, fileName);
 			Files.delete(filePath);
 		} catch (IOException e) {
-			throw new OwnRuntimeException(utility.getMessage("forum.message.error.file.not.found", null) + fileName);
+			throw new OwnRuntimeException(
+					utility.getMessage("forum.message.error.file.not.found", null) + " " + fileName);
 		}
 	}
 

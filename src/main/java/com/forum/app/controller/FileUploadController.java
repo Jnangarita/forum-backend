@@ -61,37 +61,38 @@ public class FileUploadController {
 	}
 
 	@Operation(summary = "Get a file by name")
-	@GetMapping("/{fileName:.+}")
+	@GetMapping("/{userCode}/{fileName:.+}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<Resource> getFile(
+	public ResponseEntity<Resource> getFile(@Parameter(description = "User code") @PathVariable String userCode,
 			@Parameter(description = "Name of the file to search") @PathVariable String fileName) {
-		Resource file = storageService.loadFile(fileName);
+		Resource file = storageService.loadFile(userCode, fileName);
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
 				.body(file);
 	}
 
 	@Operation(summary = "Get list of saved files")
-	@GetMapping
+	@GetMapping("/{userCode}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<FileDTO>> listUploadedFiles(Model model) {
-		List<FileDTO> fileDTOs = storageService.loadAllFiles().map(path -> {
+	public ResponseEntity<List<FileDTO>> listUploadedFiles(
+			@Parameter(description = "User code") @PathVariable String userCode, Model model) {
+		List<FileDTO> fileDTOs = storageService.loadAllFiles(userCode).map(path -> {
 			FileDTO fileDTO = new FileDTO();
 			fileDTO.setFileName(path.getFileName().toString());
 			fileDTO.setPath(MvcUriComponentsBuilder
-					.fromMethodName(FileUploadController.class, "getFile", path.getFileName().toString()).build()
-					.toUri().toString().replace("/$%7Bspring.data.rest.basePath%7D", basePath));
+					.fromMethodName(FileUploadController.class, "getFile", userCode, path.getFileName().toString())
+					.build().toUri().toString().replace("/$%7Bspring.data.rest.basePath%7D", basePath));
 			return fileDTO;
 		}).collect(Collectors.toList());
 		return ResponseEntity.ok(fileDTOs);
 	}
 
 	@Operation(summary = "Delete a file")
-	@DeleteMapping("/{fileName}")
+	@DeleteMapping("/{userCode}/{fileName}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public ResponseEntity<Void> deleteFile(
+	public ResponseEntity<Void> deleteFile(@Parameter(description = "User code") @PathVariable String userCode,
 			@Parameter(description = "Name of the file to be deleted") @PathVariable String fileName) {
-		storageService.deleteFile(fileName);
+		storageService.deleteFile(userCode, fileName);
 		return ResponseEntity.noContent().build();
 	}
 }
