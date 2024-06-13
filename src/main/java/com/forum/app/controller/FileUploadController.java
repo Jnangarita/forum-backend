@@ -9,6 +9,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,9 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.forum.app.dto.DocumentResponseDTO;
 import com.forum.app.dto.FileDTO;
+import com.forum.app.entity.User;
 import com.forum.app.service.StorageService;
-import com.forum.app.utils.Utility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,26 +40,24 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 public class FileUploadController {
 
 	private final StorageService storageService;
-	private final Utility utility;
 	private final String basePath;
 
-	public FileUploadController(StorageService storageService, Utility utility,
-			@Value("${spring.data.rest.basePath}") String basePath) {
+	public FileUploadController(StorageService storageService, @Value("${spring.data.rest.basePath}") String basePath) {
 		this.storageService = storageService;
-		this.utility = utility;
 		this.basePath = basePath;
 	}
 
 	@Operation(summary = "Save a file")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<String> saveFile(@RequestParam("file") MultipartFile file,
-			UriComponentsBuilder uriComponentsBuilder) {
-		storageService.save(file);
-		String fileName = file.getOriginalFilename();
-		URI uri = uriComponentsBuilder.path("/v1/files/{filename}").buildAndExpand(fileName).toUri();
-		return ResponseEntity.created(uri)
-				.body(utility.getMessage("forum.message.info.file.uploaded.successfully", new Object[] { fileName }));
+	public ResponseEntity<DocumentResponseDTO> saveFile(@RequestParam("file") MultipartFile file,
+			@RequestParam("documentType") String documentType, UriComponentsBuilder uriComponentsBuilder) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) authentication.getPrincipal();
+		DocumentResponseDTO document = storageService.save(file, documentType, user.getId());
+		URI uri = uriComponentsBuilder.path(basePath + "/v1/files/{filename}")
+				.buildAndExpand(document.getDocumentName()).toUri();
+		return ResponseEntity.created(uri).body(document);
 	}
 
 	@Operation(summary = "Get a file by name")
