@@ -1,5 +1,6 @@
 package com.forum.app.service.impl;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -39,5 +40,22 @@ public class CategoryServiceImpl implements CategoryService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.answer", null));
 		}
+	}
+
+	@Override
+	public CategoryResponseDTO getCategoryById(Long id) {
+		try {
+			Category category = findCategoryById(id);
+			return new CategoryResponseDTO(category);
+		} catch (EntityNotFoundException e) {
+			throw new EntityNotFoundException();
+		} catch (Exception e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.category", null));
+		}
+	}
+
+	@Override
+	public Category findCategoryById(Long id) {
+		return categoryRepository.getReferenceById(id);
 	}
 }
