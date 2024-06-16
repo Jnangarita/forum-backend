@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.answer", null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.category", null));
 		}
 	}
 
@@ -57,5 +57,23 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public Category findCategoryById(Long id) {
 		return categoryRepository.getReferenceById(id);
+	}
+
+	@Transactional
+	@Override
+	public CategoryResponseDTO updateCategory(Long id, CategoryDTO payload) {
+		try {
+			Category categoryToUpdate = findCategoryById(id);
+			categoryToUpdate.setCategoryName(payload.getCategoryName());
+			categoryToUpdate.setModifiedBy(payload.getCreatedBy());
+			Category category = categoryRepository.save(categoryToUpdate);
+			return new CategoryResponseDTO(category);
+		} catch (EntityNotFoundException e) {
+			throw new EntityNotFoundException();
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
+		} catch (Exception e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.category", null));
+		}
 	}
 }

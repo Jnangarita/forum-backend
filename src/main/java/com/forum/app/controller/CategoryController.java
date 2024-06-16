@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -53,6 +54,16 @@ public class CategoryController {
 	public ResponseEntity<CategoryResponseDTO> getCategory(
 			@Parameter(description = "Id of the category to search") @PathVariable Long id) {
 		CategoryResponseDTO category = categoryService.getCategoryById(id);
+		return ResponseEntity.ok(category);
+	}
+
+	@Operation(summary = "Update a category")
+	@PutMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<CategoryResponseDTO> updateCategory(
+			@Parameter(description = "Id of the category to be updated") @PathVariable Long id,
+			@RequestBody @Valid CategoryDTO payload) {
+		CategoryResponseDTO category = categoryService.updateCategory(id, payload);
 		return ResponseEntity.ok(category);
 	}
 }

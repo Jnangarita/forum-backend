@@ -11,4 +11,6 @@ public interface CategoryService {
 	CategoryResponseDTO getCategoryById(Long id);
 
 	Category findCategoryById(Long id);
+
+	CategoryResponseDTO updateCategory(Long id, CategoryDTO payload);
 }
