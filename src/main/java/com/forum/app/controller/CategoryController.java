@@ -1,6 +1,7 @@
 package com.forum.app.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -65,5 +66,13 @@ public class CategoryController {
 			@RequestBody @Valid CategoryDTO payload) {
 		CategoryResponseDTO category = categoryService.updateCategory(id, payload);
 		return ResponseEntity.ok(category);
+	}
+
+	@Operation(summary = "Get category list")
+	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<List<CategoryResponseDTO>> getCategoryList() {
+		List<CategoryResponseDTO> categoryList = categoryService.getCategoryList();
+		return ResponseEntity.ok(categoryList);
 	}
 }

@@ -1,5 +1,8 @@
 package com.forum.app.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
@@ -74,6 +77,21 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.category", null));
+		}
+	}
+
+	@Override
+	public List<CategoryResponseDTO> getCategoryList() {
+		try {
+			List<Category> savedCategoryList = categoryRepository.findByDeletedFalse();
+			List<CategoryResponseDTO> categoryList = new ArrayList<>();
+			for (Category category : savedCategoryList) {
+				CategoryResponseDTO categoryDTO = new CategoryResponseDTO(category);
+				categoryList.add(categoryDTO);
+			}
+			return categoryList;
+		} catch (Exception e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.category", null));
 		}
 	}
 }

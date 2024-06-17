@@ -1,5 +1,7 @@
 package com.forum.app.service;
 
+import java.util.List;
+
 import com.forum.app.dto.CategoryDTO;
 import com.forum.app.dto.CategoryResponseDTO;
 import com.forum.app.entity.Category;
@@ -13,4 +15,6 @@ public interface CategoryService {
 	Category findCategoryById(Long id);
 
 	CategoryResponseDTO updateCategory(Long id, CategoryDTO payload);
+
+	List<CategoryResponseDTO> getCategoryList();
 }
