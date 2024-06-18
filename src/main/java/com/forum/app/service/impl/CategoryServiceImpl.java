@@ -94,4 +94,19 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.category", null));
 		}
 	}
+
+	@Transactional
+	@Override
+	public void deleteCategory(Long id) {
+		try {
+			Category category = findCategoryById(id);
+			if (!category.isDeleted()) {
+				category.setDeleted(true);
+			}
+		} catch (EntityNotFoundException e) {
+			throw new EntityNotFoundException();
+		} catch (Exception e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.deleting.category", null));
+		}
+	}
 }

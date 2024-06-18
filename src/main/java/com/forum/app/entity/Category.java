@@ -31,7 +31,7 @@ public class Category {
 	private LocalDateTime modifiedDate;
 
 	@Column(name = "eliminado")
-	private Boolean deleted;
+	private boolean deleted;
 
 	@PrePersist
 	protected void onCreate() {
