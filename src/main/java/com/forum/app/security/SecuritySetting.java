@@ -19,7 +19,7 @@ public class SecuritySetting {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, SecurityFilter securityFilter) throws Exception {
-		return httpSecurity.csrf(csrf -> csrf.disable())
+		return httpSecurity.csrf(csrf -> csrf.disable()).cors(cors -> cors.configure(httpSecurity))
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorizeRequests -> authorizeRequests.antMatchers(HttpMethod.POST, "/**/login")
 						.permitAll().antMatchers(HttpMethod.POST, "/**/users").permitAll()
