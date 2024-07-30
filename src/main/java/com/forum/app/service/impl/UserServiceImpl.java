@@ -37,9 +37,11 @@ public class UserServiceImpl implements UserService {
 		try {
 			LocalDateTime currentDate = LocalDateTime.now();
 			User newUser = new User();
-			newUser.setFullName(payload.getUserName());
+			newUser.setFirstName(payload.getFirstName());
+			newUser.setLastName(payload.getLastName());
 			newUser.setEmail(payload.getEmail());
 			newUser.setPassword(passwordEncoder.encode(payload.getPassword()));
+			newUser.setRole(payload.getRole());
 			newUser.setCreatedAt(currentDate);
 			newUser.setDeleted(false);
 			User user = userRepository.save(newUser);
@@ -72,7 +74,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			LocalDateTime currentDate = LocalDateTime.now();
 			User userToUpdated = findUser(id);
-			userToUpdated.setFullName(payload.getUserName());
+			userToUpdated.setFirstName(payload.getFirstName());
 			userToUpdated.setEmail(payload.getEmail());
 			userToUpdated.setPassword(passwordEncoder.encode(payload.getPassword()));
 			userToUpdated.setUpdatedAt(currentDate);

@@ -28,8 +28,11 @@ public class User implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "nombre_usuario", unique = true, nullable = false, length = 50)
-	private String fullName;
+	@Column(name = "primer_nombre", unique = true, nullable = false, length = 50)
+	private String firstName;
+
+	@Column(name = "apellido", unique = true, nullable = false, length = 50)
+	private String lastName;
 
 	@Column(name = "codigo", nullable = false, length = 10)
 	private String code;
@@ -39,6 +42,21 @@ public class User implements UserDetails {
 
 	@Column(name = "contrasena", nullable = false, length = 300)
 	private String password;
+
+	@Column(name = "pais", length = 3)
+	private String country;
+
+	@Column(name = "numero_preguntas")
+	private Integer numberQuestions;
+
+	@Column(name = "numero_respuestas")
+	private Integer numberResponses;
+
+	@Column(name = "foto", length = 100)
+	private String photo;
+
+	@Column(name = "id_rol", nullable = false)
+	private Integer role;
 
 	@Column(name = "fecha_creacion")
 	private LocalDateTime createdAt;

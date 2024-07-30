@@ -2,13 +2,17 @@ package com.forum.app.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
 @Data
 public class UserDTO {
 	@NotBlank
-	private String userName;
+	private String firstName;
+
+	@NotBlank
+	private String lastName;
 
 	@NotBlank
 	@Email
@@ -16,4 +20,7 @@ public class UserDTO {
 
 	@NotBlank
 	private String password;
+
+	@NotNull
+	private Integer role;
 }

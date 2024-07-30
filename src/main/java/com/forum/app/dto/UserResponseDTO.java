@@ -19,7 +19,7 @@ public class UserResponseDTO {
 	public UserResponseDTO(User user) {
 		this.id = user.getId();
 		this.code = user.getCode();
-		this.userName = user.getFullName();
+		this.userName = user.getFirstName() + " " + user.getLastName();
 		this.email = user.getEmail();
 		this.createdAt = user.getCreatedAt();
 	}
