@@ -1,14 +1,14 @@
 package com.forum.app.dto;
 
-import java.time.LocalDateTime;
-
 import com.forum.app.entity.User;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class UserResponseDTO {
 	private String code;
 	private String country;
@@ -19,8 +19,7 @@ public class UserResponseDTO {
 	private String photo;
 	private boolean deleted;
 	private String userName;
-	private Integer userRole;
-	private LocalDateTime createdAt;
+	private RoleDTO userRole;
 
 	public UserResponseDTO(User user) {
 		this.code = user.getCode();
@@ -32,7 +31,5 @@ public class UserResponseDTO {
 		this.photo = user.getPhoto();
 		this.deleted = user.isDeleted();
 		this.userName = user.getFirstName() + " " + user.getLastName();
-		this.userRole = user.getRole();
-		this.createdAt = user.getCreatedAt();
 	}
 }

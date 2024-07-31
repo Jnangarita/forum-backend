@@ -3,6 +3,7 @@ package com.forum.app.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -10,6 +11,7 @@ import javax.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.forum.app.dto.RoleDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.entity.User;
@@ -54,8 +56,22 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponseDTO getUserById(Long id) {
 		try {
-			User user = findUser(id);
-			return new UserResponseDTO(user);
+			Map<String, Object> user = userRepository.findUserInformationById(id);
+			UserResponseDTO dto = new UserResponseDTO();
+			dto.setCode(user.get("codigo").toString());
+			dto.setCountry(user.get("pais").toString());
+			dto.setEmail(user.get("correo_electronico").toString());
+			dto.setId(((Number) user.get("id")).longValue());
+			dto.setNumberQuestions((Integer) user.get("numero_preguntas"));
+			dto.setNumberResponses((Integer) user.get("numero_respuestas"));
+			dto.setPhoto(user.get("foto").toString());
+			dto.setDeleted((boolean) user.get("eliminado"));
+			dto.setUserName(user.get("nombre_usuario").toString());
+			RoleDTO userRole = new RoleDTO();
+			userRole.setId(((Number) user.get("id_rol")).longValue());
+			userRole.setRoleName(user.get("nombre_rol").toString());
+			dto.setUserRole(userRole);
+			return dto;
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
