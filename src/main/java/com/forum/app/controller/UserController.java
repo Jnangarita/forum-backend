@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.forum.app.dto.BasicUserInfoDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.service.UserService;
@@ -74,8 +75,8 @@ public class UserController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<List<UserResponseDTO>> getUserList() {
-		List<UserResponseDTO> userList = userService.getUserList();
+	public ResponseEntity<List<BasicUserInfoDTO>> getUserList() {
+		List<BasicUserInfoDTO> userList = userService.getUserList();
 		return ResponseEntity.ok(userList);
 	}
 

@@ -30,4 +30,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "INNER JOIN rol r ON u.id_rol = r.id "
 			+ "WHERE u.id = :id", nativeQuery = true)
 	Map<String, Object> findUserInformationById(@Param("id") Long id);
+
+	@Query(value = "SELECT"
+			+ " u.id,"
+			+ " u.foto,"
+			+ " u.pais,"
+			+ " CONCAT(u.primer_nombre, ' ', u.apellido) AS nombre_usuario,"
+			+ " 0 AS reputacion,"
+			+ " JSON_ARRAYAGG("
+			+ " JSON_OBJECT("
+			+ " 'id', c.id,"
+			+ " 'value', c.nombre_categoria)"
+			+ " ) AS categorias "
+			+ "FROM usuario u "
+			+ "INNER JOIN pregunta p ON u.id = p.id_usuario "
+			+ "INNER JOIN categoria c ON p.id_categoria = c.id "
+			+ "WHERE u.eliminado = FALSE "
+			+ "GROUP BY u.id, u.foto, u.pais, u.primer_nombre, u.apellido", nativeQuery = true)
+	List<Map<String, Object>> userInfoList();
 }

@@ -11,6 +11,10 @@ import javax.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forum.app.dto.BasicUserInfoDTO;
+import com.forum.app.dto.IdValueDTO;
 import com.forum.app.dto.RoleDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
@@ -104,12 +108,24 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserResponseDTO> getUserList() {
+	public List<BasicUserInfoDTO> getUserList() {
 		try {
-			List<User> savedUserList = userRepository.findByDeletedFalse();
-			List<UserResponseDTO> userList = new ArrayList<>();
-			for (User user : savedUserList) {
-				UserResponseDTO userDto = new UserResponseDTO(user);
+			List<Map<String, Object>> savedUserList = userRepository.userInfoList();
+			List<BasicUserInfoDTO> userList = new ArrayList<>();
+			ObjectMapper objectMapper = new ObjectMapper();
+			for (Map<String, Object> userMap : savedUserList) {
+				Long id = ((Number) userMap.get("id")).longValue();
+				String photo = (String) userMap.get("foto");
+				String city = (String) userMap.get("pais");
+				String userName = (String) userMap.get("nombre_usuario");
+				Integer reputation = ((Number) userMap.get("reputacion")).intValue();
+
+				String categoriesJson = (String) userMap.get("categorias");
+				List<IdValueDTO> categories = objectMapper.readValue(categoriesJson,
+						new TypeReference<List<IdValueDTO>>() {
+						});
+
+				BasicUserInfoDTO userDto = new BasicUserInfoDTO(id, photo, city, userName, reputation, categories);
 				userList.add(userDto);
 			}
 			return userList;
