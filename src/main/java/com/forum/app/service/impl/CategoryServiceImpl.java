@@ -1,7 +1,10 @@
 package com.forum.app.service.impl;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -83,11 +86,18 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<CategoryResponseDTO> getCategoryList() {
 		try {
-			List<Category> savedCategoryList = categoryRepository.findByDeletedFalse();
+			List<Map<String, Object>> savedCategoryList = categoryRepository.findCategoryByDeletedFalse();
 			List<CategoryResponseDTO> categoryList = new ArrayList<>();
-			for (Category category : savedCategoryList) {
-				CategoryResponseDTO categoryDTO = new CategoryResponseDTO(category);
-				categoryList.add(categoryDTO);
+			for (Map<String, Object> userMap : savedCategoryList) {
+				Long id = ((Number) userMap.get("id")).longValue();
+				String categoryName = (String) userMap.get("nombre_categoria");
+				String description = (String) userMap.get("descripcion");
+				Integer numberQuestion = ((Number) userMap.get("numero_pregunta")).intValue();
+				LocalDateTime time = ((Timestamp) userMap.get("fecha")).toLocalDateTime();
+
+				CategoryResponseDTO userDto = new CategoryResponseDTO(categoryName, description, id, numberQuestion,
+						time);
+				categoryList.add(userDto);
 			}
 			return categoryList;
 		} catch (Exception e) {

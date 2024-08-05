@@ -1,19 +1,23 @@
 package com.forum.app.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.time.LocalDateTime;
 
 import com.forum.app.entity.Category;
 
 @Data
+@AllArgsConstructor
 public class CategoryResponseDTO {
-	private Long id;
 	private String categoryName;
-	private LocalDateTime createdDate;
+	private String description;
+	private Long id;
+	private Integer numberQuestion;
+	private LocalDateTime time;
 
 	public CategoryResponseDTO(Category category) {
 		this.id = category.getId();
 		this.categoryName = category.getCategoryName();
-		this.createdDate = category.getCreatedDate();
+		this.time = category.getCreatedDate();
 	}
 }
