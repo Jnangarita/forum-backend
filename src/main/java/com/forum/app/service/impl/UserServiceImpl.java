@@ -47,6 +47,9 @@ public class UserServiceImpl implements UserService {
 			newUser.setLastName(payload.getLastName());
 			newUser.setEmail(payload.getEmail());
 			newUser.setPassword(passwordEncoder.encode(payload.getPassword()));
+			newUser.setNumberQuestions(0);
+			newUser.setNumberResponses(0);
+			newUser.setPhoto(payload.getPhoto());
 			newUser.setRole(payload.getRole());
 			newUser.setCreatedAt(currentDate);
 			newUser.setDeleted(false);

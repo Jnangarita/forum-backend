@@ -21,6 +21,8 @@ public class UserDTO {
 	@NotBlank
 	private String password;
 
+	private String photo;
+
 	@NotNull
 	private Integer role;
 }
