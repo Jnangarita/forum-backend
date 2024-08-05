@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.CategoryDTO;
 import com.forum.app.dto.CategoryResponseDTO;
+import com.forum.app.dto.IdValueDTO;
 import com.forum.app.service.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,7 +70,7 @@ public class CategoryController {
 		return ResponseEntity.ok(category);
 	}
 
-	@Operation(summary = "Get category list")
+	@Operation(summary = "Get category list with detailed information")
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<List<CategoryResponseDTO>> getCategoryList() {
@@ -80,10 +81,17 @@ public class CategoryController {
 	@Operation(summary = "Delete a category")
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<Void> deleteCategory(
 			@Parameter(description = "Id of the category to search") @PathVariable Long id) {
 		categoryService.deleteCategory(id);
 		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(summary = "Get category list with ID and name")
+	@GetMapping("/list")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<List<IdValueDTO>> getCategories() {
+		List<IdValueDTO> categoryList = categoryService.getCategories();
+		return ResponseEntity.ok(categoryList);
 	}
 }

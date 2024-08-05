@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.forum.app.dto.CategoryDTO;
 import com.forum.app.dto.CategoryResponseDTO;
+import com.forum.app.dto.IdValueDTO;
 import com.forum.app.entity.Category;
 
 public interface CategoryService {
@@ -19,4 +20,6 @@ public interface CategoryService {
 	List<CategoryResponseDTO> getCategoryList();
 
 	void deleteCategory(Long id);
+
+	List<IdValueDTO> getCategories();
 }

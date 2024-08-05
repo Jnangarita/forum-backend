@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.CategoryDTO;
 import com.forum.app.dto.CategoryResponseDTO;
+import com.forum.app.dto.IdValueDTO;
 import com.forum.app.entity.Category;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.CategoryRepository;
@@ -117,6 +118,23 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.deleting.category", null));
+		}
+	}
+
+	@Override
+	public List<IdValueDTO> getCategories() {
+		try {
+			List<Category> categories = categoryRepository.findByDeletedFalse();
+			List<IdValueDTO> categoryList = new ArrayList<>();
+			for (Category category : categories) {
+				IdValueDTO dto = new IdValueDTO();
+				dto.setId(category.getId());
+				dto.setValue(category.getCategoryName());
+				categoryList.add(dto);
+			}
+			return categoryList;
+		} catch (Exception e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.category", null));
 		}
 	}
 }
