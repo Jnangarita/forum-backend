@@ -13,5 +13,5 @@ CREATE TABLE usuario (
     fecha_creacion TIMESTAMP,
     fecha_modificacion TIMESTAMP,
     eliminado BOOLEAN,
-	FOREIGN KEY (id_rol) REFERENCES rol(id)
+	CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES rol(id)
 );

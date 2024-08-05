@@ -38,14 +38,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ " CONCAT(u.primer_nombre, ' ', u.apellido) AS nombre_usuario,"
 			+ " 0 AS reputacion,"
 			+ " JSON_ARRAYAGG("
-			+ " JSON_OBJECT("
-			+ " 'id', c.id,"
-			+ " 'value', c.nombre_categoria)"
-			+ " ) AS categorias "
+			+ "  JSON_OBJECT("
+			+ "   'id', c.id,"
+			+ "   'value', c.nombre_categoria)) AS categorias "
 			+ "FROM usuario u "
-			+ "INNER JOIN pregunta p ON u.id = p.id_usuario "
-			+ "INNER JOIN categoria c ON p.id_categoria = c.id "
+			+ "LEFT JOIN ("
+			+ " SELECT DISTINCT"
+			+ "  p.id_usuario,"
+			+ "  p.id_categoria,"
+			+ "  c.id,"
+			+ "  c.nombre_categoria"
+			+ " FROM pregunta p"
+			+ " INNER JOIN categoria c ON p.id_categoria = c.id"
+			+ " WHERE p.eliminado = FALSE) c ON u.id = c.id_usuario "
 			+ "WHERE u.eliminado = FALSE "
-			+ "GROUP BY u.id, u.foto, u.pais, u.primer_nombre, u.apellido", nativeQuery = true)
+			+ "GROUP BY u.id, u.foto, u.pais, u.primer_nombre, u.apellido;", nativeQuery = true)
 	List<Map<String, Object>> userInfoList();
 }
