@@ -1,8 +1,10 @@
 package com.forum.app.service.impl;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -10,6 +12,11 @@ import javax.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.QuestionListDTO;
+import com.forum.app.dto.QuestionResponseDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
@@ -84,15 +91,33 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public List<TopicResponseDTO> getTopicList() {
+	public QuestionListDTO getTopicList() {
 		try {
-			List<Topic> listSavedTopics = topicRepository.findByDeletedFalse();
-			List<TopicResponseDTO> topicList = new ArrayList<>();
-			for (Topic topic : listSavedTopics) {
-				TopicResponseDTO topicDto = new TopicResponseDTO(topic);
-				topicList.add(topicDto);
+			Integer totalQuestions = topicRepository.getNumberQuestion();
+			List<Map<String, Object>> savedQuestionList = topicRepository.getQuestionList();
+			List<QuestionResponseDTO> questionList = new ArrayList<>();
+			ObjectMapper objectMapper = new ObjectMapper();
+			for (Map<String, Object> questionMap : savedQuestionList) {
+				Integer totalAnswer = ((Number) questionMap.get("respuestas")).intValue();
+				Integer questionId = ((Number) questionMap.get("id_pregunta")).intValue();
+				String questionTitle = (String) questionMap.get("titulo_pregunta");
+				String questionStatus = (String) questionMap.get("estado_pregunta");
+				LocalDateTime creationDate = ((Timestamp) questionMap.get("fecha_creacion")).toLocalDateTime();
+				String userName = (String) questionMap.get("nombre_usuario");
+				Integer userId = ((Number) questionMap.get("id_usuario")).intValue();
+				String photo = (String) questionMap.get("foto");
+				Integer views = ((Number) questionMap.get("vistas")).intValue();
+				Integer votes = ((Number) questionMap.get("votos")).intValue();
+
+				String categoriesJson = (String) questionMap.get("lista_categoria");
+				List<IdValueDTO> categories = objectMapper.readValue(categoriesJson,
+						new TypeReference<List<IdValueDTO>>() {
+						});
+				QuestionResponseDTO questionDto = new QuestionResponseDTO(totalAnswer, categories, photo, questionId,
+						questionStatus, questionTitle, creationDate, userName, userId, views, votes);
+				questionList.add(questionDto);
 			}
-			return topicList;
+			return new QuestionListDTO(totalQuestions, questionList);
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.question", null));
 		}

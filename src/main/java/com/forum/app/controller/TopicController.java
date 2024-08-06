@@ -1,7 +1,6 @@
 package com.forum.app.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
@@ -71,8 +71,8 @@ public class TopicController {
 	@Operation(summary = "Get the list of questions")
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<TopicResponseDTO>> getTopicList() {
-		List<TopicResponseDTO> topicList = topicService.getTopicList();
+	public ResponseEntity<QuestionListDTO> getTopicList() {
+		QuestionListDTO topicList = topicService.getTopicList();
 		return ResponseEntity.ok(topicList);
 	}
 

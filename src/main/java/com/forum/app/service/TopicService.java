@@ -1,7 +1,6 @@
 package com.forum.app.service;
 
-import java.util.List;
-
+import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
@@ -14,7 +13,7 @@ public interface TopicService {
 
 	TopicResponseDTO updateTopic(UpdateTopicDTO payload);
 
-	List<TopicResponseDTO> getTopicList();
+	QuestionListDTO getTopicList();
 
 	void deleteTopic(Long id);
 
