@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.QuestionResponseDTO;
 import com.forum.app.dto.SaveTopicDTO;
@@ -141,5 +142,24 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public Topic getTopicById(Long id) {
 		return topicRepository.getReferenceById(id);
+	}
+
+	@Override
+	public List<PopularQuestionDTO> getPopularQuestionList() {
+		try {
+			List<Map<String, Object>> questionList = topicRepository.getPopularQuestion();
+			List<PopularQuestionDTO> popularQuestion = new ArrayList<>();
+			for (Map<String, Object> question : questionList) {
+				Long id = ((Number) question.get("id")).longValue();
+				String photo = (String) question.get("foto");
+				String questionTitle = (String) question.get("titulo_pregunta");
+				String userName = (String) question.get("nombre_usuario");
+				PopularQuestionDTO questionDto = new PopularQuestionDTO(id, photo, questionTitle, userName);
+				popularQuestion.add(questionDto);
+			}
+			return popularQuestion;
+		} catch (Exception e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.popular.question", null));
+		}
 	}
 }

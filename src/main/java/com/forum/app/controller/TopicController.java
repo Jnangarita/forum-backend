@@ -1,6 +1,7 @@
 package com.forum.app.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
@@ -83,5 +85,13 @@ public class TopicController {
 			@Parameter(description = "Id of the question to search") @PathVariable Long id) {
 		topicService.deleteTopic(id);
 		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(summary = "Get the list of most popular questions")
+	@GetMapping("/popular")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<List<PopularQuestionDTO>> getPopularQuestion() {
+		List<PopularQuestionDTO> topicList = topicService.getPopularQuestionList();
+		return ResponseEntity.ok(topicList);
 	}
 }

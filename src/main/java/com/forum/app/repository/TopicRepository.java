@@ -61,4 +61,14 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
     @Query(value = "SELECT COUNT(*) FROM pregunta;", nativeQuery = true)
     Integer getNumberQuestion();
+
+    @Query(value = "SELECT"
+    		+ " pre.id,"
+    		+ " usr.foto,"
+    		+ " pre.titulo_pregunta,"
+    		+ " CONCAT(usr.primer_nombre, ' ', usr.apellido) AS nombre_usuario "
+    		+ "FROM pregunta pre "
+    		+ "INNER JOIN usuario usr ON pre.id_usuario = usr.id "
+    		+ "WHERE pre.eliminado = FALSE AND pre.votos >= 20;", nativeQuery = true)
+    List<Map<String, Object>> getPopularQuestion();
 }

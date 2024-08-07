@@ -1,5 +1,8 @@
 package com.forum.app.service;
 
+import java.util.List;
+
+import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
@@ -18,4 +21,6 @@ public interface TopicService {
 	void deleteTopic(Long id);
 
 	Topic getTopicById(Long id);
+
+	List<PopularQuestionDTO> getPopularQuestionList();
 }
