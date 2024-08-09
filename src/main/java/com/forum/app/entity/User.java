@@ -34,6 +34,9 @@ public class User implements UserDetails {
 	@Column(name = "apellido", unique = true, nullable = false, length = 50)
 	private String lastName;
 
+	@Column(name = "nombre_usuario", unique = true, nullable = false, length = 100)
+	private String fullName;
+
 	@Column(name = "codigo", nullable = false, length = 10)
 	private String code;
 
@@ -43,8 +46,14 @@ public class User implements UserDetails {
 	@Column(name = "contrasena", nullable = false, length = 300)
 	private String password;
 
-	@Column(name = "pais", length = 3)
+	@Column(name = "codigo_pais", length = 3)
+	private String countryCode;
+
+	@Column(name = "pais", unique = true, nullable = false, length = 50)
 	private String country;
+
+	@Column(name = "ciudad", unique = true, nullable = false, length = 50)
+	private String city;
 
 	@Column(name = "numero_preguntas")
 	private Integer numberQuestions;

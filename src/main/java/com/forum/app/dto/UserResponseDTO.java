@@ -10,14 +10,17 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class UserResponseDTO {
+	private String city;
 	private String code;
 	private String country;
+	private boolean deleted;
 	private String email;
+	private String firstName;
 	private Long id;
+	private String lastName;
 	private Integer numberQuestions;
 	private Integer numberResponses;
 	private String photo;
-	private boolean deleted;
 	private String userName;
 	private RoleDTO userRole;
 

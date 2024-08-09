@@ -1,7 +1,8 @@
 package com.forum.app.enumeration;
 
 public enum GeneralEnum {
-	GENERAL_ERROR_MESSAGE("forum.message.error.general");
+	GENERAL_ERROR_MESSAGE("forum.message.error.general"),
+	NOT_SPECIFIED("UNK");
 
 	private final String messageKey;
 
