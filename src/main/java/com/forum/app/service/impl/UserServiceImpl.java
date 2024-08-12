@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.app.dto.BasicUserInfoDTO;
 import com.forum.app.dto.IdValueDTO;
 import com.forum.app.dto.RoleDTO;
+import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.entity.User;
@@ -27,6 +29,8 @@ import com.forum.app.utils.Utility;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+	private static final String NOT_SPECIFIED = GeneralEnum.NOT_SPECIFIED.getMessageKey();
 
 	private Utility utility;
 	private UserRepository userRepository;
@@ -43,28 +47,35 @@ public class UserServiceImpl implements UserService {
 	public UserResponseDTO createUser(UserDTO payload) {
 		try {
 			LocalDateTime currentDate = LocalDateTime.now();
-			User newUser = new User();
-			String firstName = payload.getFirstName();
-			String lastName = payload.getLastName();
-			newUser.setFirstName(firstName);
-			newUser.setLastName(lastName);
-			newUser.setFullName(firstName + " " + lastName);
-			newUser.setEmail(payload.getEmail());
-			newUser.setPassword(passwordEncoder.encode(payload.getPassword()));
-			newUser.setCountryCode(GeneralEnum.NOT_SPECIFIED.getMessageKey());
-			newUser.setCountry(GeneralEnum.NOT_SPECIFIED.getMessageKey());
-			newUser.setCity(GeneralEnum.NOT_SPECIFIED.getMessageKey());
-			newUser.setNumberQuestions(0);
-			newUser.setNumberResponses(0);
-			newUser.setPhoto(payload.getPhoto());
-			newUser.setRole(payload.getRole());
-			newUser.setCreatedAt(currentDate);
-			newUser.setDeleted(false);
+			User newUser = setUserData(payload, currentDate);
 			User user = userRepository.save(newUser);
 			return new UserResponseDTO(user);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.user", null));
 		}
+	}
+
+	private User setUserData(UserDTO payload, LocalDateTime currentDate) {
+		User newUser = new User();
+		String firstName = payload.getFirstName();
+		String lastName = payload.getLastName();
+		newUser.setFirstName(firstName);
+		newUser.setLastName(lastName);
+		newUser.setFullName(firstName + " " + lastName);
+		newUser.setEmail(payload.getEmail());
+		newUser.setPassword(passwordEncoder.encode(payload.getPassword()));
+		newUser.setCountryCode(NOT_SPECIFIED);
+		newUser.setCountry(NOT_SPECIFIED);
+		newUser.setCity(NOT_SPECIFIED);
+		newUser.setNumberQuestions(0);
+		newUser.setNumberResponses(0);
+		newUser.setPhoto(payload.getPhoto());
+		newUser.setRole(payload.getRole());
+		newUser.setCreatedAt(currentDate);
+		newUser.setDeleted(false);
+		return newUser;
 	}
 
 	@Override
@@ -103,13 +114,18 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserResponseDTO updateUser(Long id, UserDTO payload) {
+	public UserResponseDTO updateUser(Long id, UpdateUserDTO payload) {
 		try {
 			LocalDateTime currentDate = LocalDateTime.now();
 			User userToUpdated = findUser(id);
 			userToUpdated.setFirstName(payload.getFirstName());
+			userToUpdated.setLastName(payload.getLastName());
+			userToUpdated.setFullName(payload.getUserName());
 			userToUpdated.setEmail(payload.getEmail());
-			userToUpdated.setPassword(passwordEncoder.encode(payload.getPassword()));
+			userToUpdated.setCountry(payload.getCountry());
+//			TODO validar que el código del país no es nulo
+//			userToUpdated.setCountryCode(payload.getCountryCode().toUpperCase());
+			userToUpdated.setCity(payload.getCity());
 			userToUpdated.setUpdatedAt(currentDate);
 			User user = userRepository.save(userToUpdated);
 			return new UserResponseDTO(user);

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.BasicUserInfoDTO;
+import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.service.UserService;
@@ -66,7 +67,7 @@ public class UserController {
 	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<UserResponseDTO> updateUser(
 			@Parameter(description = "Id of the user to search") @PathVariable Long id,
-			@RequestBody @Valid UserDTO payload) {
+			@RequestBody @Valid UpdateUserDTO payload) {
 		UserResponseDTO user = userService.updateUser(id, payload);
 		return ResponseEntity.ok(user);
 	}

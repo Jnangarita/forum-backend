@@ -3,6 +3,7 @@ package com.forum.app.service;
 import java.util.List;
 
 import com.forum.app.dto.BasicUserInfoDTO;
+import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.entity.User;
@@ -14,7 +15,7 @@ public interface UserService {
 
 	User findUser(Long id);
 
-	UserResponseDTO updateUser(Long id, UserDTO payload);
+	UserResponseDTO updateUser(Long id, UpdateUserDTO payload);
 
 	List<BasicUserInfoDTO> getUserList();
 

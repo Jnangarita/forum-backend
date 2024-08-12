@@ -26,7 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ " u.eliminado,"
 			+ " u.primer_nombre,"
 			+ " u.apellido,"
-			+ " CONCAT(u.primer_nombre, ' ', u.apellido) AS nombre_usuario,"
+			+ " u.nombre_usuario,"
 			+ " r.id AS id_rol,"
 			+ " r.nombre_rol "
 			+ "FROM usuario u "
