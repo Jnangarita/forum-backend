@@ -46,14 +46,11 @@ public class User implements UserDetails {
 	@Column(name = "contrasena", nullable = false, length = 300)
 	private String password;
 
-	@Column(name = "codigo_pais", length = 3)
-	private String countryCode;
+	@Column(name = "id_pais", unique = true, nullable = false, length = 50)
+	private Long countryId;
 
-	@Column(name = "pais", unique = true, nullable = false, length = 50)
-	private String country;
-
-	@Column(name = "ciudad", unique = true, nullable = false, length = 50)
-	private String city;
+	@Column(name = "id_ciudad", unique = true, nullable = false, length = 50)
+	private Long cityId;
 
 	@Column(name = "numero_preguntas")
 	private Integer numberQuestions;

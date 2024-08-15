@@ -6,9 +6,8 @@ CREATE TABLE usuario (
     nombre_usuario VARCHAR(100) NOT NULL,
     correo_electronico VARCHAR(50) UNIQUE NOT NULL,
     contrasena VARCHAR(300) NOT NULL,
-    codigo_pais VARCHAR(3) NOT NULL,
-    pais VARCHAR(50) NOT NULL,
-    ciudad VARCHAR(50) NOT NULL,
+    id_pais INT NULL,
+    id_ciudad INT NULL,
     numero_preguntas INT NULL,
     numero_respuestas INT NULL,
     foto VARCHAR(100) NULL,
@@ -16,5 +15,7 @@ CREATE TABLE usuario (
     fecha_creacion TIMESTAMP,
     fecha_modificacion TIMESTAMP,
     eliminado BOOLEAN,
-	CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES rol(id)
+	CONSTRAINT fk_id_rol FOREIGN KEY (id_rol) REFERENCES rol(id),
+	CONSTRAINT fk_id_pais FOREIGN KEY (id_pais) REFERENCES paises(id) ON DELETE SET NULL,
+	CONSTRAINT fk_id_ciudad FOREIGN KEY (id_ciudad) REFERENCES ciudades(id) ON DELETE SET NULL
 );

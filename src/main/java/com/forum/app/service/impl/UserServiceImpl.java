@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.app.dto.BasicUserInfoDTO;
@@ -21,7 +22,6 @@ import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.entity.User;
-import com.forum.app.enumeration.GeneralEnum;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.UserRepository;
 import com.forum.app.service.UserService;
@@ -29,8 +29,6 @@ import com.forum.app.utils.Utility;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-	private static final String NOT_SPECIFIED = GeneralEnum.NOT_SPECIFIED.getMessageKey();
 
 	private Utility utility;
 	private UserRepository userRepository;
@@ -66,9 +64,8 @@ public class UserServiceImpl implements UserService {
 		newUser.setFullName(firstName + " " + lastName);
 		newUser.setEmail(payload.getEmail());
 		newUser.setPassword(passwordEncoder.encode(payload.getPassword()));
-		newUser.setCountryCode(NOT_SPECIFIED);
-		newUser.setCountry(NOT_SPECIFIED);
-		newUser.setCity(NOT_SPECIFIED);
+		newUser.setCountryId(null);
+		newUser.setCityId(null);
 		newUser.setNumberQuestions(0);
 		newUser.setNumberResponses(0);
 		newUser.setPhoto(payload.getPhoto());
@@ -84,8 +81,8 @@ public class UserServiceImpl implements UserService {
 			Map<String, Object> user = userRepository.findUserInformationById(id);
 			UserResponseDTO dto = new UserResponseDTO();
 			dto.setCode(user.get("codigo").toString());
-			dto.setCountry(user.get("pais").toString());
-			dto.setCity(user.get("ciudad").toString());
+			dto.setCountry(parseJsonToIdValueDTO((user.get("pais").toString())));
+			dto.setCity(parseJsonToIdValueDTO((user.get("ciudad").toString())));
 			dto.setEmail(user.get("correo_electronico").toString());
 			dto.setId(((Number) user.get("id")).longValue());
 			dto.setNumberQuestions((Integer) user.get("numero_preguntas"));
@@ -107,6 +104,17 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	private IdValueDTO parseJsonToIdValueDTO(String jsonString) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			return objectMapper.readValue(jsonString, new TypeReference<IdValueDTO>() {
+			});
+		} catch (JsonProcessingException e) {
+			throw new OwnRuntimeException(
+					utility.getMessage("forum.message.error.casting.string.to.json.format", null));
+		}
+	}
+
 	@Override
 	public User findUser(Long id) {
 		return userRepository.getReferenceById(id);
@@ -122,10 +130,8 @@ public class UserServiceImpl implements UserService {
 			userToUpdated.setLastName(payload.getLastName());
 			userToUpdated.setFullName(payload.getUserName());
 			userToUpdated.setEmail(payload.getEmail());
-			userToUpdated.setCountry(payload.getCountry());
-//			TODO validar que el código del país no es nulo
-//			userToUpdated.setCountryCode(payload.getCountryCode().toUpperCase());
-			userToUpdated.setCity(payload.getCity());
+			userToUpdated.setCountryId(payload.getCountry().getId());
+			userToUpdated.setCityId(payload.getCity().getId());
 			userToUpdated.setUpdatedAt(currentDate);
 			User user = userRepository.save(userToUpdated);
 			return new UserResponseDTO(user);

@@ -16,8 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query(value = "SELECT"
 			+ " u.codigo,"
-			+ " u.pais,"
-			+ " u.ciudad,"
+			+ " JSON_OBJECT("
+			+ "  'id', p.id,"
+			+ "  'value', p.nombre_pais) AS pais,"
+			+ " JSON_OBJECT("
+			+ "  'id', c.id,"
+			+ "  'value', c.nombre_ciudad) AS ciudad,"
 			+ " u.correo_electronico,"
 			+ " u.id,"
 			+ " u.numero_preguntas,"
@@ -31,13 +35,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ " r.nombre_rol "
 			+ "FROM usuario u "
 			+ "INNER JOIN rol r ON u.id_rol = r.id "
+			+ "LEFT JOIN paises p ON p.id = u.id_pais "
+			+ "INNER JOIN ciudades c ON c.id = u.id_ciudad "
 			+ "WHERE u.id = :id", nativeQuery = true)
 	Map<String, Object> findUserInformationById(@Param("id") Long id);
 
 	@Query(value = "SELECT"
 			+ " u.id,"
 			+ " u.foto,"
-			+ " u.pais,"
+			+ " u.id_pais,"
 			+ " CONCAT(u.primer_nombre, ' ', u.apellido) AS nombre_usuario,"
 			+ " 0 AS reputacion,"
 			+ " JSON_ARRAYAGG("
@@ -55,6 +61,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ " INNER JOIN categoria c ON p.id_categoria = c.id"
 			+ " WHERE p.eliminado = FALSE) c ON u.id = c.id_usuario "
 			+ "WHERE u.eliminado = FALSE "
-			+ "GROUP BY u.id, u.foto, u.pais, u.primer_nombre, u.apellido;", nativeQuery = true)
+			+ "GROUP BY u.id, u.foto, u.id_pais, u.primer_nombre, u.apellido;", nativeQuery = true)
 	List<Map<String, Object>> userInfoList();
 }

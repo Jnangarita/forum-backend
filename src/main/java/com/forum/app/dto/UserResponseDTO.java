@@ -10,9 +10,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class UserResponseDTO {
-	private String city;
+	private IdValueDTO city;
 	private String code;
-	private String country;
+	private IdValueDTO country;
 	private boolean deleted;
 	private String email;
 	private String firstName;
@@ -26,7 +26,7 @@ public class UserResponseDTO {
 
 	public UserResponseDTO(User user) {
 		this.code = user.getCode();
-		this.country = user.getCountry();
+//		this.country = user.getCountry();
 		this.email = user.getEmail();
 		this.id = user.getId();
 		this.numberQuestions = user.getNumberQuestions();

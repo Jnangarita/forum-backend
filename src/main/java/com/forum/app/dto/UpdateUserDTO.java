@@ -1,8 +1,8 @@
 package com.forum.app.dto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,13 +23,9 @@ public class UpdateUserDTO {
 	@Email
 	private String email;
 
-	@NotBlank
-	private String country;
+	@Valid
+	private IdValueDTO country;
 
-//	@NotBlank TODO Modificar el dto para que el código del país sea obligatorio
-	@Size(max = 3, message = "El código de país debe tener un máximo de 3 caracteres.")
-	private String countryCode;
-
-	@NotBlank
-	private String city;
+	@Valid
+	private IdValueDTO city;
 }
