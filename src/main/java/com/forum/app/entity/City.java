@@ -11,16 +11,16 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "paises")
-public class Country {
+@Table(name = "ciudades")
+public class City {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "nombre_pais", nullable = false, length = 50)
-	private String countryName;
+	@Column(name = "nombre_ciudad", nullable = false, length = 100)
+	private String cityName;
 
-	@Column(name = "codigo_pais", nullable = false, length = 3)
-	private String countryCode;
+	@Column(name = "pais_id")
+	private Long countryId;
 }

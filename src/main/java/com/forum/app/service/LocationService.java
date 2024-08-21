@@ -6,4 +6,6 @@ import com.forum.app.dto.IdValueDTO;
 
 public interface LocationService {
 	List<IdValueDTO> getCountries();
+
+	List<IdValueDTO> getCities(Long id);
 }

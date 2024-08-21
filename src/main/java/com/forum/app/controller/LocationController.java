@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import com.forum.app.dto.IdValueDTO;
 import com.forum.app.service.LocationService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
@@ -30,7 +32,17 @@ public class LocationController {
 	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<List<IdValueDTO>> getCountryList() {
-		List<IdValueDTO> topPostList = locationService.getCountries();
-		return ResponseEntity.ok(topPostList);
+		List<IdValueDTO> countries = locationService.getCountries();
+		return ResponseEntity.ok(countries);
+	}
+
+	@Operation(summary = "Get the list of cities in a country")
+	@GetMapping("/{countryId}/cities")
+	@ResponseStatus(HttpStatus.OK)
+	@SecurityRequirement(name = "bearer-key")
+	public ResponseEntity<List<IdValueDTO>> getCityList(
+			@Parameter(description = "Id of the country to search") @PathVariable Long countryId) {
+		List<IdValueDTO> cities = locationService.getCities(countryId);
+		return ResponseEntity.ok(cities);
 	}
 }

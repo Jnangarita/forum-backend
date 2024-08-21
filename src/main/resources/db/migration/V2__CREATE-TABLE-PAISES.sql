@@ -1,7 +1,7 @@
 CREATE TABLE paises (
     id INT PRIMARY KEY,
     nombre_pais VARCHAR(50) NOT NULL,
-    codigo_pais CHAR(3) NOT NULL
+    codigo_pais VARCHAR(3) NOT NULL
 );
 
 INSERT INTO paises (id, nombre_pais, codigo_pais) VALUES

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.forum.app.dto.IdValueDTO;
 import com.forum.app.entity.Country;
 
-public interface LocationRepository extends JpaRepository<Country, Long> {
+public interface CountryRepository extends JpaRepository<Country, Long> {
 
 	@Query("SELECT new com.forum.app.dto.IdValueDTO(c.id, c.countryName) FROM Country c")
 	List<IdValueDTO> findCountry();
