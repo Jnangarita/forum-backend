@@ -18,7 +18,10 @@ public class Category {
 	@Column(name = "nombre_categoria", nullable = false)
 	private String categoryName;
 
-	@Column(name = "usuario_creador")
+	@Column(name = "descripcion", nullable = false)
+	private String description;
+
+	@Column(name = "usuario_creador", nullable = false)
 	private Long createdBy;
 
 	@Column(name = "usuario_modificador")
@@ -27,7 +30,7 @@ public class Category {
 	@Column(name = "fecha_creacion", updatable = false)
 	private LocalDateTime createdDate;
 
-	@Column(name = "fecha_modificacion")
+	@Column(name = "fecha_modificacion", nullable = false)
 	private LocalDateTime modifiedDate;
 
 	@Column(name = "eliminado")

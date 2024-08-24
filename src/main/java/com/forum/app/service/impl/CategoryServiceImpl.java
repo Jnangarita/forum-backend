@@ -38,6 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
 		try {
 			Category newCategory = new Category();
 			newCategory.setCategoryName(payload.getCategoryName());
+			newCategory.setDescription(payload.getDescription());
 			newCategory.setCreatedBy(payload.getCreatedBy());
 			newCategory.setDeleted(false);
 			Category category = categoryRepository.save(newCategory);

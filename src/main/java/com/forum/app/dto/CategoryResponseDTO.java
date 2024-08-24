@@ -18,6 +18,7 @@ public class CategoryResponseDTO {
 	public CategoryResponseDTO(Category category) {
 		this.id = category.getId();
 		this.categoryName = category.getCategoryName();
+		this.description = category.getDescription();
 		this.time = category.getCreatedDate();
 	}
 }

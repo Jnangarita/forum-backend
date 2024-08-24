@@ -10,6 +10,9 @@ public class CategoryDTO {
 	@NotBlank
 	private String categoryName;
 
+	@NotBlank
+	private String description;
+
 	@NotNull
 	private Long createdBy;
 }
