@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.BasicUserInfoDTO;
+import com.forum.app.dto.ChangePasswordDTO;
+import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
@@ -88,5 +90,16 @@ public class UserController {
 	public ResponseEntity<Void> deleteUser(@Parameter(description = "Id of the user to search") @PathVariable Long id) {
 		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(summary = "Change user password")
+	@PutMapping("/passwords/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	@SecurityRequirement(name = "bearer-key")
+	public ResponseEntity<MessageDTO> changePassword(
+			@Parameter(description = "Id of the user to search") @PathVariable Long id,
+			@RequestBody @Valid ChangePasswordDTO payload) {
+		MessageDTO message = userService.changePassword(id, payload);
+		return ResponseEntity.ok(message);
 	}
 }

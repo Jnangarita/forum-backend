@@ -3,6 +3,8 @@ package com.forum.app.service;
 import java.util.List;
 
 import com.forum.app.dto.BasicUserInfoDTO;
+import com.forum.app.dto.ChangePasswordDTO;
+import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
@@ -20,4 +22,6 @@ public interface UserService {
 	List<BasicUserInfoDTO> getUserList();
 
 	void deleteUser(Long id);
+
+	MessageDTO changePassword(Long id, ChangePasswordDTO payload);
 }

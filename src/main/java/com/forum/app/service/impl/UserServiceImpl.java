@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +17,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.app.dto.BasicUserInfoDTO;
+import com.forum.app.dto.ChangePasswordDTO;
 import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.RoleDTO;
 import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
@@ -181,6 +184,25 @@ public class UserServiceImpl implements UserService {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.deleting.user", null));
+		}
+	}
+
+	@Transactional
+	@Override
+	public MessageDTO changePassword(Long id, @Valid ChangePasswordDTO payload) {
+		try {
+			LocalDateTime currentDate = LocalDateTime.now();
+			User user = findUser(id);
+			String msg = utility.getMessage("forum.message.warn.password.not.match", null);
+			if (passwordEncoder.matches(payload.getCurrentPassword(), user.getPassword())
+					&& (payload.getNewPassword().equals(payload.getConfirmPassword()))) {
+				user.setPassword(passwordEncoder.encode(payload.getNewPassword()));
+				user.setUpdatedAt(currentDate);
+				msg = utility.getMessage("forum.message.info.password.updated.successfully", null);
+			}
+			return new MessageDTO(msg);
+		} catch (Exception e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.password", null));
 		}
 	}
 }
