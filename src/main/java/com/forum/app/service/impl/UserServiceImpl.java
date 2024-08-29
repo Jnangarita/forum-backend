@@ -48,8 +48,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponseDTO createUser(UserDTO payload) {
 		try {
-			LocalDateTime currentDate = LocalDateTime.now();
-			User newUser = setUserData(payload, currentDate);
+			User newUser = setUserData(payload);
 			User user = userRepository.save(newUser);
 			return new UserResponseDTO(user);
 		} catch (DataIntegrityViolationException e) {
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private User setUserData(UserDTO payload, LocalDateTime currentDate) {
+	private User setUserData(UserDTO payload) {
 		User newUser = new User();
 		String firstName = payload.getFirstName();
 		String lastName = payload.getLastName();
@@ -74,7 +73,7 @@ public class UserServiceImpl implements UserService {
 		newUser.setNumberResponses(0);
 		newUser.setPhoto(payload.getPhoto());
 		newUser.setRole(payload.getRole());
-		newUser.setCreatedAt(currentDate);
+		newUser.setCreatedAt(LocalDateTime.now());
 		newUser.setDeleted(false);
 		return newUser;
 	}
@@ -83,19 +82,7 @@ public class UserServiceImpl implements UserService {
 	public UserResponseDTO getUserById(Long id) {
 		try {
 			Map<String, Object> user = userRepository.findUserInformationById(id);
-			UserResponseDTO dto = new UserResponseDTO();
-			dto.setCode(user.get("codigo").toString());
-			dto.setCountry(parseJsonToIdValueDTO((user.get("pais").toString())));
-			dto.setCity(parseJsonToIdValueDTO((user.get("ciudad").toString())));
-			dto.setEmail(user.get("correo_electronico").toString());
-			dto.setId(((Number) user.get("id")).longValue());
-			dto.setNumberQuestions((Integer) user.get("numero_preguntas"));
-			dto.setNumberResponses((Integer) user.get("numero_respuestas"));
-			dto.setPhoto(user.get("foto").toString());
-			dto.setDeleted((boolean) user.get("eliminado"));
-			dto.setFirstName(user.get("primer_nombre").toString());
-			dto.setLastName(user.get("apellido").toString());
-			dto.setUserName(user.get("nombre_usuario").toString());
+			UserResponseDTO dto = setUserByIdData(user);
 			RoleDTO userRole = new RoleDTO();
 			userRole.setId(((Number) user.get("id_rol")).longValue());
 			userRole.setRoleName(user.get("nombre_rol").toString());
@@ -106,6 +93,23 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.user", null));
 		}
+	}
+
+	private UserResponseDTO setUserByIdData(Map<String, Object> user) {
+		UserResponseDTO dto = new UserResponseDTO();
+		dto.setCode(user.get("codigo").toString());
+		dto.setCountry(parseJsonToIdValueDTO((user.get("pais").toString())));
+		dto.setCity(parseJsonToIdValueDTO((user.get("ciudad").toString())));
+		dto.setEmail(user.get("correo_electronico").toString());
+		dto.setId(((Number) user.get("id")).longValue());
+		dto.setNumberQuestions((Integer) user.get("numero_preguntas"));
+		dto.setNumberResponses((Integer) user.get("numero_respuestas"));
+		dto.setPhoto(user.get("foto").toString());
+		dto.setDeleted((boolean) user.get("eliminado"));
+		dto.setFirstName(user.get("primer_nombre").toString());
+		dto.setLastName(user.get("apellido").toString());
+		dto.setUserName(user.get("nombre_usuario").toString());
+		return dto;
 	}
 
 	private IdValueDTO parseJsonToIdValueDTO(String jsonString) {
@@ -128,15 +132,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponseDTO updateUser(Long id, UpdateUserDTO payload) {
 		try {
-			LocalDateTime currentDate = LocalDateTime.now();
 			User userToUpdated = findUser(id);
-			userToUpdated.setFirstName(payload.getFirstName());
-			userToUpdated.setLastName(payload.getLastName());
-			userToUpdated.setFullName(payload.getUserName());
-			userToUpdated.setEmail(payload.getEmail());
-			userToUpdated.setCountryId(payload.getCountry().getId());
-			userToUpdated.setCityId(payload.getCity().getId());
-			userToUpdated.setUpdatedAt(currentDate);
+			updateUserFields(userToUpdated, payload);
 			User user = userRepository.save(userToUpdated);
 			return new UserResponseDTO(user);
 		} catch (EntityNotFoundException e) {
@@ -144,6 +141,16 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.user", null));
 		}
+	}
+
+	private void updateUserFields(User user, UpdateUserDTO payload) {
+		user.setFirstName(payload.getFirstName());
+		user.setLastName(payload.getLastName());
+		user.setFullName(payload.getUserName());
+		user.setEmail(payload.getEmail());
+		user.setCountryId(payload.getCountry().getId());
+		user.setCityId(payload.getCity().getId());
+		user.setUpdatedAt(LocalDateTime.now());
 	}
 
 	@Override
@@ -209,8 +216,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void setPasswordData(User user, String newPassword) {
-		LocalDateTime currentDate = LocalDateTime.now();
 		user.setPassword(passwordEncoder.encode(newPassword));
-		user.setUpdatedAt(currentDate);
+		user.setUpdatedAt(LocalDateTime.now());
 	}
 }
