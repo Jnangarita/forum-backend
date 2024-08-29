@@ -26,6 +26,8 @@ import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.entity.User;
 import com.forum.app.exception.OwnRuntimeException;
+import com.forum.app.exception.PasswordNotMatchException;
+import com.forum.app.exception.IncorrectPasswordException;
 import com.forum.app.repository.UserRepository;
 import com.forum.app.service.UserService;
 import com.forum.app.utils.Utility;
@@ -33,9 +35,9 @@ import com.forum.app.utils.Utility;
 @Service
 public class UserServiceImpl implements UserService {
 
-	private Utility utility;
-	private UserRepository userRepository;
-	private PasswordEncoder passwordEncoder;
+	private final Utility utility;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.utility = utility;
@@ -191,18 +193,26 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public MessageDTO changePassword(Long id, @Valid ChangePasswordDTO payload) {
 		try {
-			LocalDateTime currentDate = LocalDateTime.now();
 			User user = findUser(id);
-			String msg = utility.getMessage("forum.message.warn.password.not.match", null);
-			if (passwordEncoder.matches(payload.getCurrentPassword(), user.getPassword())
-					&& (payload.getNewPassword().equals(payload.getConfirmPassword()))) {
-				user.setPassword(passwordEncoder.encode(payload.getNewPassword()));
-				user.setUpdatedAt(currentDate);
-				msg = utility.getMessage("forum.message.info.password.updated.successfully", null);
+			if (!passwordEncoder.matches(payload.getCurrentPassword(), user.getPassword())) {
+				throw new IncorrectPasswordException();
 			}
+			if (!payload.getNewPassword().equals(payload.getConfirmPassword())) {
+				throw new PasswordNotMatchException();
+			}
+			setPasswordData(user, payload.getNewPassword());
+			String msg = utility.getMessage("forum.message.info.password.updated.successfully", null);
 			return new MessageDTO(msg);
+		} catch (IncorrectPasswordException | PasswordNotMatchException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.password", null));
 		}
+	}
+
+	private void setPasswordData(User user, String newPassword) {
+		LocalDateTime currentDate = LocalDateTime.now();
+		user.setPassword(passwordEncoder.encode(newPassword));
+		user.setUpdatedAt(currentDate);
 	}
 }

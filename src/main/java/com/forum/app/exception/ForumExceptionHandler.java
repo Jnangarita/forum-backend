@@ -78,6 +78,24 @@ public class ForumExceptionHandler {
 		return ResponseEntity.badRequest().body(badRequest);
 	}
 
+	@ExceptionHandler(IncorrectPasswordException.class)
+	public ResponseEntity<GeneralErrorDTO> handleIncorrectPasswordException(IncorrectPasswordException e) {
+		Integer code = HttpStatus.BAD_REQUEST.value();
+		String message = utility.getMessage("forum.message.warn.password", null);
+		String description = utility.getMessage("forum.message.warn.incorrect.password", null);
+		GeneralErrorDTO badRequest = new GeneralErrorDTO(code, message, description);
+		return ResponseEntity.badRequest().body(badRequest);
+	}
+
+	@ExceptionHandler(PasswordNotMatchException.class)
+	public ResponseEntity<GeneralErrorDTO> handlePasswordNotMatchException(PasswordNotMatchException e) {
+		Integer code = HttpStatus.BAD_REQUEST.value();
+		String message = utility.getMessage("forum.message.warn.password", null);
+		String description = utility.getMessage("forum.message.warn.password.not.match", null);
+		GeneralErrorDTO badRequest = new GeneralErrorDTO(code, message, description);
+		return ResponseEntity.badRequest().body(badRequest);
+	}
+
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<GeneralErrorDTO> handleGenericException(Exception e) {
