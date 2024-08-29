@@ -26,8 +26,7 @@ import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.entity.User;
 import com.forum.app.exception.OwnRuntimeException;
-import com.forum.app.exception.PasswordNotMatchException;
-import com.forum.app.exception.IncorrectPasswordException;
+import com.forum.app.exception.PasswordException;
 import com.forum.app.repository.UserRepository;
 import com.forum.app.service.UserService;
 import com.forum.app.utils.Utility;
@@ -195,15 +194,14 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = findUser(id);
 			if (!passwordEncoder.matches(payload.getCurrentPassword(), user.getPassword())) {
-				throw new IncorrectPasswordException();
+				throw new PasswordException(utility.getMessage("forum.message.warn.incorrect.password", null));
 			}
 			if (!payload.getNewPassword().equals(payload.getConfirmPassword())) {
-				throw new PasswordNotMatchException();
+				throw new PasswordException(utility.getMessage("forum.message.warn.password.not.match", null));
 			}
 			setPasswordData(user, payload.getNewPassword());
-			String msg = utility.getMessage("forum.message.info.password.updated.successfully", null);
-			return new MessageDTO(msg);
-		} catch (IncorrectPasswordException | PasswordNotMatchException e) {
+			return new MessageDTO(utility.getMessage("forum.message.info.password.updated.successfully", null));
+		} catch (PasswordException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.password", null));
