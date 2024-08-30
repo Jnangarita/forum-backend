@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -80,6 +81,14 @@ public class ForumExceptionHandler {
 	public ResponseEntity<GeneralErrorDTO> handlePasswordException(PasswordException e) {
 		return ResponseEntity.badRequest().body(new GeneralErrorDTO(HttpStatus.BAD_REQUEST.value(),
 				utility.getMessage("forum.message.warn.password", null), e.getMessage()));
+	}
+
+	@ExceptionHandler(AuthenticationException.class)
+	public ResponseEntity<GeneralErrorDTO> handlePasswordException(AuthenticationException e) {
+		return ResponseEntity.badRequest()
+				.body(new GeneralErrorDTO(HttpStatus.BAD_REQUEST.value(),
+						utility.getMessage("forum.message.error.logging", null),
+						utility.getMessage("forum.message.error.invalid.credentials", null)));
 	}
 
 	@ExceptionHandler(Exception.class)
