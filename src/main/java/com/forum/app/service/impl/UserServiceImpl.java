@@ -48,9 +48,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponseDTO createUser(UserDTO payload) {
 		try {
+			if (!payload.getPassword().equals(payload.getRepeatPassword())) {
+				throw new PasswordException(utility.getMessage("forum.message.warn.password.not.same", null));
+			}
 			User newUser = setUserData(payload);
 			User user = userRepository.save(newUser);
 			return new UserResponseDTO(user);
+		} catch (PasswordException e) {
+			throw e;
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
