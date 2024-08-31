@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
 		dto.setId(((Number) user.get("id")).longValue());
 		dto.setNumberQuestions((Integer) user.get("numero_preguntas"));
 		dto.setNumberResponses((Integer) user.get("numero_respuestas"));
-		dto.setPhoto(user.get("foto").toString());
+		dto.setPhoto((String) user.get("foto"));
 		dto.setDeleted((boolean) user.get("eliminado"));
 		dto.setFirstName(user.get("primer_nombre").toString());
 		dto.setLastName(user.get("apellido").toString());
