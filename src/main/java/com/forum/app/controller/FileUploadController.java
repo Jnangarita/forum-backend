@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -15,20 +17,21 @@ import org.springframework.ui.Model;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.DocumentResponseDTO;
 import com.forum.app.dto.FileDTO;
+import com.forum.app.dto.FileUploadDTO;
 import com.forum.app.entity.User;
 import com.forum.app.service.StorageService;
+import com.forum.app.utils.Utility;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,20 +44,26 @@ public class FileUploadController {
 
 	private final StorageService storageService;
 	private final String basePath;
+	private final Utility utility;
 
-	public FileUploadController(StorageService storageService, @Value("${spring.data.rest.basePath}") String basePath) {
+	public FileUploadController(StorageService storageService, @Value("${spring.data.rest.basePath}") String basePath,
+			Utility utility) {
 		this.storageService = storageService;
 		this.basePath = basePath;
+		this.utility = utility;
 	}
 
 	@Operation(summary = "Save a file")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<DocumentResponseDTO> saveFile(@RequestParam("file") MultipartFile file,
-			@RequestParam("documentType") String documentType, UriComponentsBuilder uriComponentsBuilder) {
+	public ResponseEntity<DocumentResponseDTO> saveFile(@ModelAttribute @Valid FileUploadDTO payload,
+			UriComponentsBuilder uriComponentsBuilder) {
+		if (payload.getFile() == null) {
+			throw new NullPointerException(utility.getMessage("forum.message.error.file", null));
+		}
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) authentication.getPrincipal();
-		DocumentResponseDTO document = storageService.save(file, documentType, user.getId());
+		DocumentResponseDTO document = storageService.save(payload, user.getId());
 		URI uri = uriComponentsBuilder.path(basePath + "/v1/files/{filename}")
 				.buildAndExpand(document.getDocumentName()).toUri();
 		return ResponseEntity.created(uri).body(document);

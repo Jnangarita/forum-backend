@@ -4,16 +4,16 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import org.springframework.core.io.Resource;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.forum.app.dto.DocumentResponseDTO;
+import com.forum.app.dto.FileUploadDTO;
 import com.forum.app.entity.Document;
 
 public interface StorageService {
 
 	void init();
 
-	DocumentResponseDTO save(MultipartFile file, String documentType, Long idUser);
+	DocumentResponseDTO save(FileUploadDTO payload, Long idUser);
 
 	Resource loadFile(String fileName, String fileName2);
 

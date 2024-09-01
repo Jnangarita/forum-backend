@@ -13,10 +13,10 @@ import java.util.stream.Stream;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.forum.app.config.StorageProperties;
 import com.forum.app.dto.DocumentResponseDTO;
+import com.forum.app.dto.FileUploadDTO;
 import com.forum.app.entity.Document;
 import com.forum.app.entity.User;
 import com.forum.app.exception.OwnRuntimeException;
@@ -42,24 +42,24 @@ public class StorageServiceImpl implements StorageService {
 	}
 
 	@Override
-	public DocumentResponseDTO save(MultipartFile file, String documentType, Long idUser) {
+	public DocumentResponseDTO save(FileUploadDTO payload, Long idUser) {
 		try {
 			User user = userService.findUser(idUser);
 			Path userDirectory = this.rootLocation.resolve(user.getCode()).normalize().toAbsolutePath();
 			if (!Files.exists(userDirectory)) {
 				Files.createDirectories(userDirectory);
 			}
-			Path destinationFile = userDirectory.resolve(Paths.get(file.getOriginalFilename())).normalize()
+			Path destinationFile = userDirectory.resolve(Paths.get(payload.getFile().getOriginalFilename())).normalize()
 					.toAbsolutePath();
 			if (Files.exists(destinationFile)) {
 				throw new OwnRuntimeException(utility.getMessage("forum.message.warn.file.already.exists",
-						new Object[] { file.getOriginalFilename() }));
+						new Object[] { payload.getFile().getOriginalFilename() }));
 			}
-			try (InputStream inputStream = file.getInputStream()) {
+			try (InputStream inputStream = payload.getFile().getInputStream()) {
 				init();
 				Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-				Document document = documentRepository.save(setDocumentData(user.getCode(), documentType,
-						file.getOriginalFilename(), destinationFile.toString()));
+				Document document = documentRepository.save(setDocumentData(user.getCode(), payload.getDocumentType(),
+						payload.getFile().getOriginalFilename(), destinationFile.toString()));
 				return new DocumentResponseDTO(document);
 			}
 		} catch (IOException e) {

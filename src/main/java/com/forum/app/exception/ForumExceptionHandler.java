@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -38,6 +39,14 @@ public class ForumExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<BadRequestDTO> emptyOrNullField(MethodArgumentNotValidException e) {
+		return ResponseEntity.badRequest()
+				.body(new BadRequestDTO(HttpStatus.BAD_REQUEST.value(),
+						utility.getMessage("forum.message.error.empty.null.field", null),
+						e.getFieldErrors().stream().map(ErrorDTO::new).collect(Collectors.toList())));
+	}
+
+	@ExceptionHandler(BindException.class)
+	public ResponseEntity<BadRequestDTO> handleBindException(BindException e) {
 		return ResponseEntity.badRequest()
 				.body(new BadRequestDTO(HttpStatus.BAD_REQUEST.value(),
 						utility.getMessage("forum.message.error.empty.null.field", null),
@@ -89,6 +98,13 @@ public class ForumExceptionHandler {
 				.body(new GeneralErrorDTO(HttpStatus.BAD_REQUEST.value(),
 						utility.getMessage("forum.message.error.logging", null),
 						utility.getMessage("forum.message.error.invalid.credentials", null)));
+	}
+
+	@ExceptionHandler(NullPointerException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<GeneralErrorDTO> handleNullPointerException(Exception e) {
+		return ResponseEntity.internalServerError().body(new GeneralErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+				utility.getMessage("forum.message.error.general", null), e.getMessage()));
 	}
 
 	@ExceptionHandler(Exception.class)
