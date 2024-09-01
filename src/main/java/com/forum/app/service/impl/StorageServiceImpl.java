@@ -10,6 +10,8 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+import javax.transaction.Transactional;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -32,15 +34,18 @@ public class StorageServiceImpl implements StorageService {
 	private final Utility utility;
 	private final UserService userService;
 	private final DocumentRepository documentRepository;
+	private final DocumentServiceImpl documentServiceImpl;
 
 	public StorageServiceImpl(StorageProperties properties, Utility utility, UserService userService,
-			DocumentRepository documentRepository) {
+			DocumentRepository documentRepository, DocumentServiceImpl documentServiceImpl) {
 		this.rootLocation = Paths.get(properties.getLocation());
 		this.utility = utility;
 		this.userService = userService;
 		this.documentRepository = documentRepository;
+		this.documentServiceImpl = documentServiceImpl;
 	}
 
+	@Transactional
 	@Override
 	public DocumentResponseDTO save(FileUploadDTO payload, Long idUser) {
 		try {
@@ -114,21 +119,24 @@ public class StorageServiceImpl implements StorageService {
 		try {
 			Path filePath = load(userCode, fileName);
 			Files.delete(filePath);
+			documentServiceImpl.deleteDocument(filePath.toString());
 		} catch (IOException e) {
 			throw new OwnRuntimeException(
-					utility.getMessage("forum.message.error.file.not.found", null) + " " + fileName);
+					utility.getMessage("forum.message.error.file.not.found", new Object[] { fileName }));
+		} catch (Exception e) {
+			throw new OwnRuntimeException(
+					utility.getMessage("forum.message.error.deleting.file", new Object[] { fileName }));
 		}
 	}
 
 	@Override
 	public Document setDocumentData(String code, String documentType, String documentName, String path) {
-		LocalDateTime currentDate = LocalDateTime.now();
 		Document document = new Document();
 		document.setUserCode(code);
 		document.setDocumentType(documentType);
 		document.setDocumentName(documentName);
 		document.setDocumentPath(path);
-		document.setCreationDate(currentDate);
+		document.setCreationDate(LocalDateTime.now());
 		document.setDeleted(false);
 		return document;
 	}

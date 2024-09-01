@@ -59,7 +59,7 @@ public class FileUploadController {
 	public ResponseEntity<DocumentResponseDTO> saveFile(@ModelAttribute @Valid FileUploadDTO payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		if (payload.getFile() == null) {
-			throw new NullPointerException(utility.getMessage("forum.message.error.file", null));
+			throw new NullPointerException(utility.getMessage("forum.message.warn.file", null));
 		}
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) authentication.getPrincipal();
