@@ -24,9 +24,12 @@ import com.forum.app.dto.RoleDTO;
 import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
+import com.forum.app.entity.Document;
 import com.forum.app.entity.User;
+import com.forum.app.enumeration.GeneralEnum;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.exception.PasswordException;
+import com.forum.app.repository.DocumentRepository;
 import com.forum.app.repository.UserRepository;
 import com.forum.app.service.UserService;
 import com.forum.app.utils.Utility;
@@ -37,11 +40,14 @@ public class UserServiceImpl implements UserService {
 	private final Utility utility;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final DocumentRepository documentRepository;
 
-	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder,
+			DocumentRepository documentRepository) {
 		this.utility = utility;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.documentRepository = documentRepository;
 	}
 
 	@Transactional
@@ -53,6 +59,7 @@ public class UserServiceImpl implements UserService {
 			}
 			User newUser = setUserData(payload);
 			User user = userRepository.save(newUser);
+			savePhoto(user.getId());
 			return new UserResponseDTO(user);
 		} catch (PasswordException e) {
 			throw e;
@@ -61,6 +68,16 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.user", null));
 		}
+	}
+
+	private void savePhoto(Long userId) {
+		Document doc = new Document();
+		doc.setUserId(userId);
+		doc.setDocumentType("PNG");
+		doc.setDocumentName("USER_IMAGE");
+		doc.setDocumentPath(GeneralEnum.BLANK_IMG.getMessageKey());
+		doc.setCreationDate(LocalDateTime.now());
+		documentRepository.save(doc);
 	}
 
 	private User setUserData(UserDTO payload) {
@@ -76,7 +93,6 @@ public class UserServiceImpl implements UserService {
 		newUser.setCityId(null);
 		newUser.setNumberQuestions(0);
 		newUser.setNumberResponses(0);
-		newUser.setPhoto(payload.getPhoto());
 		newUser.setRole(payload.getRole());
 		newUser.setCreatedAt(LocalDateTime.now());
 		newUser.setDeleted(false);

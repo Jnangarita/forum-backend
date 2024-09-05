@@ -58,9 +58,6 @@ public class User implements UserDetails {
 	@Column(name = "numero_respuestas")
 	private Integer numberResponses;
 
-	@Column(name = "foto", length = 100)
-	private String photo;
-
 	@Column(name = "id_rol", nullable = false)
 	private Integer role;
 

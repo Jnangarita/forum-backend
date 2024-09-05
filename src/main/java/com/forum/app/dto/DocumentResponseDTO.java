@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class DocumentResponseDTO {
 	private Integer idDocument;
-	private String userCode;
+	private Long userId;
 	private String documentType;
 	private String documentName;
 	private String documentPath;
@@ -17,7 +17,7 @@ public class DocumentResponseDTO {
 
 	public DocumentResponseDTO(Document document) {
 		this.idDocument = document.getIdDocument();
-		this.userCode = document.getUserCode();
+		this.userId = document.getUserId();
 		this.documentType = document.getDocumentType();
 		this.documentName = document.getDocumentName();
 		this.documentPath = document.getDocumentPath();

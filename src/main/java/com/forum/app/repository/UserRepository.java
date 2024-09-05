@@ -26,7 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ " u.id,"
 			+ " u.numero_preguntas,"
 			+ " u.numero_respuestas,"
-			+ " u.foto,"
+			+ " d.ruta_documento AS foto,"
 			+ " u.eliminado,"
 			+ " u.primer_nombre,"
 			+ " u.apellido,"
@@ -37,6 +37,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "INNER JOIN rol r ON u.id_rol = r.id "
 			+ "LEFT JOIN paises p ON p.id = u.id_pais "
 			+ "LEFT JOIN ciudades c ON c.id = u.id_ciudad "
+			+ "LEFT JOIN documento d ON d.id_usuario = u.id "
 			+ "WHERE u.id = :id", nativeQuery = true)
 	Map<String, Object> findUserInformationById(@Param("id") Long id);
 

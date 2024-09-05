@@ -43,13 +43,12 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public TopicResponseDTO createTopic(SaveTopicDTO payload) {
 		try {
-			LocalDateTime currentDate = LocalDateTime.now();
 			Topic newTopic = new Topic();
 			newTopic.setIdCategory(payload.getIdCategory());
 			newTopic.setQuestion(payload.getQuestion());
 			newTopic.setIdUser(payload.getIdUser());
 			newTopic.setQuestionStatus(QuestionStatus.UNANSWERED.getStatus());
-			newTopic.setCreationDate(currentDate);
+			newTopic.setCreationDate(LocalDateTime.now());
 			newTopic.setDeleted(false);
 			Topic topic = topicRepository.save(newTopic);
 			return new TopicResponseDTO(topic);
@@ -76,11 +75,10 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public TopicResponseDTO updateTopic(UpdateTopicDTO payload) {
 		try {
-			LocalDateTime currentDate = LocalDateTime.now();
 			Topic topic = getTopicById(payload.getIdQuestion());
 			topic.setIdCategory(payload.getIdCategory());
 			topic.setQuestion(payload.getQuestion());
-			topic.setModificationDate(currentDate);
+			topic.setModificationDate(LocalDateTime.now());
 			return new TopicResponseDTO(topic);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();

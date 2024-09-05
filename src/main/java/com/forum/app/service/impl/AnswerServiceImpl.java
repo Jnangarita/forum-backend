@@ -35,13 +35,12 @@ public class AnswerServiceImpl implements AnswerService {
 	@Override
 	public AnswerResponseDTO createAnswer(AnswerDTO payload) {
 		try {
-			LocalDateTime currentDate = LocalDateTime.now();
 			Answer newAnswer = new Answer();
 			newAnswer.setIdQuestion(payload.getIdQuestion());
 			newAnswer.setAnswerTxt(payload.getAnswerTxt());
 			newAnswer.setIdUser(payload.getIdUser());
 			newAnswer.setAnswerStatus(AnswerStatus.SENT.getStatus());
-			newAnswer.setCreationDate(currentDate);
+			newAnswer.setCreationDate(LocalDateTime.now());
 			newAnswer.setDeleted(false);
 			Answer answer = answerRepository.save(newAnswer);
 			return new AnswerResponseDTO(answer);
@@ -73,10 +72,9 @@ public class AnswerServiceImpl implements AnswerService {
 	@Override
 	public AnswerResponseDTO updateAnswer(UpdateAnswerDTO payload) {
 		try {
-			LocalDateTime currenDate = LocalDateTime.now();
 			Answer updateAnswer = findAnswerById(payload.getIdAnswer());
 			updateAnswer.setAnswerTxt(payload.getAnswerTxt());
-			updateAnswer.setModificationDate(currenDate);
+			updateAnswer.setModificationDate(LocalDateTime.now());
 			Answer answer = answerRepository.save(updateAnswer);
 			return new AnswerResponseDTO(answer);
 		} catch (EntityNotFoundException e) {

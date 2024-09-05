@@ -13,8 +13,8 @@ public class Document {
 	@Column(name = "id_documento")
 	private Integer idDocument;
 
-	@Column(name = "codigo_usuario")
-	private String userCode;
+	@Column(name = "id_usuario")
+	private Long userId;
 
 	@Column(name = "tipo_documento")
 	private String documentType;
@@ -30,7 +30,4 @@ public class Document {
 
 	@Column(name = "fecha_modificacion")
 	private LocalDateTime modificationDate;
-
-	@Column(name = "eliminado")
-	private Boolean deleted;
 }

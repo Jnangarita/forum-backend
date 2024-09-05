@@ -26,12 +26,10 @@ public class UserResponseDTO {
 
 	public UserResponseDTO(User user) {
 		this.code = user.getCode();
-//		this.country = user.getCountry();
 		this.email = user.getEmail();
 		this.id = user.getId();
 		this.numberQuestions = user.getNumberQuestions();
 		this.numberResponses = user.getNumberResponses();
-		this.photo = user.getPhoto();
 		this.deleted = user.isDeleted();
 		this.userName = user.getFirstName() + " " + user.getLastName();
 	}

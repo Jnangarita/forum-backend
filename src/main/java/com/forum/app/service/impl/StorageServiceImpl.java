@@ -51,20 +51,20 @@ public class StorageServiceImpl implements StorageService {
 		try {
 			User user = userService.findUser(idUser);
 			Path userDirectory = this.rootLocation.resolve(user.getCode()).normalize().toAbsolutePath();
+			String fileName = payload.getFile().getOriginalFilename();
 			if (!Files.exists(userDirectory)) {
 				Files.createDirectories(userDirectory);
 			}
-			Path destinationFile = userDirectory.resolve(Paths.get(payload.getFile().getOriginalFilename())).normalize()
-					.toAbsolutePath();
+			Path destinationFile = userDirectory.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
 			if (Files.exists(destinationFile)) {
-				throw new OwnRuntimeException(utility.getMessage("forum.message.warn.file.already.exists",
-						new Object[] { payload.getFile().getOriginalFilename() }));
+				throw new OwnRuntimeException(
+						utility.getMessage("forum.message.warn.file.already.exists", new Object[] { fileName }));
 			}
 			try (InputStream inputStream = payload.getFile().getInputStream()) {
 				init();
 				Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-				Document document = documentRepository.save(setDocumentData(user.getCode(), payload.getDocumentType(),
-						payload.getFile().getOriginalFilename(), destinationFile.toString()));
+				Document document = documentRepository.save(setDocumentData(user.getId(), payload.getDocumentType(),
+						fileName, destinationFile.toString()));
 				return new DocumentResponseDTO(document);
 			}
 		} catch (IOException e) {
@@ -129,15 +129,13 @@ public class StorageServiceImpl implements StorageService {
 		}
 	}
 
-	@Override
-	public Document setDocumentData(String code, String documentType, String documentName, String path) {
+	private Document setDocumentData(Long userId, String documentType, String documentName, String path) {
 		Document document = new Document();
-		document.setUserCode(code);
+		document.setUserId(userId);
 		document.setDocumentType(documentType);
 		document.setDocumentName(documentName);
 		document.setDocumentPath(path);
 		document.setCreationDate(LocalDateTime.now());
-		document.setDeleted(false);
 		return document;
 	}
 }

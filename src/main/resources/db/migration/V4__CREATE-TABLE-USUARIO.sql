@@ -10,7 +10,6 @@ CREATE TABLE usuario (
     id_ciudad INT NULL,
     numero_preguntas INT NULL,
     numero_respuestas INT NULL,
-    foto VARCHAR(100) NULL,
     id_rol INT NOT NULL,
     fecha_creacion TIMESTAMP,
     fecha_modificacion TIMESTAMP,

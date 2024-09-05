@@ -7,7 +7,6 @@ import org.springframework.core.io.Resource;
 
 import com.forum.app.dto.DocumentResponseDTO;
 import com.forum.app.dto.FileUploadDTO;
-import com.forum.app.entity.Document;
 
 public interface StorageService {
 
@@ -22,6 +21,4 @@ public interface StorageService {
 	Stream<Path> loadAllFiles(String userCode);
 
 	void deleteFile(String userCode, String fileName);
-
-	Document setDocumentData(String code, String documentType, String documentName, String path);
 }
