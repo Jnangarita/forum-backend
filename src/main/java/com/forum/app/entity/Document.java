@@ -27,7 +27,4 @@ public class Document {
 
 	@Column(name = "fecha_creacion")
 	private LocalDateTime creationDate;
-
-	@Column(name = "fecha_modificacion")
-	private LocalDateTime modificationDate;
 }

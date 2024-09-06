@@ -43,7 +43,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query(value = "SELECT"
 			+ " u.id,"
-			+ " u.foto,"
+			+ " d.ruta_documento AS foto,"
 			+ " u.id_pais,"
 			+ " CONCAT(u.primer_nombre, ' ', u.apellido) AS nombre_usuario,"
 			+ " 0 AS reputacion,"
@@ -52,6 +52,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "   'id', c.id,"
 			+ "   'value', c.nombre_categoria)) AS categorias "
 			+ "FROM usuario u "
+			+ "LEFT JOIN documento d ON u.id = d.id_usuario "
 			+ "LEFT JOIN ("
 			+ " SELECT DISTINCT"
 			+ "  p.id_usuario,"
@@ -62,6 +63,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ " INNER JOIN categoria c ON p.id_categoria = c.id"
 			+ " WHERE p.eliminado = FALSE) c ON u.id = c.id_usuario "
 			+ "WHERE u.eliminado = FALSE "
-			+ "GROUP BY u.id, u.foto, u.id_pais, u.primer_nombre, u.apellido;", nativeQuery = true)
+			+ "GROUP BY u.id, d.ruta_documento, u.id_pais, u.primer_nombre, u.apellido;", nativeQuery = true)
 	List<Map<String, Object>> userInfoList();
 }

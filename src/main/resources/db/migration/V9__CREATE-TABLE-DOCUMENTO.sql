@@ -5,6 +5,5 @@ CREATE TABLE documento (
 	nombre_documento VARCHAR(50) NOT NULL,
 	ruta_documento VARCHAR(255) NOT NULL,
     fecha_creacion TIMESTAMP,
-    fecha_modificacion TIMESTAMP,
     CONSTRAINT fk_codigo_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id)
 );

@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.forum.app.config.StorageProperties;
@@ -63,12 +64,14 @@ public class StorageServiceImpl implements StorageService {
 			try (InputStream inputStream = payload.getFile().getInputStream()) {
 				init();
 				Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-				Document document = documentRepository.save(setDocumentData(user.getId(), payload.getDocumentType(),
-						fileName, destinationFile.toString()));
+				Document document = documentRepository.save(
+						setDocumentData(user.getId(), payload.getDocumentType(), fileName, destinationFile.toString()));
 				return new DocumentResponseDTO(document);
 			}
 		} catch (IOException e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.storing.file", null) + e);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		}
 	}
 
