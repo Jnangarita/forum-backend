@@ -53,10 +53,13 @@ public class StorageServiceImpl implements StorageService {
 			User user = userService.findUser(idUser);
 			Path userDirectory = this.rootLocation.resolve(user.getCode()).normalize().toAbsolutePath();
 			String fileName = payload.getFile().getOriginalFilename();
+			Path destinationFile = userDirectory.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
+			String fileExtension = utility.getFileExtension(fileName).toUpperCase();
+			Document document = documentRepository
+					.save(setDocumentData(user.getId(), fileExtension, fileName, destinationFile.toString()));
 			if (!Files.exists(userDirectory)) {
 				Files.createDirectories(userDirectory);
 			}
-			Path destinationFile = userDirectory.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
 			if (Files.exists(destinationFile)) {
 				throw new OwnRuntimeException(
 						utility.getMessage("forum.message.warn.file.already.exists", new Object[] { fileName }));
@@ -64,8 +67,6 @@ public class StorageServiceImpl implements StorageService {
 			try (InputStream inputStream = payload.getFile().getInputStream()) {
 				init();
 				Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
-				Document document = documentRepository.save(
-						setDocumentData(user.getId(), payload.getDocumentType(), fileName, destinationFile.toString()));
 				return new DocumentResponseDTO(document);
 			}
 		} catch (IOException e) {

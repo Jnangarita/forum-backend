@@ -35,4 +35,11 @@ public class Utility {
 	public String getMessage(String messageKey, Object[] arr) {
 		return messageSource.getMessage(messageKey, arr, LocaleContextHolder.getLocale());
 	}
+
+	public String getFileExtension(String fileName) {
+		if (fileName == null) {
+			throw new NullPointerException(getMessage("forum.message.warn.file.not.empty", null));
+		}
+		return fileName.lastIndexOf('.') != -1 ? fileName.substring(fileName.lastIndexOf('.') + 1) : "";
+	}
 }
