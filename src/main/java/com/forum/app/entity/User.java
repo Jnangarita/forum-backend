@@ -1,24 +1,28 @@
 package com.forum.app.entity;
 
-import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import javax.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import com.forum.app.entity.base.Audit;
+
 import java.util.Collection;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "usuario")
-public class User implements UserDetails {
+public class User extends Audit implements UserDetails {
 	/**
 	 * 
 	 */
@@ -60,15 +64,6 @@ public class User implements UserDetails {
 
 	@Column(name = "id_rol", nullable = false)
 	private Integer role;
-
-	@Column(name = "fecha_creacion")
-	private LocalDateTime createdAt;
-
-	@Column(name = "fecha_modificacion")
-	private LocalDateTime updatedAt;
-
-	@Column(name = "eliminado")
-	private boolean deleted;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

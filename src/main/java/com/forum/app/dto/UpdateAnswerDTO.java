@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class UpdateAnswerDTO {
 	@NotNull
-	private Long idAnswer;
+	private Long answerId;
 
 	@NotBlank
 	private String answerTxt;

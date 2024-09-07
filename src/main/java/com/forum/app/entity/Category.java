@@ -1,16 +1,19 @@
 package com.forum.app.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
-@Data
+import com.forum.app.entity.base.Audit;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "categoria")
-public class Category {
+public class Category extends Audit {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -26,23 +29,4 @@ public class Category {
 
 	@Column(name = "usuario_modificador")
 	private Long modifiedBy;
-
-	@Column(name = "fecha_creacion", updatable = false)
-	private LocalDateTime createdDate;
-
-	@Column(name = "fecha_modificacion", nullable = false)
-	private LocalDateTime modifiedDate;
-
-	@Column(name = "eliminado")
-	private boolean deleted;
-
-	@PrePersist
-	protected void onCreate() {
-		this.createdDate = LocalDateTime.now();
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		this.modifiedDate = LocalDateTime.now();
-	}
 }

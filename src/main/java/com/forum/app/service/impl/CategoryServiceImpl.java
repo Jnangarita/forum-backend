@@ -40,7 +40,6 @@ public class CategoryServiceImpl implements CategoryService {
 			newCategory.setCategoryName(payload.getCategoryName());
 			newCategory.setDescription(payload.getDescription());
 			newCategory.setCreatedBy(payload.getCreatedBy());
-			newCategory.setDeleted(false);
 			Category category = categoryRepository.save(newCategory);
 			return new CategoryResponseDTO(category);
 		} catch (DataIntegrityViolationException e) {

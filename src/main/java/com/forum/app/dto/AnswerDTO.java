@@ -10,11 +10,11 @@ import lombok.Setter;
 @Setter
 public class AnswerDTO {
 	@NotNull
-    private Long idQuestion;
+    private Long questionId;
 
 	@NotBlank
     private String answerTxt;
 
 	@NotNull
-    private Long idUser;
+    private Long userId;
 }

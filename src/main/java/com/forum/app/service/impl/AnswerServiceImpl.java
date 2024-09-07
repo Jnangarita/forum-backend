@@ -1,6 +1,5 @@
 package com.forum.app.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +35,10 @@ public class AnswerServiceImpl implements AnswerService {
 	public AnswerResponseDTO createAnswer(AnswerDTO payload) {
 		try {
 			Answer newAnswer = new Answer();
-			newAnswer.setIdQuestion(payload.getIdQuestion());
+			newAnswer.setQuestionId(payload.getQuestionId());
 			newAnswer.setAnswerTxt(payload.getAnswerTxt());
-			newAnswer.setIdUser(payload.getIdUser());
+			newAnswer.setUserId(payload.getUserId());
 			newAnswer.setAnswerStatus(AnswerStatus.SENT.getStatus());
-			newAnswer.setCreationDate(LocalDateTime.now());
-			newAnswer.setDeleted(false);
 			Answer answer = answerRepository.save(newAnswer);
 			return new AnswerResponseDTO(answer);
 		} catch (DataIntegrityViolationException e) {
@@ -72,9 +69,8 @@ public class AnswerServiceImpl implements AnswerService {
 	@Override
 	public AnswerResponseDTO updateAnswer(UpdateAnswerDTO payload) {
 		try {
-			Answer updateAnswer = findAnswerById(payload.getIdAnswer());
+			Answer updateAnswer = findAnswerById(payload.getAnswerId());
 			updateAnswer.setAnswerTxt(payload.getAnswerTxt());
-			updateAnswer.setModificationDate(LocalDateTime.now());
 			Answer answer = answerRepository.save(updateAnswer);
 			return new AnswerResponseDTO(answer);
 		} catch (EntityNotFoundException e) {

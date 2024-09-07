@@ -21,12 +21,12 @@ public class AnswerResponseDTO {
 
 	public AnswerResponseDTO(Answer answer) {
 		this.id = answer.getId();
-		this.idQuestion = answer.getIdQuestion();
+		this.idQuestion = answer.getQuestionId();
 		this.answerTxt = answer.getAnswerTxt();
-		this.idUser = answer.getIdUser();
+		this.idUser = answer.getUserId();
 		this.answerStatus = answer.getAnswerStatus();
-		this.creationDate = answer.getCreationDate();
-		this.modificationDate = answer.getModificationDate();
+		this.creationDate = answer.getCreatedAt();
+		this.modificationDate = answer.getUpdatedAt();
 		this.deleted = answer.isDeleted();
 	}
 }

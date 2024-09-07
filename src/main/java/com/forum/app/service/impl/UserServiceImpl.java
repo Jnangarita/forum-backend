@@ -1,6 +1,5 @@
 package com.forum.app.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,8 +76,6 @@ public class UserServiceImpl implements UserService {
 		newUser.setNumberQuestions(0);
 		newUser.setNumberResponses(0);
 		newUser.setRole(payload.getRole());
-		newUser.setCreatedAt(LocalDateTime.now());
-		newUser.setDeleted(false);
 		return newUser;
 	}
 
@@ -154,7 +151,6 @@ public class UserServiceImpl implements UserService {
 		user.setEmail(payload.getEmail());
 		user.setCountryId(payload.getCountry().getId());
 		user.setCityId(payload.getCity().getId());
-		user.setUpdatedAt(LocalDateTime.now());
 	}
 
 	@Override
@@ -221,6 +217,5 @@ public class UserServiceImpl implements UserService {
 
 	private void setPasswordData(User user, String newPassword) {
 		user.setPassword(passwordEncoder.encode(newPassword));
-		user.setUpdatedAt(LocalDateTime.now());
 	}
 }

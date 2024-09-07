@@ -19,6 +19,6 @@ public class CategoryResponseDTO {
 		this.id = category.getId();
 		this.categoryName = category.getCategoryName();
 		this.description = category.getDescription();
-		this.time = category.getCreatedDate();
+		this.time = category.getCreatedAt();
 	}
 }
