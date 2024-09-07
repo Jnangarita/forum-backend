@@ -11,9 +11,9 @@ import lombok.Setter;
 @Setter
 public class TopicResponseDTO {
 	private Long id;
-	private Long idCategory;
+	private Long categoryId;
 	private String question;
-	private Long idUser;
+	private Long userId;
 	private char questionStatus;
 	private LocalDateTime creationDate;
 	private LocalDateTime modificationDate;
@@ -21,12 +21,12 @@ public class TopicResponseDTO {
 
 	public TopicResponseDTO(Topic topic) {
 		this.id = topic.getId();
-		this.idCategory = topic.getIdCategory();
+		this.categoryId = topic.getCategoryId();
 		this.question = topic.getQuestion();
-		this.idUser = topic.getIdUser();
+		this.userId = topic.getUserId();
 		this.questionStatus = topic.getQuestionStatus();
-		this.creationDate = topic.getCreationDate();
-		this.modificationDate = topic.getModificationDate();
+		this.creationDate = topic.getCreatedAt();
+		this.modificationDate = topic.getUpdatedAt();
 		this.deleted = topic.isDeleted();
 	}
 }

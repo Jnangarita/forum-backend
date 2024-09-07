@@ -44,12 +44,11 @@ public class TopicServiceImpl implements TopicService {
 	public TopicResponseDTO createTopic(SaveTopicDTO payload) {
 		try {
 			Topic newTopic = new Topic();
-			newTopic.setIdCategory(payload.getIdCategory());
+			newTopic.setCategoryId(payload.getCategoryId());
+			newTopic.setTitleQuestion(payload.getTitleQuestion());
 			newTopic.setQuestion(payload.getQuestion());
-			newTopic.setIdUser(payload.getIdUser());
+			newTopic.setUserId(payload.getUserId());
 			newTopic.setQuestionStatus(QuestionStatus.UNANSWERED.getStatus());
-			newTopic.setCreationDate(LocalDateTime.now());
-			newTopic.setDeleted(false);
 			Topic topic = topicRepository.save(newTopic);
 			return new TopicResponseDTO(topic);
 		} catch (DataIntegrityViolationException e) {
@@ -75,10 +74,9 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public TopicResponseDTO updateTopic(UpdateTopicDTO payload) {
 		try {
-			Topic topic = getTopicById(payload.getIdQuestion());
-			topic.setIdCategory(payload.getIdCategory());
+			Topic topic = getTopicById(payload.getCategoryId());
+			topic.setCategoryId(payload.getCategoryId());
 			topic.setQuestion(payload.getQuestion());
-			topic.setModificationDate(LocalDateTime.now());
 			return new TopicResponseDTO(topic);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();

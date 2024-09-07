@@ -10,11 +10,14 @@ import lombok.Setter;
 @Setter
 public class SaveTopicDTO {
 	@NotNull
-	Long idCategory;
+	private Long categoryId;
 
 	@NotBlank
-	String question;
+	private String titleQuestion;
+
+	@NotBlank
+	private String question;
 
 	@NotNull
-	Long idUser;
+	private Long userId;
 }

@@ -1,13 +1,13 @@
 package com.forum.app.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.forum.app.entity.base.Audit;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,29 +16,23 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "pregunta")
-public class Topic {
+public class Topic extends Audit {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(name = "titulo_pregunta")
+	private String titleQuestion;
+
 	@Column(name = "id_categoria")
-	private Long idCategory;
+	private Long categoryId;
 
 	@Column(name = "pregunta")
 	private String question;
 
 	@Column(name = "id_usuario")
-	private Long idUser;
+	private Long userId;
 
 	@Column(name = "estado_pregunta")
 	private char questionStatus;
-
-	@Column(name = "fecha_creacion")
-	private LocalDateTime creationDate;
-
-	@Column(name = "fecha_modificacion")
-	private LocalDateTime modificationDate;
-
-	@Column(name = "eliminado")
-	private boolean deleted;
 }
