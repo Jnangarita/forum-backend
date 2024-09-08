@@ -18,7 +18,7 @@ public class Utility {
 	}
 
 	public String getCustomErrorMessage(DataIntegrityViolationException e) {
-		String description = e.getMessage();
+		String description = e.getCause() != null ? e.getCause().getCause().getLocalizedMessage() : e.getMessage();
 		if (description != null) {
 			Pattern pattern = Pattern.compile("FOREIGN KEY \\(`(.*?)`\\) REFERENCES `(.*?)`");
 			Matcher matcher = pattern.matcher(description);
