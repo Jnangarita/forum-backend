@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.AnswerDTO;
-import com.forum.app.dto.AnswerResponseDTO;
 import com.forum.app.dto.UpdateAnswerDTO;
+import com.forum.app.dto.response.AnswerResponseDTO;
 import com.forum.app.service.AnswerService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,10 +61,12 @@ public class AnswerController {
 	}
 
 	@Operation(summary = "Update an answer")
-	@PutMapping
+	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<AnswerResponseDTO> updateAnswer(@RequestBody @Valid UpdateAnswerDTO payload) {
-		AnswerResponseDTO answer = answerService.updateAnswer(payload);
+	public ResponseEntity<AnswerResponseDTO> updateAnswer(
+			@Parameter(description = "Id of the answer to be updated") @PathVariable Long id,
+			@RequestBody @Valid UpdateAnswerDTO payload) {
+		AnswerResponseDTO answer = answerService.updateAnswer(id, payload);
 		return ResponseEntity.ok(answer);
 	}
 

@@ -1,4 +1,4 @@
-package com.forum.app.dto;
+package com.forum.app.dto.response;
 
 import org.springframework.validation.FieldError;
 

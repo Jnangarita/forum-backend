@@ -1,4 +1,4 @@
-package com.forum.app.dto;
+package com.forum.app.dto.response;
 
 import java.util.List;
 
@@ -7,14 +7,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BadRequestDTO {
-	private Integer code;
-	private String message;
+public class BadRequestDTO extends Error {
 	private List<ErrorDTO> errors;
 
 	public BadRequestDTO(Integer code, String message, List<ErrorDTO> errors) {
-		this.code = code;
-		this.message = message;
+		super(code, message);
 		this.errors = errors;
 	}
 }

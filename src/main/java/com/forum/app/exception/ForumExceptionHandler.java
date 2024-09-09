@@ -18,9 +18,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.forum.app.dto.BadRequestDTO;
-import com.forum.app.dto.ErrorDTO;
-import com.forum.app.dto.GeneralErrorDTO;
+import com.forum.app.dto.response.BadRequestDTO;
+import com.forum.app.dto.response.ErrorDTO;
+import com.forum.app.dto.response.GeneralErrorDTO;
 import com.forum.app.utils.Utility;
 
 @RestControllerAdvice

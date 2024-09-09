@@ -10,8 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.AnswerDTO;
-import com.forum.app.dto.AnswerResponseDTO;
 import com.forum.app.dto.UpdateAnswerDTO;
+import com.forum.app.dto.response.AnswerResponseDTO;
 import com.forum.app.entity.Answer;
 import com.forum.app.enumeration.AnswerStatus;
 import com.forum.app.exception.OwnRuntimeException;
@@ -34,13 +34,10 @@ public class AnswerServiceImpl implements AnswerService {
 	@Override
 	public AnswerResponseDTO createAnswer(AnswerDTO payload) {
 		try {
-			Answer newAnswer = new Answer();
-			newAnswer.setQuestionId(payload.getQuestionId());
-			newAnswer.setAnswerTxt(payload.getAnswerTxt());
-			newAnswer.setUserId(payload.getUserId());
-			newAnswer.setAnswerStatus(AnswerStatus.SENT.getStatus());
+			Answer newAnswer = setAnswer(payload);
 			Answer answer = answerRepository.save(newAnswer);
-			return new AnswerResponseDTO(answer);
+			return new AnswerResponseDTO(answer, utility.getMessage("forum.message.info.created.successfully",
+					new Object[] { utility.getMessage("forum.message.answer", null) }));
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
@@ -48,11 +45,20 @@ public class AnswerServiceImpl implements AnswerService {
 		}
 	}
 
+	private Answer setAnswer(AnswerDTO payload) {
+		Answer newAnswer = new Answer();
+		newAnswer.setQuestionId(payload.getQuestionId());
+		newAnswer.setAnswerTxt(payload.getAnswerTxt());
+		newAnswer.setUserId(payload.getUserId());
+		newAnswer.setAnswerStatus(AnswerStatus.SENT.getStatus());
+		return newAnswer;
+	}
+
 	@Override
 	public AnswerResponseDTO getAnswerById(Long id) {
 		try {
 			Answer answer = findAnswerById(id);
-			return new AnswerResponseDTO(answer);
+			return new AnswerResponseDTO(answer, "");
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
@@ -67,12 +73,13 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Transactional
 	@Override
-	public AnswerResponseDTO updateAnswer(UpdateAnswerDTO payload) {
+	public AnswerResponseDTO updateAnswer(Long id, UpdateAnswerDTO payload) {
 		try {
-			Answer updateAnswer = findAnswerById(payload.getAnswerId());
+			Answer updateAnswer = findAnswerById(id);
 			updateAnswer.setAnswerTxt(payload.getAnswerTxt());
 			Answer answer = answerRepository.save(updateAnswer);
-			return new AnswerResponseDTO(answer);
+			return new AnswerResponseDTO(answer, utility.getMessage("forum.message.info.updated.successfully",
+					new Object[] { utility.getMessage("forum.message.txt.answer", null) }));
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (DataIntegrityViolationException e) {
@@ -88,7 +95,7 @@ public class AnswerServiceImpl implements AnswerService {
 			List<Answer> savedAnswerList = answerRepository.findByDeletedFalse();
 			List<AnswerResponseDTO> answerList = new ArrayList<>();
 			for (Answer answer : savedAnswerList) {
-				AnswerResponseDTO answerDto = new AnswerResponseDTO(answer);
+				AnswerResponseDTO answerDto = new AnswerResponseDTO(answer, "");
 				answerList.add(answerDto);
 			}
 			return answerList;
