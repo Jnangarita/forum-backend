@@ -63,10 +63,12 @@ public class TopicController {
 	}
 
 	@Operation(summary = "Update a question")
-	@PutMapping
+	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<TopicResponseDTO> updateTopic(@RequestBody @Valid UpdateTopicDTO payload) {
-		TopicResponseDTO topic = topicService.updateTopic(payload);
+	public ResponseEntity<TopicResponseDTO> updateTopic(
+			@Parameter(description = "Id of the topic to be updated") @PathVariable Long id,
+			@RequestBody @Valid UpdateTopicDTO payload) {
+		TopicResponseDTO topic = topicService.updateTopic(id, payload);
 		return ResponseEntity.ok(topic);
 	}
 

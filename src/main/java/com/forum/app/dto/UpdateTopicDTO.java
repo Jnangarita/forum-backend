@@ -10,9 +10,6 @@ import lombok.Setter;
 @Setter
 public class UpdateTopicDTO {
 	@NotNull
-	Long questionId;
-
-	@NotNull
 	Long categoryId;
 
 	@NotBlank

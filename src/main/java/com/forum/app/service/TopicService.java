@@ -14,7 +14,7 @@ public interface TopicService {
 
 	TopicResponseDTO getTopic(Long id);
 
-	TopicResponseDTO updateTopic(UpdateTopicDTO payload);
+	TopicResponseDTO updateTopic(Long id, UpdateTopicDTO payload);
 
 	QuestionListDTO getTopicList();
 

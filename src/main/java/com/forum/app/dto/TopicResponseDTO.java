@@ -1,7 +1,6 @@
 package com.forum.app.dto;
 
-import java.time.LocalDateTime;
-
+import com.forum.app.dto.response.ResponseDTO;
 import com.forum.app.entity.Topic;
 
 import lombok.Getter;
@@ -9,24 +8,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TopicResponseDTO {
-	private Long id;
-	private Long categoryId;
+public class TopicResponseDTO extends ResponseDTO {
 	private String question;
-	private Long userId;
 	private char questionStatus;
-	private LocalDateTime creationDate;
-	private LocalDateTime modificationDate;
-	private boolean deleted;
 
-	public TopicResponseDTO(Topic topic) {
-		this.id = topic.getId();
-		this.categoryId = topic.getCategoryId();
+	public TopicResponseDTO(Topic topic, String message) {
+		super(topic.getCreatedAt(), topic.isDeleted(), topic.getId(), message, topic.getUpdatedAt());
 		this.question = topic.getQuestion();
-		this.userId = topic.getUserId();
 		this.questionStatus = topic.getQuestionStatus();
-		this.creationDate = topic.getCreatedAt();
-		this.modificationDate = topic.getUpdatedAt();
-		this.deleted = topic.isDeleted();
 	}
 }

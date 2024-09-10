@@ -43,14 +43,9 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public TopicResponseDTO createTopic(SaveTopicDTO payload) {
 		try {
-			Topic newTopic = new Topic();
-			newTopic.setCategoryId(payload.getCategoryId());
-			newTopic.setTitleQuestion(payload.getTitleQuestion());
-			newTopic.setQuestion(payload.getQuestion());
-			newTopic.setUserId(payload.getUserId());
-			newTopic.setQuestionStatus(QuestionStatus.UNANSWERED.getStatus());
-			Topic topic = topicRepository.save(newTopic);
-			return new TopicResponseDTO(topic);
+			Topic newQuestion = setQuestionData(payload);
+			Topic topic = topicRepository.save(newQuestion);
+			return new TopicResponseDTO(topic, utility.getMessage("forum.message.info.question.created", null));
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
@@ -58,11 +53,21 @@ public class TopicServiceImpl implements TopicService {
 		}
 	}
 
+	private Topic setQuestionData(SaveTopicDTO payload) {
+		Topic newTopic = new Topic();
+		newTopic.setCategoryId(payload.getCategoryId());
+		newTopic.setTitleQuestion(payload.getTitleQuestion());
+		newTopic.setQuestion(payload.getQuestion());
+		newTopic.setUserId(payload.getUserId());
+		newTopic.setQuestionStatus(QuestionStatus.UNANSWERED.getStatus());
+		return newTopic;
+	}
+
 	@Override
 	public TopicResponseDTO getTopic(Long id) {
 		try {
 			Topic topic = getTopicById(id);
-			return new TopicResponseDTO(topic);
+			return new TopicResponseDTO(topic, utility.getMessage("forum.message.info.successful.operation", null));
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
@@ -72,12 +77,12 @@ public class TopicServiceImpl implements TopicService {
 
 	@Transactional
 	@Override
-	public TopicResponseDTO updateTopic(UpdateTopicDTO payload) {
+	public TopicResponseDTO updateTopic(Long id, UpdateTopicDTO payload) {
 		try {
-			Topic topic = getTopicById(payload.getCategoryId());
-			topic.setCategoryId(payload.getCategoryId());
-			topic.setQuestion(payload.getQuestion());
-			return new TopicResponseDTO(topic);
+			Topic question = getTopicById(id);
+			question.setCategoryId(payload.getCategoryId());
+			question.setQuestion(payload.getQuestion());
+			return new TopicResponseDTO(question, utility.getMessage("forum.message.info.question.updated", null));
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (DataIntegrityViolationException e) {

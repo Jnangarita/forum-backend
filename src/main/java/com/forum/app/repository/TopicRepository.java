@@ -30,7 +30,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     		+ " pre.fecha_creacion AS fecha_creacion,"
     		+ " CONCAT(usr.primer_nombre, ' ', usr.apellido) AS nombre_usuario,"
     		+ " usr.id AS id_usuario,"
-    		+ " usr.foto AS foto,"
+    		+ " doc.ruta_documento AS foto,"
     		+ " pre.vistas AS vistas,"
     		+ " pre.votos AS votos,"
     		+ " COUNT(DISTINCT res.id) AS respuestas,"
@@ -45,6 +45,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     		+ "FROM pregunta pre "
     		+ "INNER JOIN usuario usr ON pre.id_usuario = usr.id "
     		+ "LEFT JOIN respuesta res ON pre.id = res.id_pregunta AND res.eliminado = FALSE "
+    		+ "LEFT JOIN documento doc ON usr.id = doc.id_usuario "
     		+ "WHERE pre.eliminado = FALSE "
     		+ "GROUP BY"
     		+ " pre.id,"
@@ -54,7 +55,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     		+ " usr.primer_nombre,"
     		+ " usr.apellido,"
     		+ " usr.id,"
-    		+ " usr.foto,"
+    		+ " doc.ruta_documento,"
     		+ " pre.vistas,"
     		+ " pre.votos;", nativeQuery = true)
     List<Map<String, Object>> getQuestionList();
@@ -64,11 +65,12 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
 
     @Query(value = "SELECT"
     		+ " pre.id,"
-    		+ " usr.foto,"
+    		+ " doc.ruta_documento AS foto,"
     		+ " pre.titulo_pregunta,"
     		+ " CONCAT(usr.primer_nombre, ' ', usr.apellido) AS nombre_usuario "
     		+ "FROM pregunta pre "
     		+ "INNER JOIN usuario usr ON pre.id_usuario = usr.id "
+    		+ "LEFT JOIN documento doc ON usr.id = doc.id_usuario "
     		+ "WHERE pre.eliminado = FALSE AND pre.votos >= 20;", nativeQuery = true)
     List<Map<String, Object>> getPopularQuestion();
 }
