@@ -19,6 +19,7 @@ import com.forum.app.dto.BasicUserInfoDTO;
 import com.forum.app.dto.ChangePasswordDTO;
 import com.forum.app.dto.IdValueDTO;
 import com.forum.app.dto.MessageDTO;
+import com.forum.app.dto.ResetPasswordDTO;
 import com.forum.app.dto.RoleDTO;
 import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
@@ -217,5 +218,18 @@ public class UserServiceImpl implements UserService {
 
 	private void setPasswordData(User user, String newPassword) {
 		user.setPassword(passwordEncoder.encode(newPassword));
+	}
+
+	@Transactional
+	@Override
+	public MessageDTO resetPassword(@Valid ResetPasswordDTO payload) {
+		try {
+			User user = userRepository.getUserByEmail(payload.getEmail());
+			String newPassword = utility.generatePassword();
+			user.setPassword(passwordEncoder.encode(newPassword));
+			return new MessageDTO(utility.getMessage("forum.message.info.password.reset.successfully", null));
+		} catch (Exception e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.resetting.password", null));
+		}
 	}
 }

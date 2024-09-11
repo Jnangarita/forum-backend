@@ -65,4 +65,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "WHERE u.eliminado = FALSE "
 			+ "GROUP BY u.id, d.ruta_documento, u.id_pais, u.primer_nombre, u.apellido;", nativeQuery = true)
 	List<Map<String, Object>> userInfoList();
+
+	@Query(value = "SELECT * FROM usuario u WHERE correo_electronico = :email", nativeQuery = true)
+	User getUserByEmail(@Param("email")String email);
 }

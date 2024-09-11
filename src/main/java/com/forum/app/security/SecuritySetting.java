@@ -23,6 +23,7 @@ public class SecuritySetting {
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorizeRequests -> authorizeRequests.antMatchers(HttpMethod.POST, "/**/login")
 						.permitAll().antMatchers(HttpMethod.POST, "/**/users").permitAll()
+						.antMatchers(HttpMethod.POST, "/**/reset-password").permitAll()
 						.antMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll().anyRequest()
 						.authenticated())
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();

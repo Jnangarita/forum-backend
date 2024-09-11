@@ -22,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.forum.app.dto.BasicUserInfoDTO;
 import com.forum.app.dto.ChangePasswordDTO;
 import com.forum.app.dto.MessageDTO;
+import com.forum.app.dto.ResetPasswordDTO;
 import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
@@ -100,6 +101,15 @@ public class UserController {
 			@Parameter(description = "Id of the user to search") @PathVariable Long id,
 			@RequestBody @Valid ChangePasswordDTO payload) {
 		MessageDTO message = userService.changePassword(id, payload);
+		return ResponseEntity.ok(message);
+	}
+
+	@Operation(summary = "Reset user password")
+	@PostMapping("/reset-password")
+	@ResponseStatus(HttpStatus.OK)
+	@SecurityRequirement(name = "bearer-key")
+	public ResponseEntity<MessageDTO> resetPassword(@RequestBody @Valid ResetPasswordDTO payload) {
+		MessageDTO message = userService.resetPassword(payload);
 		return ResponseEntity.ok(message);
 	}
 }

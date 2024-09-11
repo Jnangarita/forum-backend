@@ -1,5 +1,6 @@
 package com.forum.app.utils;
 
+import java.security.SecureRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,5 +42,24 @@ public class Utility {
 			throw new NullPointerException(getMessage("forum.message.warn.file.not.empty", null));
 		}
 		return fileName.lastIndexOf('.') != -1 ? fileName.substring(fileName.lastIndexOf('.') + 1) : "";
+	}
+
+	public String generatePassword() {
+		final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
+		final String DIGITS = "0123456789";
+
+		final String ALL_CHARACTERS = UPPER_CASE + LOWER_CASE + DIGITS;
+		final int PASSWORD_LENGTH = 8;
+
+		SecureRandom random = new SecureRandom();
+		StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
+
+		for (int i = 0; i < PASSWORD_LENGTH; i++) {
+			int index = random.nextInt(ALL_CHARACTERS.length());
+			password.append(ALL_CHARACTERS.charAt(index));
+		}
+
+		return password.toString();
 	}
 }
