@@ -45,21 +45,13 @@ public class Utility {
 	}
 
 	public String generatePassword() {
-		final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
-		final String DIGITS = "0123456789";
-
-		final String ALL_CHARACTERS = UPPER_CASE + LOWER_CASE + DIGITS;
-		final int PASSWORD_LENGTH = 8;
-
+		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		SecureRandom random = new SecureRandom();
-		StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
-
-		for (int i = 0; i < PASSWORD_LENGTH; i++) {
-			int index = random.nextInt(ALL_CHARACTERS.length());
-			password.append(ALL_CHARACTERS.charAt(index));
+		StringBuilder password = new StringBuilder(8);
+		for (int i = 0; i < 8; i++) {
+			int index = random.nextInt(characters.length());
+			password.append(characters.charAt(index));
 		}
-
 		return password.toString();
 	}
 }
