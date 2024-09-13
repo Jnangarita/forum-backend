@@ -45,11 +45,11 @@ public class Utility {
 	}
 
 	public String generatePassword() {
-		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		SecureRandom random = new SecureRandom();
+		SecureRandom randomNum = new SecureRandom();
 		StringBuilder password = new StringBuilder(8);
+		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		for (int i = 0; i < 8; i++) {
-			int index = random.nextInt(characters.length());
+			int index = randomNum.nextInt(characters.length());
 			password.append(characters.charAt(index));
 		}
 		return password.toString();
