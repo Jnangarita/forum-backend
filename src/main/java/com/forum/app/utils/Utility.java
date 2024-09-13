@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 public class Utility {
 
 	private final MessageSource messageSource;
+	private final SecureRandom randomNum = new SecureRandom();
 
 	public Utility(MessageSource messageSource) {
 		this.messageSource = messageSource;
@@ -45,7 +46,6 @@ public class Utility {
 	}
 
 	public String generatePassword() {
-		SecureRandom randomNum = new SecureRandom();
 		StringBuilder password = new StringBuilder(8);
 		String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		for (int i = 0; i < 8; i++) {

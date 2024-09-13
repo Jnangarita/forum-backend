@@ -224,10 +224,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public MessageDTO resetPassword(@Valid ResetPasswordDTO payload) {
 		try {
-			User user = userRepository.getUserByEmail(payload.getEmail());
+			String email = payload.getEmail();
+			User user = userRepository.getUserByEmail(email);
+			if (user == null) {
+				throw new NullPointerException(
+						utility.getMessage("forum.message.error.null.email", new Object[] { email }));
+			}
 			String newPassword = utility.generatePassword();
 			user.setPassword(passwordEncoder.encode(newPassword));
 			return new MessageDTO(utility.getMessage("forum.message.info.password.reset.successfully", null));
+		} catch (NullPointerException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.resetting.password", null));
 		}
