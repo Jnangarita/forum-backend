@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +39,14 @@ public class UserServiceImpl implements UserService {
 	private final Utility utility;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final JavaMailSender mailSender;
 
-	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder,
+			JavaMailSender mailSender) {
 		this.utility = utility;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.mailSender = mailSender;
 	}
 
 	@Transactional
@@ -232,11 +237,20 @@ public class UserServiceImpl implements UserService {
 			}
 			String newPassword = utility.generatePassword();
 			user.setPassword(passwordEncoder.encode(newPassword));
+			sendMail(email, newPassword);
 			return new MessageDTO(utility.getMessage("forum.message.info.password.reset.successfully", null));
 		} catch (NullPointerException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.resetting.password", null));
 		}
+	}
+
+	private void sendMail(String email, String password) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(email);
+		message.setSubject("Olvido la contraseña");
+		message.setText("Su nueva contraseña es: " + password);
+		mailSender.send(message);
 	}
 }
