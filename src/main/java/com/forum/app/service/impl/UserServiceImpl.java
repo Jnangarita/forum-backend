@@ -233,7 +233,7 @@ public class UserServiceImpl implements UserService {
 			User user = userRepository.getUserByEmail(email);
 			if (user == null) {
 				throw new NullPointerException(
-						utility.getMessage("forum.message.error.null.email", new Object[] { email }));
+						utility.getMessage("forum.message.warn.null.email", new Object[] { email }));
 			}
 			String newPassword = utility.generatePassword();
 			user.setPassword(passwordEncoder.encode(newPassword));
