@@ -212,18 +212,26 @@ public class UserServiceImpl implements UserService {
 	public MessageDTO changePassword(Long id, @Valid ChangePasswordDTO payload) {
 		try {
 			User user = findUser(id);
-			if (!passwordEncoder.matches(payload.getCurrentPassword(), user.getPassword())) {
-				throw new PasswordException(utility.getMessage("forum.message.warn.incorrect.password", null));
-			}
-			if (!payload.getNewPassword().equals(payload.getConfirmPassword())) {
-				throw new PasswordException(utility.getMessage("forum.message.warn.password.not.match", null));
-			}
+			validateCurrentPassword(payload.getCurrentPassword(), user.getPassword());
+			confirmPassword(payload.getNewPassword(), payload.getConfirmPassword());
 			setPasswordData(user, payload.getNewPassword());
 			return new MessageDTO(utility.getMessage("forum.message.info.password.updated.successfully", null));
 		} catch (PasswordException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.password", null));
+		}
+	}
+
+	private void validateCurrentPassword(String newPassword, String confirmPassword) {
+		if (!passwordEncoder.matches(newPassword, confirmPassword)) {
+			throw new PasswordException(utility.getMessage("forum.message.warn.incorrect.password", null));
+		}
+	}
+
+	private void confirmPassword(String newPassword, String confirmPassword) {
+		if (!newPassword.equals(confirmPassword)) {
+			throw new PasswordException(utility.getMessage("forum.message.warn.password.not.match", null));
 		}
 	}
 
