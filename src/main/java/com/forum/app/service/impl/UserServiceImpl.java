@@ -36,6 +36,7 @@ import com.forum.app.exception.PasswordException;
 import com.forum.app.repository.UserRepository;
 import com.forum.app.service.UserService;
 import com.forum.app.utils.Utility;
+import com.forum.app.validation.Validate;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -45,23 +46,23 @@ public class UserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender mailSender;
 	private final TemplateEngine templateEngine;
+	private final Validate validate;
 
 	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder,
-			JavaMailSender mailSender, TemplateEngine templateEngine) {
+			JavaMailSender mailSender, TemplateEngine templateEngine, Validate validate) {
 		this.utility = utility;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.mailSender = mailSender;
 		this.templateEngine = templateEngine;
+		this.validate = validate;
 	}
 
 	@Transactional
 	@Override
 	public UserResponseDTO createUser(UserDTO payload) {
 		try {
-			if (!payload.getPassword().equals(payload.getRepeatPassword())) {
-				throw new PasswordException(utility.getMessage("forum.message.warn.password.not.same", null));
-			}
+			validate.confirmPassword(payload.getPassword(), payload.getRepeatPassword());
 			User newUser = setUserData(payload);
 			User user = userRepository.save(newUser);
 			return new UserResponseDTO(user);
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
 		newUser.setLastName(lastName);
 		newUser.setFullName(firstName + " " + lastName);
 		newUser.setEmail(payload.getEmail());
-		newUser.setPassword(passwordEncoder.encode(payload.getPassword()));
+		setPasswordData(newUser, payload.getPassword());
 		newUser.setCountryId(null);
 		newUser.setCityId(null);
 		newUser.setNumberQuestions(0);
@@ -212,26 +213,14 @@ public class UserServiceImpl implements UserService {
 	public MessageDTO changePassword(Long id, @Valid ChangePasswordDTO payload) {
 		try {
 			User user = findUser(id);
-			validateCurrentPassword(payload.getCurrentPassword(), user.getPassword());
-			confirmPassword(payload.getNewPassword(), payload.getConfirmPassword());
+			validate.currentPassword(payload.getCurrentPassword(), user.getPassword());
+			validate.confirmPassword(payload.getNewPassword(), payload.getConfirmPassword());
 			setPasswordData(user, payload.getNewPassword());
 			return new MessageDTO(utility.getMessage("forum.message.info.password.updated.successfully", null));
 		} catch (PasswordException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.password", null));
-		}
-	}
-
-	private void validateCurrentPassword(String newPassword, String confirmPassword) {
-		if (!passwordEncoder.matches(newPassword, confirmPassword)) {
-			throw new PasswordException(utility.getMessage("forum.message.warn.incorrect.password", null));
-		}
-	}
-
-	private void confirmPassword(String newPassword, String confirmPassword) {
-		if (!newPassword.equals(confirmPassword)) {
-			throw new PasswordException(utility.getMessage("forum.message.warn.password.not.match", null));
 		}
 	}
 
@@ -246,7 +235,7 @@ public class UserServiceImpl implements UserService {
 			String email = payload.getEmail();
 			User user = findUserByEmail(email);
 			String newPassword = utility.generatePassword();
-			user.setPassword(passwordEncoder.encode(newPassword));
+			setPasswordData(user, newPassword);
 			String template = emailTemplate(user.getFirstName(), newPassword);
 			sendMail(email, template);
 			return new MessageDTO(utility.getMessage("forum.message.info.password.reset.successfully", null));
@@ -259,9 +248,7 @@ public class UserServiceImpl implements UserService {
 
 	private User findUserByEmail(String email) {
 		User user = userRepository.getUserByEmail(email);
-		if (user == null) {
-			throw new NullPointerException(utility.getMessage("forum.message.warn.null.email", new Object[] { email }));
-		}
+		validate.emptyEmail(user, email);
 		return user;
 	}
 
