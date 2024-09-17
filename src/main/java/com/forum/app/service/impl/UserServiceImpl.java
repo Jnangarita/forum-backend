@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -40,13 +44,15 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender mailSender;
+	private final TemplateEngine templateEngine;
 
 	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder,
-			JavaMailSender mailSender) {
+			JavaMailSender mailSender, TemplateEngine templateEngine) {
 		this.utility = utility;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.mailSender = mailSender;
+		this.templateEngine = templateEngine;
 	}
 
 	@Transactional
@@ -230,27 +236,44 @@ public class UserServiceImpl implements UserService {
 	public MessageDTO resetPassword(@Valid ResetPasswordDTO payload) {
 		try {
 			String email = payload.getEmail();
-			User user = userRepository.getUserByEmail(email);
-			if (user == null) {
-				throw new NullPointerException(
-						utility.getMessage("forum.message.warn.null.email", new Object[] { email }));
-			}
+			User user = findUserByEmail(email);
 			String newPassword = utility.generatePassword();
 			user.setPassword(passwordEncoder.encode(newPassword));
-			sendMail(email, newPassword);
+			String template = emailTemplate(user.getFirstName(), newPassword);
+			sendMail(email, template);
 			return new MessageDTO(utility.getMessage("forum.message.info.password.reset.successfully", null));
 		} catch (NullPointerException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage("forum.message.error.resetting.password", null));
+			throw new OwnRuntimeException(utility.getExceptionMsg(e, "forum.message.error.resetting.password"));
 		}
 	}
 
-	private void sendMail(String email, String password) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(email);
-		message.setSubject("Olvido la contraseña");
-		message.setText("Su nueva contraseña es: " + password);
-		mailSender.send(message);
+	private User findUserByEmail(String email) {
+		User user = userRepository.getUserByEmail(email);
+		if (user == null) {
+			throw new NullPointerException(utility.getMessage("forum.message.warn.null.email", new Object[] { email }));
+		}
+		return user;
+	}
+
+	private String emailTemplate(String userName, String password) {
+		Context context = new Context();
+		context.setVariable("userName", userName);
+		context.setVariable("password", password);
+		return templateEngine.process("forgetPassword", context);
+	}
+
+	private void sendMail(String email, String content) {
+		try {
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+			helper.setTo(email);
+			helper.setSubject(utility.getMessage("forum.message.info.forgot.password", null));
+			helper.setText(content, true);
+			mailSender.send(mimeMessage);
+		} catch (MessagingException e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.error.sending.email", null));
+		}
 	}
 }

@@ -28,6 +28,8 @@ public class ForumExceptionHandler {
 
 	private static final int BAD_REQUEST = HttpStatus.BAD_REQUEST.value();
 	private static final int INTERNAL_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
+	private static final String GENERAL_ERROR_MSG = "forum.message.error.general";
+	private static final String EMPTY_NULL_FIELD_ERROR_MSG = "forum.message.error.empty.null.field";
 
 	private final Utility utility;
 
@@ -43,14 +45,14 @@ public class ForumExceptionHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<BadRequestDTO> emptyOrNullField(MethodArgumentNotValidException e) {
 		return ResponseEntity.badRequest()
-				.body(new BadRequestDTO(BAD_REQUEST, utility.getMessage("forum.message.error.empty.null.field", null),
+				.body(new BadRequestDTO(BAD_REQUEST, utility.getMessage(EMPTY_NULL_FIELD_ERROR_MSG, null),
 						e.getFieldErrors().stream().map(ErrorDTO::new).collect(Collectors.toList())));
 	}
 
 	@ExceptionHandler(BindException.class)
 	public ResponseEntity<BadRequestDTO> handleBindException(BindException e) {
 		return ResponseEntity.badRequest()
-				.body(new BadRequestDTO(BAD_REQUEST, utility.getMessage("forum.message.error.empty.null.field", null),
+				.body(new BadRequestDTO(BAD_REQUEST, utility.getMessage(EMPTY_NULL_FIELD_ERROR_MSG, null),
 						e.getFieldErrors().stream().map(ErrorDTO::new).collect(Collectors.toList())));
 	}
 
@@ -103,14 +105,14 @@ public class ForumExceptionHandler {
 	@ExceptionHandler(NullPointerException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<GeneralErrorDTO> handleNullPointerException(Exception e) {
-		return ResponseEntity.internalServerError().body(new GeneralErrorDTO(INTERNAL_ERROR,
-				utility.getMessage("forum.message.error.general", null), e.getMessage()));
+		return ResponseEntity.internalServerError()
+				.body(new GeneralErrorDTO(INTERNAL_ERROR, utility.getMessage(GENERAL_ERROR_MSG, null), e.getMessage()));
 	}
 
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<GeneralErrorDTO> handleGenericException(Exception e) {
-		return ResponseEntity.internalServerError().body(new GeneralErrorDTO(INTERNAL_ERROR,
-				utility.getMessage("forum.message.error.general", null), e.getMessage()));
+		return ResponseEntity.internalServerError()
+				.body(new GeneralErrorDTO(INTERNAL_ERROR, utility.getMessage(GENERAL_ERROR_MSG, null), e.getMessage()));
 	}
 }
