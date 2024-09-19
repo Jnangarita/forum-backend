@@ -29,4 +29,6 @@ public interface UserService {
 	MessageDTO changePassword(Long id, ChangePasswordDTO payload);
 
 	MessageDTO resetPassword(@Valid ResetPasswordDTO payload);
+
+	User findUserByEmail(String email);
 }

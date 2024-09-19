@@ -63,7 +63,8 @@ public class UserServiceImpl implements UserService {
 	public UserResponseDTO createUser(UserDTO payload) {
 		try {
 			validate.confirmPassword(payload.getPassword(), payload.getRepeatPassword());
-			User newUser = setUserData(payload);
+			User newUser = new User();
+			setUserData(newUser, payload);
 			User user = userRepository.save(newUser);
 			return new UserResponseDTO(user);
 		} catch (PasswordException e) {
@@ -75,28 +76,25 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private User setUserData(UserDTO payload) {
-		User newUser = new User();
-		String firstName = payload.getFirstName();
-		String lastName = payload.getLastName();
-		newUser.setFirstName(firstName);
-		newUser.setLastName(lastName);
-		newUser.setFullName(firstName + " " + lastName);
-		newUser.setEmail(payload.getEmail());
-		setPasswordData(newUser, payload.getPassword());
-		newUser.setCountryId(null);
-		newUser.setCityId(null);
-		newUser.setNumberQuestions(0);
-		newUser.setNumberResponses(0);
-		newUser.setRole(payload.getRole());
-		return newUser;
+	private void setUserData(User user, UserDTO payload) {
+		user.setFirstName(payload.getFirstName());
+		user.setLastName(payload.getLastName());
+		user.setFullName(user.getFirstName() + " " + user.getLastName());
+		user.setEmail(payload.getEmail());
+		setPasswordData(user, payload.getPassword());
+		user.setCountryId(null);
+		user.setCityId(null);
+		user.setNumberQuestions(0);
+		user.setNumberResponses(0);
+		user.setRole(payload.getRole());
 	}
 
 	@Override
 	public UserResponseDTO getUserById(Long id) {
 		try {
 			Map<String, Object> user = userRepository.findUserInformationById(id);
-			UserResponseDTO dto = setUserByIdData(user);
+			UserResponseDTO dto = new UserResponseDTO();
+			setUserByIdData(dto, user);
 			RoleDTO userRole = new RoleDTO();
 			userRole.setId(((Number) user.get("id_rol")).longValue());
 			userRole.setRoleName(user.get("nombre_rol").toString());
@@ -109,8 +107,7 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private UserResponseDTO setUserByIdData(Map<String, Object> user) {
-		UserResponseDTO dto = new UserResponseDTO();
+	private void setUserByIdData(UserResponseDTO dto, Map<String, Object> user) {
 		dto.setCode(user.get("codigo").toString());
 		dto.setCountry(parseJsonToIdValueDTO((user.get("pais").toString())));
 		dto.setCity(parseJsonToIdValueDTO((user.get("ciudad").toString())));
@@ -123,7 +120,6 @@ public class UserServiceImpl implements UserService {
 		dto.setFirstName(user.get("primer_nombre").toString());
 		dto.setLastName(user.get("apellido").toString());
 		dto.setUserName(user.get("nombre_usuario").toString());
-		return dto;
 	}
 
 	private IdValueDTO parseJsonToIdValueDTO(String jsonString) {
@@ -173,23 +169,29 @@ public class UserServiceImpl implements UserService {
 			List<BasicUserInfoDTO> userList = new ArrayList<>();
 			ObjectMapper objectMapper = new ObjectMapper();
 			for (Map<String, Object> userMap : savedUserList) {
-				Long id = ((Number) userMap.get("id")).longValue();
-				String photo = (String) userMap.get("foto");
-				String city = (String) userMap.get("pais");
-				String userName = (String) userMap.get("nombre_usuario");
-				Integer reputation = ((Number) userMap.get("reputacion")).intValue();
-
-				String categoriesJson = (String) userMap.get("categorias");
-				List<IdValueDTO> categories = objectMapper.readValue(categoriesJson,
-						new TypeReference<List<IdValueDTO>>() {
-						});
-
-				BasicUserInfoDTO userDto = new BasicUserInfoDTO(id, photo, city, userName, reputation, categories);
+				BasicUserInfoDTO userDto = setUserListData(objectMapper, userMap);
 				userList.add(userDto);
 			}
 			return userList;
 		} catch (Exception e) {
-			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.user", null));
+			throw new OwnRuntimeException(utility.getExceptionMsg(e, "forum.message.error.getting.list.user"));
+		}
+	}
+
+	private BasicUserInfoDTO setUserListData(ObjectMapper objectMapper, Map<String, Object> userMap) {
+		try {
+			Long id = ((Number) userMap.get("id")).longValue();
+			String photo = (String) userMap.get("foto");
+			String city = (String) userMap.get("pais");
+			String userName = (String) userMap.get("nombre_usuario");
+			Integer reputation = ((Number) userMap.get("reputacion")).intValue();
+			String categoriesJson = (String) userMap.get("categorias");
+			List<IdValueDTO> categories = objectMapper.readValue(categoriesJson, new TypeReference<List<IdValueDTO>>() {
+			});
+			return new BasicUserInfoDTO(id, photo, city, userName, reputation, categories);
+		} catch (JsonProcessingException e) {
+			throw new OwnRuntimeException(
+					utility.getMessage("forum.message.error.casting.string.to.json.format", null));
 		}
 	}
 
@@ -246,7 +248,8 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private User findUserByEmail(String email) {
+	@Override
+	public User findUserByEmail(String email) {
 		User user = userRepository.getUserByEmail(email);
 		validate.emptyEmail(user, email);
 		return user;
