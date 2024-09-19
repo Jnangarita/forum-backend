@@ -11,16 +11,17 @@ import com.forum.app.dto.ResetPasswordDTO;
 import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
+import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
 
 public interface UserService {
-	UserResponseDTO createUser(UserDTO payload);
+	UserInfoDTO createUser(UserDTO payload);
 
 	UserResponseDTO getUserById(Long id);
 
 	User findUser(Long id);
 
-	UserResponseDTO updateUser(Long id, UpdateUserDTO payload);
+	UserInfoDTO updateUser(Long id, UpdateUserDTO payload);
 
 	List<BasicUserInfoDTO> getUserList();
 

@@ -30,6 +30,7 @@ import com.forum.app.dto.RoleDTO;
 import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
+import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.exception.PasswordException;
@@ -60,13 +61,13 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserResponseDTO createUser(UserDTO payload) {
+	public UserInfoDTO createUser(UserDTO payload) {
 		try {
 			validate.confirmPassword(payload.getPassword(), payload.getRepeatPassword());
 			User newUser = new User();
 			setUserData(newUser, payload);
 			User user = userRepository.save(newUser);
-			return new UserResponseDTO(user);
+			return new UserInfoDTO(user);
 		} catch (PasswordException e) {
 			throw e;
 		} catch (DataIntegrityViolationException e) {
@@ -140,12 +141,12 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserResponseDTO updateUser(Long id, UpdateUserDTO payload) {
+	public UserInfoDTO updateUser(Long id, UpdateUserDTO payload) {
 		try {
 			User userToUpdated = findUser(id);
 			updateUserFields(userToUpdated, payload);
 			User user = userRepository.save(userToUpdated);
-			return new UserResponseDTO(user);
+			return new UserInfoDTO(user);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {

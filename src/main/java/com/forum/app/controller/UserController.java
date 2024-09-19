@@ -26,6 +26,7 @@ import com.forum.app.dto.ResetPasswordDTO;
 import com.forum.app.dto.UpdateUserDTO;
 import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
+import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,9 +48,9 @@ public class UserController {
 	@Operation(summary = "Save a user")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserDTO payload,
+	public ResponseEntity<UserInfoDTO> createUser(@RequestBody @Valid UserDTO payload,
 			UriComponentsBuilder uriComponentsBuilder) {
-		UserResponseDTO user = userService.createUser(payload);
+		UserInfoDTO user = userService.createUser(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/v1/users/{id}").buildAndExpand(user.getId()).toUri();
 		return ResponseEntity.created(url).body(user);
 	}
@@ -68,10 +69,10 @@ public class UserController {
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<UserResponseDTO> updateUser(
+	public ResponseEntity<UserInfoDTO> updateUser(
 			@Parameter(description = "Id of the user to search") @PathVariable Long id,
 			@RequestBody @Valid UpdateUserDTO payload) {
-		UserResponseDTO user = userService.updateUser(id, payload);
+		UserInfoDTO user = userService.updateUser(id, payload);
 		return ResponseEntity.ok(user);
 	}
 
