@@ -11,8 +11,8 @@ public class AnswerResponseDTO extends ResponseDTO {
 	private char answerStatus;
 	private String answerTxt;
 
-	public AnswerResponseDTO(Answer answer, String message) {
-		super(answer.getCreatedAt(), answer.isDeleted(), answer.getId(), message, answer.getUpdatedAt());
+	public AnswerResponseDTO(Answer answer) {
+		super(answer.getCreatedAt(), answer.isDeleted(), answer.getId(), answer.getUpdatedAt());
 		this.answerTxt = answer.getAnswerTxt();
 		this.answerStatus = answer.getAnswerStatus();
 	}

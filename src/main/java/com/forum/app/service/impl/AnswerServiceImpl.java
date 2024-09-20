@@ -36,8 +36,7 @@ public class AnswerServiceImpl implements AnswerService {
 		try {
 			Answer newAnswer = setAnswer(payload);
 			Answer answer = answerRepository.save(newAnswer);
-			return new AnswerResponseDTO(answer, utility.getMessage("forum.message.info.created.successfully",
-					new Object[] { utility.getMessage("forum.message.answer", null) }));
+			return new AnswerResponseDTO(answer);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
@@ -58,7 +57,7 @@ public class AnswerServiceImpl implements AnswerService {
 	public AnswerResponseDTO getAnswerById(Long id) {
 		try {
 			Answer answer = findAnswerById(id);
-			return new AnswerResponseDTO(answer, "");
+			return new AnswerResponseDTO(answer);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
@@ -78,8 +77,7 @@ public class AnswerServiceImpl implements AnswerService {
 			Answer updateAnswer = findAnswerById(id);
 			updateAnswer.setAnswerTxt(payload.getAnswerTxt());
 			Answer answer = answerRepository.save(updateAnswer);
-			return new AnswerResponseDTO(answer, utility.getMessage("forum.message.info.updated.successfully",
-					new Object[] { utility.getMessage("forum.message.txt.answer", null) }));
+			return new AnswerResponseDTO(answer);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (DataIntegrityViolationException e) {
@@ -95,7 +93,7 @@ public class AnswerServiceImpl implements AnswerService {
 			List<Answer> savedAnswerList = answerRepository.findByDeletedFalse();
 			List<AnswerResponseDTO> answerList = new ArrayList<>();
 			for (Answer answer : savedAnswerList) {
-				AnswerResponseDTO answerDto = new AnswerResponseDTO(answer, "");
+				AnswerResponseDTO answerDto = new AnswerResponseDTO(answer);
 				answerList.add(answerDto);
 			}
 			return answerList;

@@ -45,7 +45,7 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			Topic newQuestion = setQuestionData(payload);
 			Topic topic = topicRepository.save(newQuestion);
-			return new TopicResponseDTO(topic, utility.getMessage("forum.message.info.question.created", null));
+			return new TopicResponseDTO(topic);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
@@ -67,7 +67,7 @@ public class TopicServiceImpl implements TopicService {
 	public TopicResponseDTO getTopic(Long id) {
 		try {
 			Topic topic = getTopicById(id);
-			return new TopicResponseDTO(topic, utility.getMessage("forum.message.info.successful.operation", null));
+			return new TopicResponseDTO(topic);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
@@ -82,7 +82,7 @@ public class TopicServiceImpl implements TopicService {
 			Topic question = getTopicById(id);
 			question.setCategoryId(payload.getCategoryId());
 			question.setQuestion(payload.getQuestion());
-			return new TopicResponseDTO(question, utility.getMessage("forum.message.info.question.updated", null));
+			return new TopicResponseDTO(question);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (DataIntegrityViolationException e) {

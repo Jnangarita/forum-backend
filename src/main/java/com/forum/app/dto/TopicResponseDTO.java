@@ -12,8 +12,8 @@ public class TopicResponseDTO extends ResponseDTO {
 	private String question;
 	private char questionStatus;
 
-	public TopicResponseDTO(Topic topic, String message) {
-		super(topic.getCreatedAt(), topic.isDeleted(), topic.getId(), message, topic.getUpdatedAt());
+	public TopicResponseDTO(Topic topic) {
+		super(topic.getCreatedAt(), topic.isDeleted(), topic.getId(), topic.getUpdatedAt());
 		this.question = topic.getQuestion();
 		this.questionStatus = topic.getQuestionStatus();
 	}
