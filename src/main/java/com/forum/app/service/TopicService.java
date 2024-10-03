@@ -7,12 +7,13 @@ import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
+import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.entity.Topic;
 
 public interface TopicService {
 	TopicResponseDTO createTopic(SaveTopicDTO payload);
 
-	TopicResponseDTO getTopic(Long id);
+	QuestionInfoDTO getTopic(Long id);
 
 	TopicResponseDTO updateTopic(Long id, UpdateTopicDTO payload);
 

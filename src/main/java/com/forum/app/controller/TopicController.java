@@ -24,6 +24,7 @@ import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
+import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.service.TopicService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,9 +57,9 @@ public class TopicController {
 	@Operation(summary = "Gets a question by id")
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<TopicResponseDTO> getTopic(
+	public ResponseEntity<QuestionInfoDTO> getTopic(
 			@Parameter(description = "Id of the question to search") @PathVariable Long id) {
-		TopicResponseDTO topic = topicService.getTopic(id);
+		QuestionInfoDTO topic = topicService.getTopic(id);
 		return ResponseEntity.ok(topic);
 	}
 

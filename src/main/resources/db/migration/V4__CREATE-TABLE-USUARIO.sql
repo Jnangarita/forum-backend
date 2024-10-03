@@ -11,6 +11,7 @@ CREATE TABLE usuario (
     numero_preguntas INT NULL,
     numero_respuestas INT NULL,
     id_rol INT NOT NULL,
+    reputacion INT,
     fecha_creacion TIMESTAMP,
     fecha_modificacion TIMESTAMP,
     eliminado BOOLEAN,

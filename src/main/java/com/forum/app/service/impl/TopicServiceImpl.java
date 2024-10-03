@@ -21,6 +21,7 @@ import com.forum.app.dto.QuestionResponseDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
+import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.entity.Topic;
 import com.forum.app.enumeration.QuestionStatus;
 import com.forum.app.exception.OwnRuntimeException;
@@ -64,15 +65,36 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public TopicResponseDTO getTopic(Long id) {
+	public QuestionInfoDTO getTopic(Long id) {
 		try {
-			Topic topic = getTopicById(id);
-			return new TopicResponseDTO(topic);
+			Map<String, Object> question = topicRepository.getInfoQuestion(id);
+			ObjectMapper objectMapper = new ObjectMapper();
+			String categoriesJson = (String) question.get("categorias");
+			LocalDateTime creationDate = ((Timestamp) question.get("fecha_creacion")).toLocalDateTime();
+			boolean dislike = (boolean) question.get("no_me_gusta");
+			Long questionId = ((Number) question.get("id")).longValue();
+			Integer likes = ((Number) question.get("me_gusta")).intValue();
+			LocalDateTime modificationDate = getDate(question, "fecha_modificacion");
+			String photo = (String) question.get("ruta_documento");
+			String content = (String) question.get("pregunta");
+			String title = (String) question.get("titulo_pregunta");
+			Integer reputation = ((Number) question.get("reputacion")).intValue();
+			boolean saved = (boolean) question.get("guardado");
+			String userName = (String) question.get("nombre_usuario");
+			Integer views = ((Number) question.get("vistas")).intValue();
+			List<IdValueDTO> categories = objectMapper.readValue(categoriesJson, new TypeReference<List<IdValueDTO>>() {
+			});
+			return new QuestionInfoDTO(categories, creationDate, dislike, questionId, likes, photo, content, title,
+					reputation, saved, modificationDate, userName, views);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.question", null));
 		}
+	}
+
+	private LocalDateTime getDate(Map<String, Object> result, String column) {
+		return result.get(column) != null ? ((Timestamp) result.get(column)).toLocalDateTime() : null;
 	}
 
 	@Transactional

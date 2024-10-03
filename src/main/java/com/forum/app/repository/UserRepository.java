@@ -46,7 +46,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ " d.ruta_documento AS foto,"
 			+ " u.id_pais,"
 			+ " CONCAT(u.primer_nombre, ' ', u.apellido) AS nombre_usuario,"
-			+ " 0 AS reputacion,"
+			+ " 0 AS reputacion,"//TODO agregar la columna reputación de la tabla usuario
 			+ " JSON_ARRAYAGG("
 			+ "  JSON_OBJECT("
 			+ "   'id', c.id,"
