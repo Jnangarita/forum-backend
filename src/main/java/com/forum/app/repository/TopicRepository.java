@@ -84,7 +84,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     		+ " pre.id,"
     		+ " pre.me_gusta,"
     		+ " pre.fecha_modificacion,"
-    		+ " doc.ruta_documento,"
+    		+ " doc.ruta_documento AS foto,"
     		+ " pre.pregunta,"
     		+ " pre.titulo_pregunta,"
     		+ " usr.reputacion,"

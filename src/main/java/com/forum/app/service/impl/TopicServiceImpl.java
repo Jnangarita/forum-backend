@@ -23,6 +23,7 @@ import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
 import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.entity.Topic;
+import com.forum.app.enumeration.DbColumns;
 import com.forum.app.enumeration.QuestionStatus;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.TopicRepository;
@@ -70,18 +71,18 @@ public class TopicServiceImpl implements TopicService {
 			Map<String, Object> question = topicRepository.getInfoQuestion(id);
 			ObjectMapper objectMapper = new ObjectMapper();
 			String categoriesJson = (String) question.get("categorias");
-			LocalDateTime creationDate = ((Timestamp) question.get("fecha_creacion")).toLocalDateTime();
+			LocalDateTime creationDate = getDate(question, DbColumns.CREATION_DATE.getColumns());
 			boolean dislike = (boolean) question.get("no_me_gusta");
 			Long questionId = ((Number) question.get("id")).longValue();
 			Integer likes = ((Number) question.get("me_gusta")).intValue();
 			LocalDateTime modificationDate = getDate(question, "fecha_modificacion");
-			String photo = (String) question.get("ruta_documento");
+			String photo = (String) question.get(DbColumns.PHOTO.getColumns());
 			String content = (String) question.get("pregunta");
-			String title = (String) question.get("titulo_pregunta");
+			String title = (String) question.get(DbColumns.TITLE_QUESTION.getColumns());
 			Integer reputation = ((Number) question.get("reputacion")).intValue();
 			boolean saved = (boolean) question.get("guardado");
-			String userName = (String) question.get("nombre_usuario");
-			Integer views = ((Number) question.get("vistas")).intValue();
+			String userName = (String) question.get(DbColumns.USER_NAME.getColumns());
+			Integer views = ((Number) question.get(DbColumns.VIEWS.getColumns())).intValue();
 			List<IdValueDTO> categories = objectMapper.readValue(categoriesJson, new TypeReference<List<IdValueDTO>>() {
 			});
 			return new QuestionInfoDTO(categories, creationDate, dislike, questionId, likes, photo, content, title,
@@ -124,13 +125,13 @@ public class TopicServiceImpl implements TopicService {
 			for (Map<String, Object> questionMap : savedQuestionList) {
 				Integer totalAnswer = ((Number) questionMap.get("respuestas")).intValue();
 				Integer questionId = ((Number) questionMap.get("id_pregunta")).intValue();
-				String questionTitle = (String) questionMap.get("titulo_pregunta");
+				String questionTitle = (String) questionMap.get(DbColumns.TITLE_QUESTION.getColumns());
 				String questionStatus = (String) questionMap.get("estado_pregunta");
-				LocalDateTime creationDate = ((Timestamp) questionMap.get("fecha_creacion")).toLocalDateTime();
-				String userName = (String) questionMap.get("nombre_usuario");
+				LocalDateTime creationDate = getDate(questionMap, DbColumns.CREATION_DATE.getColumns());
+				String userName = (String) questionMap.get(DbColumns.USER_NAME.getColumns());
 				Integer userId = ((Number) questionMap.get("id_usuario")).intValue();
-				String photo = (String) questionMap.get("foto");
-				Integer views = ((Number) questionMap.get("vistas")).intValue();
+				String photo = (String) questionMap.get(DbColumns.PHOTO.getColumns());
+				Integer views = ((Number) questionMap.get(DbColumns.VIEWS.getColumns())).intValue();
 				Integer votes = ((Number) questionMap.get("votos")).intValue();
 
 				String categoriesJson = (String) questionMap.get("lista_categoria");
@@ -174,9 +175,9 @@ public class TopicServiceImpl implements TopicService {
 			List<PopularQuestionDTO> popularQuestion = new ArrayList<>();
 			for (Map<String, Object> question : questionList) {
 				Long id = ((Number) question.get("id")).longValue();
-				String photo = (String) question.get("foto");
-				String questionTitle = (String) question.get("titulo_pregunta");
-				String userName = (String) question.get("nombre_usuario");
+				String photo = (String) question.get(DbColumns.PHOTO.getColumns());
+				String questionTitle = (String) question.get(DbColumns.TITLE_QUESTION.getColumns());
+				String userName = (String) question.get(DbColumns.USER_NAME.getColumns());
 				PopularQuestionDTO questionDto = new PopularQuestionDTO(id, photo, questionTitle, userName);
 				popularQuestion.add(questionDto);
 			}

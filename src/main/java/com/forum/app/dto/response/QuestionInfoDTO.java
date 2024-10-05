@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class QuestionInfoDTO {
-	private List<IdValueDTO> category;
+	private List<IdValueDTO> categories;
 	private LocalDateTime createdAt;
 	private boolean dislike;
 	private Long id;
@@ -24,6 +24,6 @@ public class QuestionInfoDTO {
 	private Integer reputation;
 	private boolean saved;
 	private LocalDateTime updatedAt;
-	private String username;
+	private String userName;
 	private Integer views;
 }
