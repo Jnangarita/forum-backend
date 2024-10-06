@@ -1,6 +1,5 @@
 package com.forum.app.service.impl;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +11,7 @@ import javax.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.app.dto.IdValueDTO;
@@ -69,24 +69,9 @@ public class TopicServiceImpl implements TopicService {
 	public QuestionInfoDTO getTopic(Long id) {
 		try {
 			Map<String, Object> question = topicRepository.getInfoQuestion(id);
-			ObjectMapper objectMapper = new ObjectMapper();
-			String categoriesJson = (String) question.get("categorias");
-			LocalDateTime creationDate = getDate(question, DbColumns.CREATION_DATE.getColumns());
-			boolean dislike = (boolean) question.get("no_me_gusta");
-			Long questionId = ((Number) question.get("id")).longValue();
-			Integer likes = ((Number) question.get("me_gusta")).intValue();
-			LocalDateTime modificationDate = getDate(question, "fecha_modificacion");
-			String photo = (String) question.get(DbColumns.PHOTO.getColumns());
-			String content = (String) question.get("pregunta");
-			String title = (String) question.get(DbColumns.TITLE_QUESTION.getColumns());
-			Integer reputation = ((Number) question.get("reputacion")).intValue();
-			boolean saved = (boolean) question.get("guardado");
-			String userName = (String) question.get(DbColumns.USER_NAME.getColumns());
-			Integer views = ((Number) question.get(DbColumns.VIEWS.getColumns())).intValue();
-			List<IdValueDTO> categories = objectMapper.readValue(categoriesJson, new TypeReference<List<IdValueDTO>>() {
-			});
-			return new QuestionInfoDTO(categories, creationDate, dislike, questionId, likes, photo, content, title,
-					reputation, saved, modificationDate, userName, views);
+			QuestionInfoDTO questionDto = new QuestionInfoDTO();
+			setQuestionInfo(questionDto, question);
+			return questionDto;
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
@@ -94,8 +79,32 @@ public class TopicServiceImpl implements TopicService {
 		}
 	}
 
-	private LocalDateTime getDate(Map<String, Object> result, String column) {
-		return result.get(column) != null ? ((Timestamp) result.get(column)).toLocalDateTime() : null;
+	private void setQuestionInfo(QuestionInfoDTO dto, Map<String, Object> question) {
+		String categoriesJson = (String) question.get(DbColumns.CATEGORIES.getColumns());
+		dto.setCreatedAt(utility.getDate(question, DbColumns.CREATION_DATE.getColumns()));
+		dto.setDislike((boolean) question.get("no_me_gusta"));
+		dto.setId(((Number) question.get(DbColumns.ID.getColumns())).longValue());
+		dto.setLike(((Number) question.get("me_gusta")).intValue());
+		dto.setUpdatedAt(utility.getDate(question, DbColumns.MODIFICATION_DATE.getColumns()));
+		dto.setPhoto((String) question.get(DbColumns.PHOTO.getColumns()));
+		dto.setQuestionContent((String) question.get("pregunta"));
+		dto.setQuestionTitle((String) question.get(DbColumns.TITLE_QUESTION.getColumns()));
+		dto.setReputation(((Number) question.get("reputacion")).intValue());
+		dto.setSaved((boolean) question.get("guardado"));
+		dto.setUserName((String) question.get(DbColumns.USER_NAME.getColumns()));
+		dto.setViews(((Number) question.get(DbColumns.VIEWS.getColumns())).intValue());
+		dto.setCategories(parseJsonToIdValueDTO(categoriesJson));
+	}
+
+	private List<IdValueDTO> parseJsonToIdValueDTO(String jsonString) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			return objectMapper.readValue(jsonString, new TypeReference<List<IdValueDTO>>() {
+			});
+		} catch (JsonProcessingException e) {
+			throw new OwnRuntimeException(
+					utility.getMessage("forum.message.error.casting.string.to.json.format", null));
+		}
 	}
 
 	@Transactional
@@ -127,14 +136,14 @@ public class TopicServiceImpl implements TopicService {
 				Integer questionId = ((Number) questionMap.get("id_pregunta")).intValue();
 				String questionTitle = (String) questionMap.get(DbColumns.TITLE_QUESTION.getColumns());
 				String questionStatus = (String) questionMap.get("estado_pregunta");
-				LocalDateTime creationDate = getDate(questionMap, DbColumns.CREATION_DATE.getColumns());
+				LocalDateTime creationDate = utility.getDate(questionMap, DbColumns.CREATION_DATE.getColumns());
 				String userName = (String) questionMap.get(DbColumns.USER_NAME.getColumns());
 				Integer userId = ((Number) questionMap.get("id_usuario")).intValue();
 				String photo = (String) questionMap.get(DbColumns.PHOTO.getColumns());
 				Integer views = ((Number) questionMap.get(DbColumns.VIEWS.getColumns())).intValue();
 				Integer votes = ((Number) questionMap.get("votos")).intValue();
 
-				String categoriesJson = (String) questionMap.get("lista_categoria");
+				String categoriesJson = (String) questionMap.get(DbColumns.CATEGORIES.getColumns());
 				List<IdValueDTO> categories = objectMapper.readValue(categoriesJson,
 						new TypeReference<List<IdValueDTO>>() {
 						});
@@ -174,7 +183,7 @@ public class TopicServiceImpl implements TopicService {
 			List<Map<String, Object>> questionList = topicRepository.getPopularQuestion();
 			List<PopularQuestionDTO> popularQuestion = new ArrayList<>();
 			for (Map<String, Object> question : questionList) {
-				Long id = ((Number) question.get("id")).longValue();
+				Long id = ((Number) question.get(DbColumns.ID.getColumns())).longValue();
 				String photo = (String) question.get(DbColumns.PHOTO.getColumns());
 				String questionTitle = (String) question.get(DbColumns.TITLE_QUESTION.getColumns());
 				String userName = (String) question.get(DbColumns.USER_NAME.getColumns());

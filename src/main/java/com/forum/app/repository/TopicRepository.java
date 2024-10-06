@@ -78,7 +78,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     		+ " JSON_ARRAYAGG("
     		+ "  JSON_OBJECT("
     		+ "   'id', cat.id,"
-    		+ "   'value', cat.nombre_categoria)) AS categorias,"
+    		+ "   'value', cat.nombre_categoria)) AS lista_categoria,"
     		+ " pre.fecha_creacion,"
     		+ " pre.no_me_gusta,"
     		+ " pre.id,"

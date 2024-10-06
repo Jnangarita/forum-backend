@@ -124,8 +124,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private IdValueDTO parseJsonToIdValueDTO(String jsonString) {
-		ObjectMapper objectMapper = new ObjectMapper();
 		try {
+			ObjectMapper objectMapper = new ObjectMapper();
 			return objectMapper.readValue(jsonString, new TypeReference<IdValueDTO>() {
 			});
 		} catch (JsonProcessingException e) {

@@ -1,6 +1,9 @@
 package com.forum.app.utils;
 
 import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,5 +61,9 @@ public class Utility {
 
 	public String getExceptionMsg(Exception e, String errorKey) {
 		return e.getMessage() == null ? getMessage(errorKey, null) : e.getMessage();
+	}
+
+	public LocalDateTime getDate(Map<String, Object> result, String column) {
+		return result.get(column) != null ? ((Timestamp) result.get(column)).toLocalDateTime() : null;
 	}
 }

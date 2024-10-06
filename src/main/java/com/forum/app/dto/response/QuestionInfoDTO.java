@@ -7,11 +7,13 @@ import com.forum.app.dto.IdValueDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class QuestionInfoDTO {
 	private List<IdValueDTO> categories;
 	private LocalDateTime createdAt;
