@@ -45,7 +45,8 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public TopicResponseDTO createTopic(SaveTopicDTO payload) {
 		try {
-			Topic newQuestion = setQuestionData(payload);
+			Topic newQuestion = new Topic();
+			setQuestionData(newQuestion, payload);
 			Topic topic = topicRepository.save(newQuestion);
 			return new TopicResponseDTO(topic);
 		} catch (DataIntegrityViolationException e) {
@@ -55,14 +56,18 @@ public class TopicServiceImpl implements TopicService {
 		}
 	}
 
-	private Topic setQuestionData(SaveTopicDTO payload) {
-		Topic newTopic = new Topic();
-		newTopic.setCategoryId(payload.getCategoryId());
-		newTopic.setTitleQuestion(payload.getTitleQuestion());
-		newTopic.setQuestion(payload.getQuestion());
-		newTopic.setUserId(payload.getUserId());
-		newTopic.setQuestionStatus(QuestionStatus.UNANSWERED.getStatus());
-		return newTopic;
+	private Topic setQuestionData(Topic topic, SaveTopicDTO payload) {
+		topic.setCategoryId(payload.getCategoryId());
+		topic.setTitleQuestion(payload.getTitleQuestion());
+		topic.setQuestion(payload.getQuestion());
+		topic.setUserId(payload.getUserId());
+		topic.setQuestionStatus(QuestionStatus.UNANSWERED.getStatus());
+		topic.setViews(0);
+		topic.setVotes(0);
+		topic.setSaved(false);
+		topic.setLikes(0);
+		topic.setDislikes(false);
+		return topic;
 	}
 
 	@Override

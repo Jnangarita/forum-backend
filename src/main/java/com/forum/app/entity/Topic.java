@@ -35,4 +35,19 @@ public class Topic extends Audit {
 
 	@Column(name = "estado_pregunta")
 	private char questionStatus;
+
+	@Column(name = "vistas")
+	private Integer views;
+
+	@Column(name = "votos")
+	private Integer votes;
+
+	@Column(name = "me_gusta")
+	private Integer likes;
+
+	@Column(name = "no_me_gusta")
+	private boolean dislikes;
+
+	@Column(name = "guardado")
+	private boolean saved;
 }
