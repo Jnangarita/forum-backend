@@ -98,8 +98,8 @@ public class UserServiceImpl implements UserService {
 			UserResponseDTO dto = new UserResponseDTO();
 			setUserByIdData(dto, user);
 			RoleDTO userRole = new RoleDTO();
-			userRole.setId(((Number) user.get("id_rol")).longValue());
-			userRole.setRoleName(user.get("nombre_rol").toString());
+			userRole.setId(((Number) user.get(DbColumns.ROLE_ID.getColumns())).longValue());
+			userRole.setRoleName(user.get(DbColumns.ROLE_NAME.getColumns()).toString());
 			dto.setUserRole(userRole);
 			return dto;
 		} catch (EntityNotFoundException e) {
@@ -110,17 +110,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void setUserByIdData(UserResponseDTO dto, Map<String, Object> user) {
-		dto.setCode(user.get("codigo").toString());
+		dto.setCode(user.get(DbColumns.CODE.getColumns()).toString());
 		dto.setCountry(parseJsonToIdValueDTO((user.get(DbColumns.COUNTRY.getColumns()).toString())));
-		dto.setCity(parseJsonToIdValueDTO((user.get("ciudad").toString())));
-		dto.setEmail(user.get("correo_electronico").toString());
+		dto.setCity(parseJsonToIdValueDTO((user.get(DbColumns.CITY.getColumns()).toString())));
+		dto.setEmail(user.get(DbColumns.EMAIL.getColumns()).toString());
 		dto.setId(((Number) user.get(DbColumns.ID.getColumns())).longValue());
 		dto.setNumberQuestions((Integer) user.get(DbColumns.QUESTION_NUMBER.getColumns()));
-		dto.setNumberResponses((Integer) user.get("numero_respuestas"));
+		dto.setNumberResponses((Integer) user.get(DbColumns.ANSWER_NUMBER.getColumns()));
 		dto.setPhoto((String) user.get(DbColumns.PHOTO.getColumns()));
-		dto.setDeleted((boolean) user.get("eliminado"));
-		dto.setFirstName(user.get("primer_nombre").toString());
-		dto.setLastName(user.get("apellido").toString());
+		dto.setDeleted((boolean) user.get(DbColumns.DELETED.getColumns()));
+		dto.setFirstName(user.get(DbColumns.FIRST_NAME.getColumns()).toString());
+		dto.setLastName(user.get(DbColumns.LAST_NAME.getColumns()).toString());
 		dto.setUserName(user.get(DbColumns.USER_NAME.getColumns()).toString());
 	}
 
