@@ -50,7 +50,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ " JSON_ARRAYAGG("
 			+ "  JSON_OBJECT("
 			+ "   'id', c.id,"
-			+ "   'value', c.nombre_categoria)) AS categorias "
+			+ "   'value', c.nombre_categoria)) AS lista_categoria "
 			+ "FROM usuario u "
 			+ "LEFT JOIN documento d ON u.id = d.id_usuario "
 			+ "LEFT JOIN ("

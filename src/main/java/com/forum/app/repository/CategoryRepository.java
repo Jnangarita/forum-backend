@@ -15,7 +15,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     		+ " c.id,"
     		+ " c.nombre_categoria,"
     		+ " c.descripcion,"
-    		+ " COUNT(p.id) AS numero_pregunta,"
+    		+ " COUNT(p.id) AS numero_preguntas,"
     		+ " COALESCE(MAX(p.fecha_creacion), c.fecha_creacion) AS fecha "
     		+ "FROM categoria c "
     		+ "LEFT JOIN pregunta p ON c.id = p.id_categoria AND p.eliminado = FALSE "

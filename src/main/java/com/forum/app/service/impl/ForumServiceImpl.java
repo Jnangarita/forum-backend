@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.TopPostDTO;
+import com.forum.app.enumeration.DbColumns;
 import com.forum.app.repository.AnswerRepository;
 import com.forum.app.repository.TopicRepository;
 import com.forum.app.service.ForumService;
@@ -41,13 +42,13 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	private TopPostDTO mapToTopPostDTO(Map<String, Object> data, boolean isQuestion) {
-		Long postId = ((Number) data.get("id")).longValue();
-		String post = isQuestion ? (String) data.get("pregunta") : (String) data.get("respuesta");
-		Long userId = ((Number) data.get("id_usuario")).longValue();
+		Long postId = ((Number) data.get(DbColumns.ID.getColumns())).longValue();
+		String post = isQuestion ? (String) data.get(DbColumns.QUESTION.getColumns()) : (String) data.get("respuesta");
+		Long userId = ((Number) data.get(DbColumns.USER_ID.getColumns())).longValue();
 		char postType = ((String) data.get("tipo")).charAt(0);
-		char status = isQuestion ? ((String) data.get("estado_pregunta")).charAt(0)
+		char status = isQuestion ? ((String) data.get(DbColumns.QUESTION_STATUS.getColumns())).charAt(0)
 				: ((String) data.get("estado_respuesta")).charAt(0);
-		LocalDateTime creationDate = ((Timestamp) data.get("fecha_creacion")).toLocalDateTime();
+		LocalDateTime creationDate = ((Timestamp) data.get(DbColumns.CREATION_DATE.getColumns())).toLocalDateTime();
 
 		return new TopPostDTO(creationDate, postId, post, postType, status, userId);
 	}

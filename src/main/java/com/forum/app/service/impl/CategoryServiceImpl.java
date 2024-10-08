@@ -16,6 +16,7 @@ import com.forum.app.dto.CategoryDTO;
 import com.forum.app.dto.CategoryResponseDTO;
 import com.forum.app.dto.IdValueDTO;
 import com.forum.app.entity.Category;
+import com.forum.app.enumeration.DbColumns;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.CategoryRepository;
 import com.forum.app.service.CategoryService;
@@ -90,10 +91,10 @@ public class CategoryServiceImpl implements CategoryService {
 			List<Map<String, Object>> savedCategoryList = categoryRepository.findCategoryByDeletedFalse();
 			List<CategoryResponseDTO> categoryList = new ArrayList<>();
 			for (Map<String, Object> userMap : savedCategoryList) {
-				Long id = ((Number) userMap.get("id")).longValue();
+				Long id = ((Number) userMap.get(DbColumns.ID.getColumns())).longValue();
 				String categoryName = (String) userMap.get("nombre_categoria");
 				String description = (String) userMap.get("descripcion");
-				Integer numberQuestion = ((Number) userMap.get("numero_pregunta")).intValue();
+				Integer numberQuestion = ((Number) userMap.get(DbColumns.QUESTION_NUMBER.getColumns())).intValue();
 				LocalDateTime time = ((Timestamp) userMap.get("fecha")).toLocalDateTime();
 
 				CategoryResponseDTO userDto = new CategoryResponseDTO(categoryName, description, id, numberQuestion,

@@ -32,6 +32,7 @@ import com.forum.app.dto.UserDTO;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
+import com.forum.app.enumeration.DbColumns;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.exception.PasswordException;
 import com.forum.app.repository.UserRepository;
@@ -110,17 +111,17 @@ public class UserServiceImpl implements UserService {
 
 	private void setUserByIdData(UserResponseDTO dto, Map<String, Object> user) {
 		dto.setCode(user.get("codigo").toString());
-		dto.setCountry(parseJsonToIdValueDTO((user.get("pais").toString())));
+		dto.setCountry(parseJsonToIdValueDTO((user.get(DbColumns.COUNTRY.getColumns()).toString())));
 		dto.setCity(parseJsonToIdValueDTO((user.get("ciudad").toString())));
 		dto.setEmail(user.get("correo_electronico").toString());
-		dto.setId(((Number) user.get("id")).longValue());
-		dto.setNumberQuestions((Integer) user.get("numero_preguntas"));
+		dto.setId(((Number) user.get(DbColumns.ID.getColumns())).longValue());
+		dto.setNumberQuestions((Integer) user.get(DbColumns.QUESTION_NUMBER.getColumns()));
 		dto.setNumberResponses((Integer) user.get("numero_respuestas"));
-		dto.setPhoto((String) user.get("foto"));
+		dto.setPhoto((String) user.get(DbColumns.PHOTO.getColumns()));
 		dto.setDeleted((boolean) user.get("eliminado"));
 		dto.setFirstName(user.get("primer_nombre").toString());
 		dto.setLastName(user.get("apellido").toString());
-		dto.setUserName(user.get("nombre_usuario").toString());
+		dto.setUserName(user.get(DbColumns.USER_NAME.getColumns()).toString());
 	}
 
 	private IdValueDTO parseJsonToIdValueDTO(String jsonString) {
@@ -181,12 +182,12 @@ public class UserServiceImpl implements UserService {
 
 	private BasicUserInfoDTO setUserListData(ObjectMapper objectMapper, Map<String, Object> userMap) {
 		try {
-			Long id = ((Number) userMap.get("id")).longValue();
-			String photo = (String) userMap.get("foto");
-			String city = (String) userMap.get("pais");
-			String userName = (String) userMap.get("nombre_usuario");
-			Integer reputation = ((Number) userMap.get("reputacion")).intValue();
-			String categoriesJson = (String) userMap.get("categorias");
+			Long id = ((Number) userMap.get(DbColumns.ID.getColumns())).longValue();
+			String photo = (String) userMap.get(DbColumns.PHOTO.getColumns());
+			String city = (String) userMap.get(DbColumns.COUNTRY.getColumns());
+			String userName = (String) userMap.get(DbColumns.USER_NAME.getColumns());
+			Integer reputation = ((Number) userMap.get(DbColumns.REPUTATION.getColumns())).intValue();
+			String categoriesJson = (String) userMap.get(DbColumns.CATEGORIES.getColumns());
 			List<IdValueDTO> categories = objectMapper.readValue(categoriesJson, new TypeReference<List<IdValueDTO>>() {
 			});
 			return new BasicUserInfoDTO(id, photo, city, userName, reputation, categories);

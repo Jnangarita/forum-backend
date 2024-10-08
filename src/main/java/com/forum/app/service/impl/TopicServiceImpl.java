@@ -92,9 +92,9 @@ public class TopicServiceImpl implements TopicService {
 		dto.setLike(((Number) question.get("me_gusta")).intValue());
 		dto.setUpdatedAt(utility.getDate(question, DbColumns.MODIFICATION_DATE.getColumns()));
 		dto.setPhoto((String) question.get(DbColumns.PHOTO.getColumns()));
-		dto.setQuestionContent((String) question.get("pregunta"));
+		dto.setQuestionContent((String) question.get(DbColumns.QUESTION.getColumns()));
 		dto.setQuestionTitle((String) question.get(DbColumns.TITLE_QUESTION.getColumns()));
-		dto.setReputation(((Number) question.get("reputacion")).intValue());
+		dto.setReputation(((Number) question.get(DbColumns.REPUTATION.getColumns())).intValue());
 		dto.setSaved((boolean) question.get("guardado"));
 		dto.setUserName((String) question.get(DbColumns.USER_NAME.getColumns()));
 		dto.setViews(((Number) question.get(DbColumns.VIEWS.getColumns())).intValue());
@@ -140,10 +140,10 @@ public class TopicServiceImpl implements TopicService {
 				Integer totalAnswer = ((Number) questionMap.get("respuestas")).intValue();
 				Integer questionId = ((Number) questionMap.get("id_pregunta")).intValue();
 				String questionTitle = (String) questionMap.get(DbColumns.TITLE_QUESTION.getColumns());
-				String questionStatus = (String) questionMap.get("estado_pregunta");
+				String questionStatus = (String) questionMap.get(DbColumns.QUESTION_STATUS.getColumns());
 				LocalDateTime creationDate = utility.getDate(questionMap, DbColumns.CREATION_DATE.getColumns());
 				String userName = (String) questionMap.get(DbColumns.USER_NAME.getColumns());
-				Integer userId = ((Number) questionMap.get("id_usuario")).intValue();
+				Integer userId = ((Number) questionMap.get(DbColumns.USER_ID.getColumns())).intValue();
 				String photo = (String) questionMap.get(DbColumns.PHOTO.getColumns());
 				Integer views = ((Number) questionMap.get(DbColumns.VIEWS.getColumns())).intValue();
 				Integer votes = ((Number) questionMap.get("votos")).intValue();
