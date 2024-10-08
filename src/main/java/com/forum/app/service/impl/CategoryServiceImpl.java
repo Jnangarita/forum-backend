@@ -92,10 +92,10 @@ public class CategoryServiceImpl implements CategoryService {
 			List<CategoryResponseDTO> categoryList = new ArrayList<>();
 			for (Map<String, Object> userMap : savedCategoryList) {
 				Long id = ((Number) userMap.get(DbColumns.ID.getColumns())).longValue();
-				String categoryName = (String) userMap.get("nombre_categoria");
-				String description = (String) userMap.get("descripcion");
+				String categoryName = (String) userMap.get(DbColumns.CATEGORY_NAME.getColumns());
+				String description = (String) userMap.get(DbColumns.DESCRIPTION.getColumns());
 				Integer numberQuestion = ((Number) userMap.get(DbColumns.QUESTION_NUMBER.getColumns())).intValue();
-				LocalDateTime time = ((Timestamp) userMap.get("fecha")).toLocalDateTime();
+				LocalDateTime time = ((Timestamp) userMap.get(DbColumns.DATE.getColumns())).toLocalDateTime();
 
 				CategoryResponseDTO userDto = new CategoryResponseDTO(categoryName, description, id, numberQuestion,
 						time);

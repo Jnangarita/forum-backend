@@ -43,11 +43,12 @@ public class ForumServiceImpl implements ForumService {
 
 	private TopPostDTO mapToTopPostDTO(Map<String, Object> data, boolean isQuestion) {
 		Long postId = ((Number) data.get(DbColumns.ID.getColumns())).longValue();
-		String post = isQuestion ? (String) data.get(DbColumns.QUESTION.getColumns()) : (String) data.get("respuesta");
+		String post = isQuestion ? (String) data.get(DbColumns.QUESTION.getColumns())
+				: (String) data.get(DbColumns.ANSWER.getColumns());
 		Long userId = ((Number) data.get(DbColumns.USER_ID.getColumns())).longValue();
-		char postType = ((String) data.get("tipo")).charAt(0);
+		char postType = ((String) data.get(DbColumns.TYPE.getColumns())).charAt(0);
 		char status = isQuestion ? ((String) data.get(DbColumns.QUESTION_STATUS.getColumns())).charAt(0)
-				: ((String) data.get("estado_respuesta")).charAt(0);
+				: ((String) data.get(DbColumns.ANSWER_STATUS.getColumns())).charAt(0);
 		LocalDateTime creationDate = ((Timestamp) data.get(DbColumns.CREATION_DATE.getColumns())).toLocalDateTime();
 
 		return new TopPostDTO(creationDate, postId, post, postType, status, userId);
