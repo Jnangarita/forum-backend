@@ -33,7 +33,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     		+ " doc.ruta_documento AS foto,"
     		+ " pre.vistas AS vistas,"
     		+ " pre.votos AS votos,"
-    		+ " COUNT(DISTINCT res.id) AS respuestas,"
+    		+ " COUNT(DISTINCT res.id) AS respuesta,"
     		+ " (SELECT JSON_ARRAYAGG("
     		+ "  JSON_OBJECT("
     		+ "   'id', c.id,"

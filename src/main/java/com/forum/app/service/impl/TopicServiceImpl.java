@@ -87,15 +87,15 @@ public class TopicServiceImpl implements TopicService {
 	private void setQuestionInfo(QuestionInfoDTO dto, Map<String, Object> question) {
 		String categoriesJson = (String) question.get(DbColumns.CATEGORIES.getColumns());
 		dto.setCreatedAt(utility.getDate(question, DbColumns.CREATION_DATE.getColumns()));
-		dto.setDislike((boolean) question.get("no_me_gusta"));
+		dto.setDislike((boolean) question.get(DbColumns.DISLIKE.getColumns()));
 		dto.setId(((Number) question.get(DbColumns.ID.getColumns())).longValue());
-		dto.setLike(((Number) question.get("me_gusta")).intValue());
+		dto.setLike(((Number) question.get(DbColumns.LIKE.getColumns())).intValue());
 		dto.setUpdatedAt(utility.getDate(question, DbColumns.MODIFICATION_DATE.getColumns()));
 		dto.setPhoto((String) question.get(DbColumns.PHOTO.getColumns()));
 		dto.setQuestionContent((String) question.get(DbColumns.QUESTION.getColumns()));
 		dto.setQuestionTitle((String) question.get(DbColumns.TITLE_QUESTION.getColumns()));
 		dto.setReputation(((Number) question.get(DbColumns.REPUTATION.getColumns())).intValue());
-		dto.setSaved((boolean) question.get("guardado"));
+		dto.setSaved((boolean) question.get(DbColumns.SAVED.getColumns()));
 		dto.setUserName((String) question.get(DbColumns.USER_NAME.getColumns()));
 		dto.setViews(((Number) question.get(DbColumns.VIEWS.getColumns())).intValue());
 		dto.setCategories(parseJsonToIdValueDTO(categoriesJson));
@@ -137,8 +137,8 @@ public class TopicServiceImpl implements TopicService {
 			List<QuestionResponseDTO> questionList = new ArrayList<>();
 			ObjectMapper objectMapper = new ObjectMapper();
 			for (Map<String, Object> questionMap : savedQuestionList) {
-				Integer totalAnswer = ((Number) questionMap.get("respuestas")).intValue();
-				Integer questionId = ((Number) questionMap.get("id_pregunta")).intValue();
+				Integer totalAnswer = ((Number) questionMap.get(DbColumns.ANSWER.getColumns())).intValue();
+				Integer questionId = ((Number) questionMap.get(DbColumns.QUESTION_ID.getColumns())).intValue();
 				String questionTitle = (String) questionMap.get(DbColumns.TITLE_QUESTION.getColumns());
 				String questionStatus = (String) questionMap.get(DbColumns.QUESTION_STATUS.getColumns());
 				LocalDateTime creationDate = utility.getDate(questionMap, DbColumns.CREATION_DATE.getColumns());
@@ -146,7 +146,7 @@ public class TopicServiceImpl implements TopicService {
 				Integer userId = ((Number) questionMap.get(DbColumns.USER_ID.getColumns())).intValue();
 				String photo = (String) questionMap.get(DbColumns.PHOTO.getColumns());
 				Integer views = ((Number) questionMap.get(DbColumns.VIEWS.getColumns())).intValue();
-				Integer votes = ((Number) questionMap.get("votos")).intValue();
+				Integer votes = ((Number) questionMap.get(DbColumns.VOTES.getColumns())).intValue();
 
 				String categoriesJson = (String) questionMap.get(DbColumns.CATEGORIES.getColumns());
 				List<IdValueDTO> categories = objectMapper.readValue(categoriesJson,
