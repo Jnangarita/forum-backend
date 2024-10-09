@@ -23,11 +23,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 @Component
 public class Utility {
 
+	private static final String JSON_FORMAT_ERROR_MSG = "forum.message.error.casting.string.to.json.format";
+
 	private final MessageSource messageSource;
+	private final ObjectMapper objectMapper;
 	private static final SecureRandom randomNum = new SecureRandom();
 
-	public Utility(MessageSource messageSource) {
+	public Utility(MessageSource messageSource, ObjectMapper objectMapper) {
 		this.messageSource = messageSource;
+		this.objectMapper = objectMapper;
 	}
 
 	public String getCustomErrorMessage(DataIntegrityViolationException e) {
@@ -75,13 +79,21 @@ public class Utility {
 		return result.get(column) != null ? ((Timestamp) result.get(column)).toLocalDateTime() : null;
 	}
 
-	public List<IdValueDTO> parseJsonToIdValueDTO(String jsonString) {
+	public List<IdValueDTO> convertJsonToIdValueDTOList(String jsonString) {
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
 			return objectMapper.readValue(jsonString, new TypeReference<List<IdValueDTO>>() {
 			});
 		} catch (JsonProcessingException e) {
-			throw new OwnRuntimeException(getMessage("forum.message.error.casting.string.to.json.format", null));
+			throw new OwnRuntimeException(getMessage(JSON_FORMAT_ERROR_MSG, null));
+		}
+	}
+
+	public IdValueDTO convertJsonToIdValueDTO(String jsonString) {
+		try {
+			return objectMapper.readValue(jsonString, new TypeReference<IdValueDTO>() {
+			});
+		} catch (JsonProcessingException e) {
+			throw new OwnRuntimeException(getMessage(JSON_FORMAT_ERROR_MSG, null));
 		}
 	}
 }

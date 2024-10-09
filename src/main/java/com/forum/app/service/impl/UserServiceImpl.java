@@ -18,9 +18,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.app.dto.BasicUserInfoDTO;
 import com.forum.app.dto.ChangePasswordDTO;
 import com.forum.app.dto.IdValueDTO;
@@ -111,8 +108,8 @@ public class UserServiceImpl implements UserService {
 
 	private void setUserByIdData(UserResponseDTO dto, Map<String, Object> user) {
 		dto.setCode(user.get(DbColumns.CODE.getColumns()).toString());
-		dto.setCountry(parseJsonToIdValueDTO((user.get(DbColumns.COUNTRY.getColumns()).toString())));
-		dto.setCity(parseJsonToIdValueDTO((user.get(DbColumns.CITY.getColumns()).toString())));
+		dto.setCountry(utility.convertJsonToIdValueDTO((user.get(DbColumns.COUNTRY.getColumns()).toString())));
+		dto.setCity(utility.convertJsonToIdValueDTO((user.get(DbColumns.CITY.getColumns()).toString())));
 		dto.setEmail(user.get(DbColumns.EMAIL.getColumns()).toString());
 		dto.setId(((Number) user.get(DbColumns.ID.getColumns())).longValue());
 		dto.setNumberQuestions((Integer) user.get(DbColumns.QUESTION_NUMBER.getColumns()));
@@ -122,17 +119,6 @@ public class UserServiceImpl implements UserService {
 		dto.setFirstName(user.get(DbColumns.FIRST_NAME.getColumns()).toString());
 		dto.setLastName(user.get(DbColumns.LAST_NAME.getColumns()).toString());
 		dto.setUserName(user.get(DbColumns.USER_NAME.getColumns()).toString());
-	}
-
-	private IdValueDTO parseJsonToIdValueDTO(String jsonString) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			return objectMapper.readValue(jsonString, new TypeReference<IdValueDTO>() {
-			});
-		} catch (JsonProcessingException e) {
-			throw new OwnRuntimeException(
-					utility.getMessage("forum.message.error.casting.string.to.json.format", null));
-		}
 	}
 
 	@Override
@@ -187,7 +173,7 @@ public class UserServiceImpl implements UserService {
 		dto.setUserName((String) userMap.get(DbColumns.USER_NAME.getColumns()));
 		dto.setReputation(((Number) userMap.get(DbColumns.REPUTATION.getColumns())).intValue());
 		String categoriesJson = (String) userMap.get(DbColumns.CATEGORIES.getColumns());
-		List<IdValueDTO> categories = utility.parseJsonToIdValueDTO(categoriesJson);
+		List<IdValueDTO> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
 		dto.setCategory(categories);
 	}
 

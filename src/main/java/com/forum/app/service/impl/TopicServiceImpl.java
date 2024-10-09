@@ -93,7 +93,7 @@ public class TopicServiceImpl implements TopicService {
 		dto.setSaved((boolean) question.get(DbColumns.SAVED.getColumns()));
 		dto.setUserName((String) question.get(DbColumns.USER_NAME.getColumns()));
 		dto.setViews(((Number) question.get(DbColumns.VIEWS.getColumns())).intValue());
-		dto.setCategories(utility.parseJsonToIdValueDTO(categoriesJson));
+		dto.setCategories(utility.convertJsonToIdValueDTOList(categoriesJson));
 	}
 
 	@Transactional
@@ -142,7 +142,7 @@ public class TopicServiceImpl implements TopicService {
 		dto.setViews(((Number) question.get(DbColumns.VIEWS.getColumns())).intValue());
 		dto.setVotes(((Number) question.get(DbColumns.VOTES.getColumns())).intValue());
 		String categoriesJson = (String) question.get(DbColumns.CATEGORIES.getColumns());
-		List<IdValueDTO> categories = utility.parseJsonToIdValueDTO(categoriesJson);
+		List<IdValueDTO> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
 		dto.setCategories(categories);
 	}
 
