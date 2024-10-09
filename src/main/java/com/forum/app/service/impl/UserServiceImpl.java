@@ -49,15 +49,17 @@ public class UserServiceImpl implements UserService {
 	private final JavaMailSender mailSender;
 	private final TemplateEngine templateEngine;
 	private final Validate validate;
+	private final ObjectMapper objectMapper;
 
 	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder,
-			JavaMailSender mailSender, TemplateEngine templateEngine, Validate validate) {
+			JavaMailSender mailSender, TemplateEngine templateEngine, Validate validate, ObjectMapper objectMapper) {
 		this.utility = utility;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.mailSender = mailSender;
 		this.templateEngine = templateEngine;
 		this.validate = validate;
+		this.objectMapper = objectMapper;
 	}
 
 	@Transactional
@@ -126,7 +128,6 @@ public class UserServiceImpl implements UserService {
 
 	private IdValueDTO parseJsonToIdValueDTO(String jsonString) {
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
 			return objectMapper.readValue(jsonString, new TypeReference<IdValueDTO>() {
 			});
 		} catch (JsonProcessingException e) {
@@ -169,9 +170,9 @@ public class UserServiceImpl implements UserService {
 		try {
 			List<Map<String, Object>> savedUserList = userRepository.userInfoList();
 			List<BasicUserInfoDTO> userList = new ArrayList<>();
-			ObjectMapper objectMapper = new ObjectMapper();
 			for (Map<String, Object> userMap : savedUserList) {
-				BasicUserInfoDTO userDto = setUserListData(objectMapper, userMap);
+				BasicUserInfoDTO userDto = new BasicUserInfoDTO();
+				setUserListData(userDto, userMap);
 				userList.add(userDto);
 			}
 			return userList;
@@ -180,17 +181,17 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private BasicUserInfoDTO setUserListData(ObjectMapper objectMapper, Map<String, Object> userMap) {
+	private void setUserListData(BasicUserInfoDTO dto, Map<String, Object> userMap) {
 		try {
-			Long id = ((Number) userMap.get(DbColumns.ID.getColumns())).longValue();
-			String photo = (String) userMap.get(DbColumns.PHOTO.getColumns());
-			String city = (String) userMap.get(DbColumns.COUNTRY.getColumns());
-			String userName = (String) userMap.get(DbColumns.USER_NAME.getColumns());
-			Integer reputation = ((Number) userMap.get(DbColumns.REPUTATION.getColumns())).intValue();
+			dto.setId(((Number) userMap.get(DbColumns.ID.getColumns())).longValue());
+			dto.setPhoto((String) userMap.get(DbColumns.PHOTO.getColumns()));
+			dto.setCity((String) userMap.get(DbColumns.COUNTRY.getColumns()));
+			dto.setUserName((String) userMap.get(DbColumns.USER_NAME.getColumns()));
+			dto.setReputation(((Number) userMap.get(DbColumns.REPUTATION.getColumns())).intValue());
 			String categoriesJson = (String) userMap.get(DbColumns.CATEGORIES.getColumns());
 			List<IdValueDTO> categories = objectMapper.readValue(categoriesJson, new TypeReference<List<IdValueDTO>>() {
 			});
-			return new BasicUserInfoDTO(id, photo, city, userName, reputation, categories);
+			dto.setCategory(categories);
 		} catch (JsonProcessingException e) {
 			throw new OwnRuntimeException(
 					utility.getMessage("forum.message.error.casting.string.to.json.format", null));
