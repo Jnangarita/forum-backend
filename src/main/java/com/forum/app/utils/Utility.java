@@ -3,6 +3,7 @@ package com.forum.app.utils;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +11,13 @@ import java.util.regex.Pattern;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.forum.app.dto.IdValueDTO;
+import com.forum.app.exception.OwnRuntimeException;
+
 import org.springframework.dao.DataIntegrityViolationException;
 
 @Component
@@ -65,5 +73,15 @@ public class Utility {
 
 	public LocalDateTime getDate(Map<String, Object> result, String column) {
 		return result.get(column) != null ? ((Timestamp) result.get(column)).toLocalDateTime() : null;
+	}
+
+	public List<IdValueDTO> parseJsonToIdValueDTO(String jsonString) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			return objectMapper.readValue(jsonString, new TypeReference<List<IdValueDTO>>() {
+			});
+		} catch (JsonProcessingException e) {
+			throw new OwnRuntimeException(getMessage("forum.message.error.casting.string.to.json.format", null));
+		}
 	}
 }

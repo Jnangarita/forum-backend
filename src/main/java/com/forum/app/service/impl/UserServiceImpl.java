@@ -49,17 +49,15 @@ public class UserServiceImpl implements UserService {
 	private final JavaMailSender mailSender;
 	private final TemplateEngine templateEngine;
 	private final Validate validate;
-	private final ObjectMapper objectMapper;
 
 	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder,
-			JavaMailSender mailSender, TemplateEngine templateEngine, Validate validate, ObjectMapper objectMapper) {
+			JavaMailSender mailSender, TemplateEngine templateEngine, Validate validate) {
 		this.utility = utility;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.mailSender = mailSender;
 		this.templateEngine = templateEngine;
 		this.validate = validate;
-		this.objectMapper = objectMapper;
 	}
 
 	@Transactional
@@ -128,6 +126,7 @@ public class UserServiceImpl implements UserService {
 
 	private IdValueDTO parseJsonToIdValueDTO(String jsonString) {
 		try {
+			ObjectMapper objectMapper = new ObjectMapper();
 			return objectMapper.readValue(jsonString, new TypeReference<IdValueDTO>() {
 			});
 		} catch (JsonProcessingException e) {
@@ -182,20 +181,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void setUserListData(BasicUserInfoDTO dto, Map<String, Object> userMap) {
-		try {
-			dto.setId(((Number) userMap.get(DbColumns.ID.getColumns())).longValue());
-			dto.setPhoto((String) userMap.get(DbColumns.PHOTO.getColumns()));
-			dto.setCity((String) userMap.get(DbColumns.COUNTRY.getColumns()));
-			dto.setUserName((String) userMap.get(DbColumns.USER_NAME.getColumns()));
-			dto.setReputation(((Number) userMap.get(DbColumns.REPUTATION.getColumns())).intValue());
-			String categoriesJson = (String) userMap.get(DbColumns.CATEGORIES.getColumns());
-			List<IdValueDTO> categories = objectMapper.readValue(categoriesJson, new TypeReference<List<IdValueDTO>>() {
-			});
-			dto.setCategory(categories);
-		} catch (JsonProcessingException e) {
-			throw new OwnRuntimeException(
-					utility.getMessage("forum.message.error.casting.string.to.json.format", null));
-		}
+		dto.setId(((Number) userMap.get(DbColumns.ID.getColumns())).longValue());
+		dto.setPhoto((String) userMap.get(DbColumns.PHOTO.getColumns()));
+		dto.setCity((String) userMap.get(DbColumns.COUNTRY.getColumns()));
+		dto.setUserName((String) userMap.get(DbColumns.USER_NAME.getColumns()));
+		dto.setReputation(((Number) userMap.get(DbColumns.REPUTATION.getColumns())).intValue());
+		String categoriesJson = (String) userMap.get(DbColumns.CATEGORIES.getColumns());
+		List<IdValueDTO> categories = utility.parseJsonToIdValueDTO(categoriesJson);
+		dto.setCategory(categories);
 	}
 
 	@Transactional

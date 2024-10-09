@@ -10,9 +10,6 @@ import javax.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.app.dto.IdValueDTO;
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
@@ -96,18 +93,7 @@ public class TopicServiceImpl implements TopicService {
 		dto.setSaved((boolean) question.get(DbColumns.SAVED.getColumns()));
 		dto.setUserName((String) question.get(DbColumns.USER_NAME.getColumns()));
 		dto.setViews(((Number) question.get(DbColumns.VIEWS.getColumns())).intValue());
-		dto.setCategories(parseJsonToIdValueDTO(categoriesJson));
-	}
-
-	private List<IdValueDTO> parseJsonToIdValueDTO(String jsonString) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			return objectMapper.readValue(jsonString, new TypeReference<List<IdValueDTO>>() {
-			});
-		} catch (JsonProcessingException e) {
-			throw new OwnRuntimeException(
-					utility.getMessage("forum.message.error.casting.string.to.json.format", null));
-		}
+		dto.setCategories(utility.parseJsonToIdValueDTO(categoriesJson));
 	}
 
 	@Transactional
@@ -156,7 +142,7 @@ public class TopicServiceImpl implements TopicService {
 		dto.setViews(((Number) question.get(DbColumns.VIEWS.getColumns())).intValue());
 		dto.setVotes(((Number) question.get(DbColumns.VOTES.getColumns())).intValue());
 		String categoriesJson = (String) question.get(DbColumns.CATEGORIES.getColumns());
-		List<IdValueDTO> categories = parseJsonToIdValueDTO(categoriesJson);
+		List<IdValueDTO> categories = utility.parseJsonToIdValueDTO(categoriesJson);
 		dto.setCategories(categories);
 	}
 
