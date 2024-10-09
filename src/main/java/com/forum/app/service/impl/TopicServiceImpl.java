@@ -186,16 +186,20 @@ public class TopicServiceImpl implements TopicService {
 			List<Map<String, Object>> questionList = topicRepository.getPopularQuestion();
 			List<PopularQuestionDTO> popularQuestion = new ArrayList<>();
 			for (Map<String, Object> question : questionList) {
-				Long id = ((Number) question.get(DbColumns.ID.getColumns())).longValue();
-				String photo = (String) question.get(DbColumns.PHOTO.getColumns());
-				String questionTitle = (String) question.get(DbColumns.TITLE_QUESTION.getColumns());
-				String userName = (String) question.get(DbColumns.USER_NAME.getColumns());
-				PopularQuestionDTO questionDto = new PopularQuestionDTO(id, photo, questionTitle, userName);
+				PopularQuestionDTO questionDto = new PopularQuestionDTO();
+				populatePopularQuestionDto(questionDto, question);
 				popularQuestion.add(questionDto);
 			}
 			return popularQuestion;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.popular.question", null));
 		}
+	}
+
+	private void populatePopularQuestionDto(PopularQuestionDTO dto, Map<String, Object> question) {
+		dto.setId(((Number) question.get(DbColumns.ID.getColumns())).longValue());
+		dto.setPhoto((String) question.get(DbColumns.PHOTO.getColumns()));
+		dto.setQuestionTitle((String) question.get(DbColumns.TITLE_QUESTION.getColumns()));
+		dto.setUserName((String) question.get(DbColumns.USER_NAME.getColumns()));
 	}
 }
