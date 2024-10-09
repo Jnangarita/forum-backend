@@ -5,17 +5,19 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class QuestionResponseDTO {
 	private Integer answers;
 	private List<IdValueDTO> categories;
 	private String photo;
 	private Integer questionId;
-	private String questionStatus;
+	private char questionStatus;
 	private String questionTitle;
 	private LocalDateTime creationDate;
 	private String user;
