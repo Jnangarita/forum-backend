@@ -34,7 +34,8 @@ public class AnswerServiceImpl implements AnswerService {
 	@Override
 	public AnswerResponseDTO createAnswer(AnswerDTO payload) {
 		try {
-			Answer newAnswer = setAnswer(payload);
+			Answer newAnswer = new Answer();
+			setAnswer(newAnswer, payload);
 			Answer answer = answerRepository.save(newAnswer);
 			return new AnswerResponseDTO(answer);
 		} catch (DataIntegrityViolationException e) {
@@ -44,13 +45,11 @@ public class AnswerServiceImpl implements AnswerService {
 		}
 	}
 
-	private Answer setAnswer(AnswerDTO payload) {
-		Answer newAnswer = new Answer();
-		newAnswer.setQuestionId(payload.getQuestionId());
-		newAnswer.setAnswerTxt(payload.getAnswerTxt());
-		newAnswer.setUserId(payload.getUserId());
-		newAnswer.setAnswerStatus(AnswerStatus.SENT.getStatus());
-		return newAnswer;
+	private void setAnswer(Answer dto, AnswerDTO payload) {
+		dto.setQuestionId(payload.getQuestionId());
+		dto.setAnswerTxt(payload.getAnswerTxt());
+		dto.setUserId(payload.getUserId());
+		dto.setAnswerStatus(AnswerStatus.SENT.getStatus());
 	}
 
 	@Override
