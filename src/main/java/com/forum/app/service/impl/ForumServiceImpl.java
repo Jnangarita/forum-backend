@@ -1,7 +1,5 @@
 package com.forum.app.service.impl;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,16 +12,19 @@ import com.forum.app.enumeration.DbColumns;
 import com.forum.app.repository.AnswerRepository;
 import com.forum.app.repository.TopicRepository;
 import com.forum.app.service.ForumService;
+import com.forum.app.utils.Utility;
 
 @Service
 public class ForumServiceImpl implements ForumService {
 
-	private TopicRepository topicRepository;
-	private AnswerRepository answerRepository;
+	private final TopicRepository topicRepository;
+	private final AnswerRepository answerRepository;
+	private final Utility utility;
 
-	public ForumServiceImpl(TopicRepository topicRepository, AnswerRepository answerRepository) {
+	public ForumServiceImpl(TopicRepository topicRepository, AnswerRepository answerRepository, Utility utility) {
 		this.topicRepository = topicRepository;
 		this.answerRepository = answerRepository;
+		this.utility = utility;
 	}
 
 	@Override
@@ -31,26 +32,25 @@ public class ForumServiceImpl implements ForumService {
 		List<Map<String, Object>> questionList = topicRepository.findPostedQuestionByUserId(id);
 		List<Map<String, Object>> answerList = answerRepository.findPostedAnswersByUserId(id);
 		List<TopPostDTO> topPostList = new ArrayList<>();
-
-		topPostList.addAll(
-				questionList.stream().map(question -> mapToTopPostDTO(question, true)).collect(Collectors.toList()));
-
-		topPostList
-				.addAll(answerList.stream().map(answer -> mapToTopPostDTO(answer, false)).collect(Collectors.toList()));
-
+		topPostList.addAll(convertToTopPostDTOList(questionList, true));
+		topPostList.addAll(convertToTopPostDTOList(answerList, false));
 		return topPostList;
 	}
 
-	private TopPostDTO mapToTopPostDTO(Map<String, Object> data, boolean isQuestion) {
-		Long postId = ((Number) data.get(DbColumns.ID.getColumns())).longValue();
-		String post = isQuestion ? (String) data.get(DbColumns.QUESTION.getColumns())
-				: (String) data.get(DbColumns.ANSWER.getColumns());
-		Long userId = ((Number) data.get(DbColumns.USER_ID.getColumns())).longValue();
-		char postType = ((String) data.get(DbColumns.TYPE.getColumns())).charAt(0);
-		char status = isQuestion ? ((String) data.get(DbColumns.QUESTION_STATUS.getColumns())).charAt(0)
-				: ((String) data.get(DbColumns.ANSWER_STATUS.getColumns())).charAt(0);
-		LocalDateTime creationDate = ((Timestamp) data.get(DbColumns.CREATION_DATE.getColumns())).toLocalDateTime();
+	private List<TopPostDTO> convertToTopPostDTOList(List<Map<String, Object>> mapList, boolean isQuestion) {
+		return mapList.stream().map(data -> mapToTopPostDTO(data, isQuestion)).collect(Collectors.toList());
+	}
 
-		return new TopPostDTO(creationDate, postId, post, postType, status, userId);
+	private TopPostDTO mapToTopPostDTO(Map<String, Object> data, boolean isQuestion) {
+		TopPostDTO dto = new TopPostDTO();
+		dto.setPostId(((Number) data.get(DbColumns.ID.getColumns())).longValue());
+		dto.setPost(isQuestion ? (String) data.get(DbColumns.QUESTION.getColumns())
+				: (String) data.get(DbColumns.ANSWER.getColumns()));
+		dto.setUserId(((Number) data.get(DbColumns.USER_ID.getColumns())).longValue());
+		dto.setPostType(((String) data.get(DbColumns.TYPE.getColumns())).charAt(0));
+		dto.setStatus(isQuestion ? ((String) data.get(DbColumns.QUESTION_STATUS.getColumns())).charAt(0)
+				: ((String) data.get(DbColumns.ANSWER_STATUS.getColumns())).charAt(0));
+		dto.setCreationDate(utility.getDate(data, DbColumns.CREATION_DATE.getColumns()));
+		return dto;
 	}
 }
