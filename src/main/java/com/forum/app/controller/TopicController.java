@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
+import com.forum.app.dto.QuestionResponseDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
@@ -96,5 +98,15 @@ public class TopicController {
 	public ResponseEntity<List<PopularQuestionDTO>> getPopularQuestion() {
 		List<PopularQuestionDTO> topicList = topicService.getPopularQuestionList();
 		return ResponseEntity.ok(topicList);
+	}
+
+	@Operation(summary = "Get the list of questions according to category")
+	@GetMapping("/")
+	@ResponseStatus(HttpStatus.OK)
+	@SecurityRequirement(name = "bearer-key")
+	public ResponseEntity<List<QuestionResponseDTO>> getQuestionListByCategory(
+			@RequestParam(required = true) String category) {
+		List<QuestionResponseDTO> questionList = topicService.questionListByCategory(category);
+		return ResponseEntity.ok(questionList);
 	}
 }

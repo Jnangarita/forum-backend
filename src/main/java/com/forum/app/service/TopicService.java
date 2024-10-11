@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
+import com.forum.app.dto.QuestionResponseDTO;
 import com.forum.app.dto.SaveTopicDTO;
 import com.forum.app.dto.TopicResponseDTO;
 import com.forum.app.dto.UpdateTopicDTO;
@@ -24,4 +25,6 @@ public interface TopicService {
 	Topic getTopicById(Long id);
 
 	List<PopularQuestionDTO> getPopularQuestionList();
+
+	List<QuestionResponseDTO> questionListByCategory(String category);
 }

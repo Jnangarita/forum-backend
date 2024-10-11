@@ -118,16 +118,21 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			Integer totalQuestions = topicRepository.getNumberQuestion();
 			List<Map<String, Object>> savedQuestionList = topicRepository.getQuestionList();
-			List<QuestionResponseDTO> questionList = new ArrayList<>();
-			for (Map<String, Object> questionMap : savedQuestionList) {
-				QuestionResponseDTO questionDto = new QuestionResponseDTO();
-				populateQuestionDto(questionDto, questionMap);
-				questionList.add(questionDto);
-			}
+			List<QuestionResponseDTO> questionList = populateQuestionList(savedQuestionList);
 			return new QuestionListDTO(totalQuestions, questionList);
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.question", null));
 		}
+	}
+
+	private List<QuestionResponseDTO> populateQuestionList(List<Map<String, Object>> list) {
+		List<QuestionResponseDTO> questionList = new ArrayList<>();
+		for (Map<String, Object> questionMap : list) {
+			QuestionResponseDTO questionDto = new QuestionResponseDTO();
+			populateQuestionDto(questionDto, questionMap);
+			questionList.add(questionDto);
+		}
+		return questionList;
 	}
 
 	private void populateQuestionDto(QuestionResponseDTO dto, Map<String, Object> question) {
@@ -187,5 +192,15 @@ public class TopicServiceImpl implements TopicService {
 		dto.setPhoto((String) question.get(DbColumns.PHOTO.getColumns()));
 		dto.setQuestionTitle((String) question.get(DbColumns.TITLE_QUESTION.getColumns()));
 		dto.setUserName((String) question.get(DbColumns.USER_NAME.getColumns()));
+	}
+
+	@Override
+	public List<QuestionResponseDTO> questionListByCategory(String category) {
+		try {
+			List<Map<String, Object>> savedQuestionList = topicRepository.getQuestionByCategory(category);
+			return populateQuestionList(savedQuestionList);
+		} catch (Exception e) {
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.question", null));
+		}
 	}
 }
