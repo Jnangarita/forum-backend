@@ -2,12 +2,15 @@ package com.forum.app.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 import com.forum.app.entity.Category;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CategoryResponseDTO {
 	private String categoryName;
 	private String description;

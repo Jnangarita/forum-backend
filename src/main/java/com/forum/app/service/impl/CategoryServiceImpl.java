@@ -1,7 +1,5 @@
 package com.forum.app.service.impl;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public CategoryResponseDTO createCategory(CategoryDTO payload) {
 		try {
 			Category newCategory = new Category();
-			newCategory.setCategoryName(payload.getCategoryName());
-			newCategory.setDescription(payload.getDescription());
-			newCategory.setCreatedBy(payload.getCreatedBy());
+			populateCategory(newCategory, payload);
 			Category category = categoryRepository.save(newCategory);
 			return new CategoryResponseDTO(category);
 		} catch (DataIntegrityViolationException e) {
@@ -48,6 +44,12 @@ public class CategoryServiceImpl implements CategoryService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.category", null));
 		}
+	}
+
+	private void populateCategory(Category category, CategoryDTO payload) {
+		category.setCategoryName(payload.getCategoryName());
+		category.setDescription(payload.getDescription());
+		category.setCreatedBy(payload.getCreatedBy());
 	}
 
 	@Override
@@ -90,21 +92,23 @@ public class CategoryServiceImpl implements CategoryService {
 		try {
 			List<Map<String, Object>> savedCategoryList = categoryRepository.findCategoryByDeletedFalse();
 			List<CategoryResponseDTO> categoryList = new ArrayList<>();
-			for (Map<String, Object> userMap : savedCategoryList) {
-				Long id = ((Number) userMap.get(DbColumns.ID.getColumns())).longValue();
-				String categoryName = (String) userMap.get(DbColumns.CATEGORY_NAME.getColumns());
-				String description = (String) userMap.get(DbColumns.DESCRIPTION.getColumns());
-				Integer numberQuestion = ((Number) userMap.get(DbColumns.QUESTION_NUMBER.getColumns())).intValue();
-				LocalDateTime time = ((Timestamp) userMap.get(DbColumns.DATE.getColumns())).toLocalDateTime();
-
-				CategoryResponseDTO userDto = new CategoryResponseDTO(categoryName, description, id, numberQuestion,
-						time);
-				categoryList.add(userDto);
+			for (Map<String, Object> category : savedCategoryList) {
+				CategoryResponseDTO categoryDto = new CategoryResponseDTO();
+				populateCategoryResponseDto(category, categoryDto);
+				categoryList.add(categoryDto);
 			}
 			return categoryList;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.category", null));
 		}
+	}
+
+	private void populateCategoryResponseDto(Map<String, Object> categoryMap, CategoryResponseDTO dto) {
+		dto.setId(((Number) categoryMap.get(DbColumns.ID.getColumns())).longValue());
+		dto.setCategoryName((String) categoryMap.get(DbColumns.CATEGORY_NAME.getColumns()));
+		dto.setDescription((String) categoryMap.get(DbColumns.DESCRIPTION.getColumns()));
+		dto.setNumberQuestion(((Number) categoryMap.get(DbColumns.QUESTION_NUMBER.getColumns())).intValue());
+		dto.setTime(utility.getDate(categoryMap, DbColumns.DATE.getColumns()));
 	}
 
 	@Transactional
