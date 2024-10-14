@@ -104,7 +104,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	private void populateCategoryResponseDto(Map<String, Object> categoryMap, CategoryResponseDTO dto) {
-		dto.setId(((Number) categoryMap.get(DbColumns.ID.getColumns())).longValue());
+		dto.setId(utility.convertToLongType(categoryMap.get(DbColumns.ID.getColumns())));
 		dto.setCategoryName((String) categoryMap.get(DbColumns.CATEGORY_NAME.getColumns()));
 		dto.setDescription((String) categoryMap.get(DbColumns.DESCRIPTION.getColumns()));
 		dto.setNumberQuestion(((Number) categoryMap.get(DbColumns.QUESTION_NUMBER.getColumns())).intValue());

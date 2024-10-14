@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
 			UserResponseDTO dto = new UserResponseDTO();
 			setUserByIdData(dto, user);
 			RoleDTO userRole = new RoleDTO();
-			userRole.setId(((Number) user.get(DbColumns.ROLE_ID.getColumns())).longValue());
+			userRole.setId(utility.convertToLongType(user.get(DbColumns.ROLE_ID.getColumns())));
 			userRole.setRoleName(user.get(DbColumns.ROLE_NAME.getColumns()).toString());
 			dto.setUserRole(userRole);
 			return dto;
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
 		dto.setCountry(utility.convertJsonToIdValueDTO((user.get(DbColumns.COUNTRY.getColumns()).toString())));
 		dto.setCity(utility.convertJsonToIdValueDTO((user.get(DbColumns.CITY.getColumns()).toString())));
 		dto.setEmail(user.get(DbColumns.EMAIL.getColumns()).toString());
-		dto.setId(((Number) user.get(DbColumns.ID.getColumns())).longValue());
+		dto.setId(utility.convertToLongType(user.get(DbColumns.ID.getColumns())));
 		dto.setNumberQuestions((Integer) user.get(DbColumns.QUESTION_NUMBER.getColumns()));
 		dto.setNumberResponses((Integer) user.get(DbColumns.ANSWER_NUMBER.getColumns()));
 		dto.setPhoto((String) user.get(DbColumns.PHOTO.getColumns()));
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void setUserListData(BasicUserInfoDTO dto, Map<String, Object> userMap) {
-		dto.setId(((Number) userMap.get(DbColumns.ID.getColumns())).longValue());
+		dto.setId(utility.convertToLongType(userMap.get(DbColumns.ID.getColumns())));
 		dto.setPhoto((String) userMap.get(DbColumns.PHOTO.getColumns()));
 		dto.setCity((String) userMap.get(DbColumns.COUNTRY.getColumns()));
 		dto.setUserName((String) userMap.get(DbColumns.USER_NAME.getColumns()));

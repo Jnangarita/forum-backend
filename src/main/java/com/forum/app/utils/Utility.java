@@ -96,4 +96,8 @@ public class Utility {
 			throw new OwnRuntimeException(getMessage(JSON_FORMAT_ERROR_MSG, null));
 		}
 	}
+
+	public Long convertToLongType(Object column) {
+		return column != null ? ((Number) column).longValue() : null;
+	}
 }

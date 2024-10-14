@@ -43,10 +43,10 @@ public class ForumServiceImpl implements ForumService {
 
 	private TopPostDTO mapToTopPostDTO(Map<String, Object> data, boolean isQuestion) {
 		TopPostDTO dto = new TopPostDTO();
-		dto.setPostId(((Number) data.get(DbColumns.ID.getColumns())).longValue());
+		dto.setPostId(utility.convertToLongType(data.get(DbColumns.ID.getColumns())));
 		dto.setPost(isQuestion ? (String) data.get(DbColumns.QUESTION.getColumns())
 				: (String) data.get(DbColumns.ANSWER.getColumns()));
-		dto.setUserId(((Number) data.get(DbColumns.USER_ID.getColumns())).longValue());
+		dto.setUserId(utility.convertToLongType(data.get(DbColumns.USER_ID.getColumns())));
 		dto.setPostType(((String) data.get(DbColumns.TYPE.getColumns())).charAt(0));
 		dto.setStatus(isQuestion ? ((String) data.get(DbColumns.QUESTION_STATUS.getColumns())).charAt(0)
 				: ((String) data.get(DbColumns.ANSWER_STATUS.getColumns())).charAt(0));

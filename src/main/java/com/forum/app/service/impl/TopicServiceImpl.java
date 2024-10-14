@@ -83,7 +83,7 @@ public class TopicServiceImpl implements TopicService {
 		String categoriesJson = (String) question.get(DbColumns.CATEGORIES.getColumns());
 		dto.setCreatedAt(utility.getDate(question, DbColumns.CREATION_DATE.getColumns()));
 		dto.setDislike((boolean) question.get(DbColumns.DISLIKE.getColumns()));
-		dto.setId(((Number) question.get(DbColumns.ID.getColumns())).longValue());
+		dto.setId(utility.convertToLongType(question.get(DbColumns.ID.getColumns())));
 		dto.setLike(((Number) question.get(DbColumns.LIKE.getColumns())).intValue());
 		dto.setUpdatedAt(utility.getDate(question, DbColumns.MODIFICATION_DATE.getColumns()));
 		dto.setPhoto((String) question.get(DbColumns.PHOTO.getColumns()));
@@ -188,7 +188,7 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	private void populatePopularQuestionDto(PopularQuestionDTO dto, Map<String, Object> question) {
-		dto.setId(((Number) question.get(DbColumns.ID.getColumns())).longValue());
+		dto.setId(utility.convertToLongType(question.get(DbColumns.ID.getColumns())));
 		dto.setPhoto((String) question.get(DbColumns.PHOTO.getColumns()));
 		dto.setQuestionTitle((String) question.get(DbColumns.TITLE_QUESTION.getColumns()));
 		dto.setUserName((String) question.get(DbColumns.USER_NAME.getColumns()));
