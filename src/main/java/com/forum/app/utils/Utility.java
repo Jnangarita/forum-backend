@@ -106,6 +106,6 @@ public class Utility {
 	}
 
 	public String convertToStringType(Object column) {
-		return column != null ? ((Number) column).toString() : null;
+		return column != null ? column.toString() : null;
 	}
 }
