@@ -101,8 +101,7 @@ public class TopicServiceImpl implements TopicService {
 	public TopicResponseDTO updateTopic(Long id, UpdateTopicDTO payload) {
 		try {
 			Topic question = getTopicById(id);
-			question.setCategoryId(payload.getCategoryId());
-			question.setQuestion(payload.getQuestion());
+			populateQuestion(question, payload);
 			return new TopicResponseDTO(question);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
@@ -111,6 +110,11 @@ public class TopicServiceImpl implements TopicService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.question", null));
 		}
+	}
+
+	private void populateQuestion(Topic question, UpdateTopicDTO payload) {
+		question.setCategoryId(payload.getCategoryId());
+		question.setQuestion(payload.getQuestion());
 	}
 
 	@Override
