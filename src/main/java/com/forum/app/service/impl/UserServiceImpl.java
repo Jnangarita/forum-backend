@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
 		dto.setPhoto((String) userMap.get(DbColumns.PHOTO.getColumns()));
 		dto.setCity((String) userMap.get(DbColumns.COUNTRY.getColumns()));
 		dto.setUserName((String) userMap.get(DbColumns.USER_NAME.getColumns()));
-		dto.setReputation(((Number) userMap.get(DbColumns.REPUTATION.getColumns())).intValue());
+		dto.setReputation(utility.convertToIntType(userMap.get(DbColumns.REPUTATION.getColumns())));
 		String categoriesJson = (String) userMap.get(DbColumns.CATEGORIES.getColumns());
 		List<IdValueDTO> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
 		dto.setCategory(categories);

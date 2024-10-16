@@ -84,15 +84,15 @@ public class TopicServiceImpl implements TopicService {
 		dto.setCreatedAt(utility.getDate(question, DbColumns.CREATION_DATE.getColumns()));
 		dto.setDislike((boolean) question.get(DbColumns.DISLIKE.getColumns()));
 		dto.setId(utility.convertToLongType(question.get(DbColumns.ID.getColumns())));
-		dto.setLike(((Number) question.get(DbColumns.LIKE.getColumns())).intValue());
+		dto.setLike(utility.convertToIntType(question.get(DbColumns.LIKE.getColumns())));
 		dto.setUpdatedAt(utility.getDate(question, DbColumns.MODIFICATION_DATE.getColumns()));
 		dto.setPhoto((String) question.get(DbColumns.PHOTO.getColumns()));
 		dto.setQuestionContent((String) question.get(DbColumns.QUESTION.getColumns()));
 		dto.setQuestionTitle((String) question.get(DbColumns.TITLE_QUESTION.getColumns()));
-		dto.setReputation(((Number) question.get(DbColumns.REPUTATION.getColumns())).intValue());
+		dto.setReputation(utility.convertToIntType(question.get(DbColumns.REPUTATION.getColumns())));
 		dto.setSaved((boolean) question.get(DbColumns.SAVED.getColumns()));
 		dto.setUserName((String) question.get(DbColumns.USER_NAME.getColumns()));
-		dto.setViews(((Number) question.get(DbColumns.VIEWS.getColumns())).intValue());
+		dto.setViews(utility.convertToIntType(question.get(DbColumns.VIEWS.getColumns())));
 		dto.setCategories(utility.convertJsonToIdValueDTOList(categoriesJson));
 	}
 
@@ -136,16 +136,16 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	private void populateQuestionDto(QuestionResponseDTO dto, Map<String, Object> question) {
-		dto.setAnswers(((Number) question.get(DbColumns.ANSWER.getColumns())).intValue());
-		dto.setQuestionId(((Number) question.get(DbColumns.QUESTION_ID.getColumns())).intValue());
+		dto.setAnswers(utility.convertToIntType(question.get(DbColumns.ANSWER.getColumns())));
+		dto.setQuestionId(utility.convertToIntType(question.get(DbColumns.QUESTION_ID.getColumns())));
 		dto.setQuestionTitle((String) question.get(DbColumns.TITLE_QUESTION.getColumns()));
 		dto.setQuestionStatus(((String) question.get(DbColumns.QUESTION_STATUS.getColumns())).charAt(0));
 		dto.setCreationDate(utility.getDate(question, DbColumns.CREATION_DATE.getColumns()));
 		dto.setUser((String) question.get(DbColumns.USER_NAME.getColumns()));
-		dto.setUserId(((Number) question.get(DbColumns.USER_ID.getColumns())).intValue());
+		dto.setUserId(utility.convertToIntType(question.get(DbColumns.USER_ID.getColumns())));
 		dto.setPhoto((String) question.get(DbColumns.PHOTO.getColumns()));
-		dto.setViews(((Number) question.get(DbColumns.VIEWS.getColumns())).intValue());
-		dto.setVotes(((Number) question.get(DbColumns.VOTES.getColumns())).intValue());
+		dto.setViews(utility.convertToIntType(question.get(DbColumns.VIEWS.getColumns())));
+		dto.setVotes(utility.convertToIntType(question.get(DbColumns.VOTES.getColumns())));
 		String categoriesJson = (String) question.get(DbColumns.CATEGORIES.getColumns());
 		List<IdValueDTO> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
 		dto.setCategories(categories);

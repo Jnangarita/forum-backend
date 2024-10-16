@@ -100,4 +100,8 @@ public class Utility {
 	public Long convertToLongType(Object column) {
 		return column != null ? ((Number) column).longValue() : null;
 	}
+
+	public Integer convertToIntType(Object column) {
+		return column != null ? ((Number) column).intValue() : null;
+	}
 }
