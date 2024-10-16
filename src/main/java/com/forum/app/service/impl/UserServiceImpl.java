@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
 			setUserByIdData(dto, user);
 			RoleDTO userRole = new RoleDTO();
 			userRole.setId(utility.convertToLongType(user.get(DbColumns.ROLE_ID.getColumns())));
-			userRole.setRoleName(user.get(DbColumns.ROLE_NAME.getColumns()).toString());
+			userRole.setRoleName(utility.convertToStringType(user.get(DbColumns.ROLE_NAME.getColumns())));
 			dto.setUserRole(userRole);
 			return dto;
 		} catch (EntityNotFoundException e) {
@@ -107,18 +107,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void setUserByIdData(UserResponseDTO dto, Map<String, Object> user) {
-		dto.setCode(user.get(DbColumns.CODE.getColumns()).toString());
+		dto.setCode(utility.convertToStringType(user.get(DbColumns.CODE.getColumns())));
 		dto.setCountry(utility.convertJsonToIdValueDTO((user.get(DbColumns.COUNTRY.getColumns()).toString())));
 		dto.setCity(utility.convertJsonToIdValueDTO((user.get(DbColumns.CITY.getColumns()).toString())));
-		dto.setEmail(user.get(DbColumns.EMAIL.getColumns()).toString());
+		dto.setEmail(utility.convertToStringType(user.get(DbColumns.EMAIL.getColumns())));
 		dto.setId(utility.convertToLongType(user.get(DbColumns.ID.getColumns())));
 		dto.setNumberQuestions((Integer) user.get(DbColumns.QUESTION_NUMBER.getColumns()));
 		dto.setNumberResponses((Integer) user.get(DbColumns.ANSWER_NUMBER.getColumns()));
 		dto.setPhoto((String) user.get(DbColumns.PHOTO.getColumns()));
 		dto.setDeleted((boolean) user.get(DbColumns.DELETED.getColumns()));
-		dto.setFirstName(user.get(DbColumns.FIRST_NAME.getColumns()).toString());
-		dto.setLastName(user.get(DbColumns.LAST_NAME.getColumns()).toString());
-		dto.setUserName(user.get(DbColumns.USER_NAME.getColumns()).toString());
+		dto.setFirstName(utility.convertToStringType(user.get(DbColumns.FIRST_NAME.getColumns())));
+		dto.setLastName(utility.convertToStringType(user.get(DbColumns.LAST_NAME.getColumns())));
+		dto.setUserName(utility.convertToStringType(user.get(DbColumns.USER_NAME.getColumns())));
 	}
 
 	@Override

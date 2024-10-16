@@ -104,4 +104,8 @@ public class Utility {
 	public Integer convertToIntType(Object column) {
 		return column != null ? ((Number) column).intValue() : null;
 	}
+
+	public String convertToStringType(Object column) {
+		return column != null ? ((Number) column).toString() : null;
+	}
 }
