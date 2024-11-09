@@ -34,3 +34,6 @@ build/
 
 ### Eclipse IDE ###
 /bin
+
+### Project ###
+application.properties
