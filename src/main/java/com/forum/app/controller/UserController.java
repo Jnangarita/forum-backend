@@ -24,7 +24,7 @@ import com.forum.app.dto.ChangePasswordDTO;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.ResetPasswordDTO;
 import com.forum.app.dto.UpdateUserDTO;
-import com.forum.app.dto.UserDTO;
+import com.forum.app.dto.request.UserInput;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.service.UserService;
@@ -48,7 +48,7 @@ public class UserController {
 	@Operation(summary = "Save a user")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<UserInfoDTO> createUser(@RequestBody @Valid UserDTO payload,
+	public ResponseEntity<UserInfoDTO> createUser(@RequestBody @Valid UserInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		UserInfoDTO user = userService.createUser(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/v1/users/{id}").buildAndExpand(user.getId()).toUri();

@@ -10,6 +10,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.forum.app.mapper.UserMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -25,7 +26,7 @@ import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.ResetPasswordDTO;
 import com.forum.app.dto.RoleDTO;
 import com.forum.app.dto.UpdateUserDTO;
-import com.forum.app.dto.UserDTO;
+import com.forum.app.dto.request.UserInput;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
@@ -39,33 +40,32 @@ import com.forum.app.validation.Validate;
 
 @Service
 public class UserServiceImpl implements UserService {
-
 	private final Utility utility;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender mailSender;
 	private final TemplateEngine templateEngine;
 	private final Validate validate;
+	private final UserMapper userMapper;
 
 	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder,
-			JavaMailSender mailSender, TemplateEngine templateEngine, Validate validate) {
+						   JavaMailSender mailSender, TemplateEngine templateEngine, Validate validate, UserMapper userMapper) {
 		this.utility = utility;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.mailSender = mailSender;
 		this.templateEngine = templateEngine;
 		this.validate = validate;
+		this.userMapper = userMapper;
 	}
 
 	@Transactional
 	@Override
-	public UserInfoDTO createUser(UserDTO payload) {
+	public UserInfoDTO createUser(UserInput payload) {
 		try {
 			validate.confirmPassword(payload.getPassword(), payload.getRepeatPassword());
-			User newUser = new User();
-			setUserData(newUser, payload);
-			User user = userRepository.save(newUser);
-			return new UserInfoDTO(user);
+			User user = setUserData(payload);
+			return new UserInfoDTO(userRepository.save(user));
 		} catch (PasswordException e) {
 			throw e;
 		} catch (DataIntegrityViolationException e) {
@@ -75,17 +75,13 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private void setUserData(User user, UserDTO payload) {
-		user.setFirstName(payload.getFirstName());
-		user.setLastName(payload.getLastName());
+	private User setUserData(UserInput payload) {
+		User user = userMapper.convertDtoToEntity(payload);
 		user.setFullName(user.getFirstName() + " " + user.getLastName());
-		user.setEmail(payload.getEmail());
 		setPasswordData(user, payload.getPassword());
-		user.setCountryId(null);
-		user.setCityId(null);
 		user.setNumberQuestions(0);
 		user.setNumberResponses(0);
-		user.setRole(payload.getRole());
+		return user;
 	}
 
 	@Override

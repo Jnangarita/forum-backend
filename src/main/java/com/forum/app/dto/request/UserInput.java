@@ -1,4 +1,4 @@
-package com.forum.app.dto;
+package com.forum.app.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class UserInput {
 	@NotBlank
 	private String firstName;
 

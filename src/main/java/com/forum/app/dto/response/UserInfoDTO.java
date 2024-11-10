@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class UserInfoDTO extends UserDTO {
-
 	public UserInfoDTO(User user) {
 		super(user);
 	}
