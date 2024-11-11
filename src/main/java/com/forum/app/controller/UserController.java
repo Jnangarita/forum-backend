@@ -24,7 +24,7 @@ import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
 import com.forum.app.dto.request.UpdateUserInput;
-import com.forum.app.dto.request.CreateUserInput;
+import com.forum.app.dto.request.SaveUserInput;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.service.UserService;
@@ -48,7 +48,7 @@ public class UserController {
 	@Operation(summary = "Save a user")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<UserInfoDTO> createUser(@RequestBody @Valid CreateUserInput payload,
+	public ResponseEntity<UserInfoDTO> createUser(@RequestBody @Valid SaveUserInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		UserInfoDTO user = userService.createUser(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/v1/users/{id}").buildAndExpand(user.getId()).toUri();
@@ -108,7 +108,6 @@ public class UserController {
 	@Operation(summary = "Reset user password")
 	@PostMapping("/reset-password")
 	@ResponseStatus(HttpStatus.OK)
-	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<MessageDTO> resetPassword(@RequestBody @Valid ResetPasswordInput payload) {
 		MessageDTO message = userService.resetPassword(payload);
 		return ResponseEntity.ok(message);

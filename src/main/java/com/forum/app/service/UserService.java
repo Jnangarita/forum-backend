@@ -9,13 +9,13 @@ import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
 import com.forum.app.dto.request.UpdateUserInput;
-import com.forum.app.dto.request.CreateUserInput;
+import com.forum.app.dto.request.SaveUserInput;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
 
 public interface UserService {
-	UserInfoDTO createUser(CreateUserInput payload);
+	UserInfoDTO createUser(SaveUserInput payload);
 
 	UserResponseDTO getUserById(Long id);
 

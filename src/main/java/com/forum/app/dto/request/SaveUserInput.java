@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateUserInput extends UserBaseInput {
+public class SaveUserInput extends UserBaseInput {
 	@NotBlank
 	private String password;
 
