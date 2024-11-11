@@ -1,19 +1,16 @@
 package com.forum.app.dto.request;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.forum.app.dto.request.base.AnswerBaseInput;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class AnswerInput {
+public class SaveAnswerInput extends AnswerBaseInput {
 	@NotNull
     private Long questionId;
-
-	@NotBlank
-    private String answerTxt;
 
 	@NotNull
     private Long userId;

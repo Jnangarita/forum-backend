@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.forum.app.dto.request.AnswerInput;
+import com.forum.app.dto.request.SaveAnswerInput;
 import com.forum.app.dto.request.UpdateAnswerInput;
 import com.forum.app.dto.response.AnswerResponseDTO;
 import com.forum.app.service.AnswerService;
@@ -44,7 +44,7 @@ public class AnswerController {
 	@Operation(summary = "Save an answer")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<AnswerResponseDTO> createAnswer(@RequestBody @Valid AnswerInput payload,
+	public ResponseEntity<AnswerResponseDTO> createAnswer(@RequestBody @Valid SaveAnswerInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		AnswerResponseDTO answer = answerService.createAnswer(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/answers/{id}").buildAndExpand(answer.getId()).toUri();

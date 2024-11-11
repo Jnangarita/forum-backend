@@ -1,13 +1,10 @@
 package com.forum.app.dto.request;
 
-import javax.validation.constraints.NotBlank;
-
+import com.forum.app.dto.request.base.AnswerBaseInput;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateAnswerInput {
-	@NotBlank
-	private String answerTxt;
+public class UpdateAnswerInput extends AnswerBaseInput {
 }
