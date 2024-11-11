@@ -1,25 +1,17 @@
 package com.forum.app.dto.request;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import lombok.Data;
+import com.forum.app.dto.request.base.UserBaseInput;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class UserInput {
-	@NotBlank
-	private String firstName;
-
-	@NotBlank
-	private String lastName;
-
-	@NotBlank
-	@Email
-	private String email;
-
+@Getter
+@Setter
+public class CreateUserInput extends UserBaseInput {
 	@NotBlank
 	private String password;
 

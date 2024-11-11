@@ -25,8 +25,8 @@ import com.forum.app.dto.IdValueDTO;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.ResetPasswordDTO;
 import com.forum.app.dto.RoleDTO;
-import com.forum.app.dto.UpdateUserDTO;
-import com.forum.app.dto.request.UserInput;
+import com.forum.app.dto.request.UpdateUserInput;
+import com.forum.app.dto.request.CreateUserInput;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserInfoDTO createUser(UserInput payload) {
+	public UserInfoDTO createUser(CreateUserInput payload) {
 		try {
 			validate.confirmPassword(payload.getPassword(), payload.getRepeatPassword());
 			User user = setUserData(payload);
@@ -75,9 +75,9 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private User setUserData(UserInput payload) {
+	private User setUserData(CreateUserInput payload) {
 		User user = userMapper.convertDtoToEntity(payload);
-		user.setFullName(user.getFirstName() + " " + user.getLastName());
+		user.setProfileName(user.getFirstName() + " " + user.getLastName());
 		setPasswordData(user, payload.getPassword());
 		user.setNumberQuestions(0);
 		user.setNumberResponses(0);
@@ -124,10 +124,10 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserInfoDTO updateUser(Long id, UpdateUserDTO payload) {
+	public UserInfoDTO updateUser(Long id, UpdateUserInput payload) {
 		try {
 			User userToUpdated = findUser(id);
-			updateUserFields(userToUpdated, payload);
+			userMapper.updateUserFromDto(payload, userToUpdated);
 			User user = userRepository.save(userToUpdated);
 			return new UserInfoDTO(user);
 		} catch (EntityNotFoundException e) {
@@ -135,15 +135,6 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.user", null));
 		}
-	}
-
-	private void updateUserFields(User user, UpdateUserDTO payload) {
-		user.setFirstName(payload.getFirstName());
-		user.setLastName(payload.getLastName());
-		user.setFullName(payload.getUserName());
-		user.setEmail(payload.getEmail());
-		user.setCountryId(payload.getCountry().getId());
-		user.setCityId(payload.getCity().getId());
 	}
 
 	@Override

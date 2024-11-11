@@ -39,7 +39,7 @@ public class User extends Audit implements UserDetails {
 	private String lastName;
 
 	@Column(name = "nombre_usuario", unique = true, nullable = false, length = 100)
-	private String fullName;
+	private String profileName;
 
 	@Column(name = "codigo", nullable = false, length = 10)
 	private String code;

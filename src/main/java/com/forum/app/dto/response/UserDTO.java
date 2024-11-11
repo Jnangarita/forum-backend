@@ -17,6 +17,6 @@ public abstract class UserDTO {
 	protected UserDTO(User user) {
 		this.email = user.getEmail();
 		this.id = user.getId();
-		this.userName = user.getFullName();
+		this.userName = user.getProfileName();
 	}
 }

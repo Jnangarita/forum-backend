@@ -23,8 +23,8 @@ import com.forum.app.dto.BasicUserInfoDTO;
 import com.forum.app.dto.ChangePasswordDTO;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.ResetPasswordDTO;
-import com.forum.app.dto.UpdateUserDTO;
-import com.forum.app.dto.request.UserInput;
+import com.forum.app.dto.request.UpdateUserInput;
+import com.forum.app.dto.request.CreateUserInput;
 import com.forum.app.dto.UserResponseDTO;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.service.UserService;
@@ -48,7 +48,7 @@ public class UserController {
 	@Operation(summary = "Save a user")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<UserInfoDTO> createUser(@RequestBody @Valid UserInput payload,
+	public ResponseEntity<UserInfoDTO> createUser(@RequestBody @Valid CreateUserInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		UserInfoDTO user = userService.createUser(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/v1/users/{id}").buildAndExpand(user.getId()).toUri();
@@ -71,7 +71,7 @@ public class UserController {
 	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<UserInfoDTO> updateUser(
 			@Parameter(description = "Id of the user to search") @PathVariable Long id,
-			@RequestBody @Valid UpdateUserDTO payload) {
+			@RequestBody @Valid UpdateUserInput payload) {
 		UserInfoDTO user = userService.updateUser(id, payload);
 		return ResponseEntity.ok(user);
 	}
