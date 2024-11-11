@@ -77,10 +77,7 @@ public class UserServiceImpl implements UserService {
 
 	private User setUserData(CreateUserInput payload) {
 		User user = userMapper.convertDtoToEntity(payload);
-		user.setProfileName(user.getFirstName() + " " + user.getLastName());
 		setPasswordData(user, payload.getPassword());
-		user.setNumberQuestions(0);
-		user.setNumberResponses(0);
 		return user;
 	}
 

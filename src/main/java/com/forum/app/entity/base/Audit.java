@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class Audit {
+public class Audit {
 
 	@Column(name = "fecha_creacion", nullable = false, updatable = false)
 	private LocalDateTime createdAt;
