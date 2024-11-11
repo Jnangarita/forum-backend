@@ -5,18 +5,18 @@ import java.util.List;
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.QuestionResponseDTO;
-import com.forum.app.dto.SaveTopicDTO;
+import com.forum.app.dto.request.SaveTopicInput;
 import com.forum.app.dto.TopicResponseDTO;
-import com.forum.app.dto.UpdateTopicDTO;
+import com.forum.app.dto.request.UpdateTopicInput;
 import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.entity.Topic;
 
 public interface TopicService {
-	TopicResponseDTO createTopic(SaveTopicDTO payload);
+	TopicResponseDTO createTopic(SaveTopicInput payload);
 
 	QuestionInfoDTO getTopic(Long id);
 
-	TopicResponseDTO updateTopic(Long id, UpdateTopicDTO payload);
+	TopicResponseDTO updateTopic(Long id, UpdateTopicInput payload);
 
 	QuestionListDTO getTopicList();
 

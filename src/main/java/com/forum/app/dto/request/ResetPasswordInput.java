@@ -1,4 +1,4 @@
-package com.forum.app.dto;
+package com.forum.app.dto.request;
 
 import javax.validation.constraints.NotBlank;
 
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResetPasswordDTO {
+public class ResetPasswordInput {
 	@NotBlank
 	private String email;
 }

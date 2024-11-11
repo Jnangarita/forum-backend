@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.forum.app.config.StorageProperties;
 import com.forum.app.dto.DocumentResponseDTO;
-import com.forum.app.dto.FileUploadDTO;
+import com.forum.app.dto.request.FileUploadInput;
 import com.forum.app.entity.Document;
 import com.forum.app.entity.User;
 import com.forum.app.exception.OwnRuntimeException;
@@ -48,7 +48,7 @@ public class StorageServiceImpl implements StorageService {
 
 	@Transactional
 	@Override
-	public DocumentResponseDTO save(FileUploadDTO payload, Long idUser) {
+	public DocumentResponseDTO save(FileUploadInput payload, Long idUser) {
 		try {
 			User user = userService.findUser(idUser);
 			Path userDirectory = this.rootLocation.resolve(user.getCode()).normalize().toAbsolutePath();

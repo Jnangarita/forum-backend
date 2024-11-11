@@ -5,9 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.forum.app.dto.BasicUserInfoDTO;
-import com.forum.app.dto.ChangePasswordDTO;
+import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.MessageDTO;
-import com.forum.app.dto.ResetPasswordDTO;
+import com.forum.app.dto.request.ResetPasswordInput;
 import com.forum.app.dto.request.UpdateUserInput;
 import com.forum.app.dto.request.CreateUserInput;
 import com.forum.app.dto.UserResponseDTO;
@@ -27,9 +27,9 @@ public interface UserService {
 
 	void deleteUser(Long id);
 
-	MessageDTO changePassword(Long id, ChangePasswordDTO payload);
+	MessageDTO changePassword(Long id, ChangePasswordInput payload);
 
-	MessageDTO resetPassword(@Valid ResetPasswordDTO payload);
+	MessageDTO resetPassword(@Valid ResetPasswordInput payload);
 
 	User findUserByEmail(String email);
 }

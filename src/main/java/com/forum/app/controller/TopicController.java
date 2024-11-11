@@ -23,9 +23,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.QuestionResponseDTO;
-import com.forum.app.dto.SaveTopicDTO;
+import com.forum.app.dto.request.SaveTopicInput;
 import com.forum.app.dto.TopicResponseDTO;
-import com.forum.app.dto.UpdateTopicDTO;
+import com.forum.app.dto.request.UpdateTopicInput;
 import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.service.TopicService;
 
@@ -49,7 +49,7 @@ public class TopicController {
 	@Operation(summary = "Save a question")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<TopicResponseDTO> createTopic(@RequestBody @Valid SaveTopicDTO payload,
+	public ResponseEntity<TopicResponseDTO> createTopic(@RequestBody @Valid SaveTopicInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		TopicResponseDTO topic = topicService.createTopic(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/topics/{id}").buildAndExpand(topic.getId()).toUri();
@@ -70,7 +70,7 @@ public class TopicController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<TopicResponseDTO> updateTopic(
 			@Parameter(description = "Id of the topic to be updated") @PathVariable Long id,
-			@RequestBody @Valid UpdateTopicDTO payload) {
+			@RequestBody @Valid UpdateTopicInput payload) {
 		TopicResponseDTO topic = topicService.updateTopic(id, payload);
 		return ResponseEntity.ok(topic);
 	}

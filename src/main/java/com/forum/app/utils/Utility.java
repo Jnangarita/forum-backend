@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.exception.OwnRuntimeException;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -79,18 +79,18 @@ public class Utility {
 		return result.get(column) != null ? ((Timestamp) result.get(column)).toLocalDateTime() : null;
 	}
 
-	public List<IdValueDTO> convertJsonToIdValueDTOList(String jsonString) {
+	public List<IdValueInput> convertJsonToIdValueDTOList(String jsonString) {
 		try {
-			return objectMapper.readValue(jsonString, new TypeReference<List<IdValueDTO>>() {
+			return objectMapper.readValue(jsonString, new TypeReference<List<IdValueInput>>() {
 			});
 		} catch (JsonProcessingException e) {
 			throw new OwnRuntimeException(getMessage(JSON_FORMAT_ERROR_MSG, null));
 		}
 	}
 
-	public IdValueDTO convertJsonToIdValueDTO(String jsonString) {
+	public IdValueInput convertJsonToIdValueDTO(String jsonString) {
 		try {
-			return objectMapper.readValue(jsonString, new TypeReference<IdValueDTO>() {
+			return objectMapper.readValue(jsonString, new TypeReference<IdValueInput>() {
 			});
 		} catch (JsonProcessingException e) {
 			throw new OwnRuntimeException(getMessage(JSON_FORMAT_ERROR_MSG, null));

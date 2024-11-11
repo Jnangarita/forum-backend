@@ -10,9 +10,9 @@ import javax.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.forum.app.dto.CategoryDTO;
+import com.forum.app.dto.request.CategoryInput;
 import com.forum.app.dto.CategoryResponseDTO;
-import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.entity.Category;
 import com.forum.app.enumeration.DbColumns;
 import com.forum.app.exception.OwnRuntimeException;
@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Transactional
 	@Override
-	public CategoryResponseDTO createCategory(CategoryDTO payload) {
+	public CategoryResponseDTO createCategory(CategoryInput payload) {
 		try {
 			Category newCategory = new Category();
 			populateCategory(newCategory, payload);
@@ -46,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 	}
 
-	private void populateCategory(Category category, CategoryDTO payload) {
+	private void populateCategory(Category category, CategoryInput payload) {
 		category.setCategoryName(payload.getCategoryName());
 		category.setDescription(payload.getDescription());
 		category.setCreatedBy(payload.getCreatedBy());
@@ -71,8 +71,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Transactional
 	@Override
-	public CategoryResponseDTO updateCategory(Long id, CategoryDTO payload) {
+	public CategoryResponseDTO updateCategory(Long id, CategoryInput payload) {
 		try {
+			// TODO: Actualizar el campo description
 			Category categoryToUpdate = findCategoryById(id);
 			categoryToUpdate.setCategoryName(payload.getCategoryName());
 			categoryToUpdate.setModifiedBy(payload.getCreatedBy());
@@ -127,12 +128,12 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public List<IdValueDTO> getCategories() {
+	public List<IdValueInput> getCategories() {
 		try {
 			List<Category> categories = categoryRepository.findByDeletedFalse();
-			List<IdValueDTO> categoryList = new ArrayList<>();
+			List<IdValueInput> categoryList = new ArrayList<>();
 			for (Category category : categories) {
-				IdValueDTO dto = new IdValueDTO();
+				IdValueInput dto = new IdValueInput();
 				dto.setId(category.getId());
 				dto.setValue(category.getCategoryName());
 				categoryList.add(dto);

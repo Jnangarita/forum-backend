@@ -28,7 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.DocumentResponseDTO;
 import com.forum.app.dto.FileDTO;
-import com.forum.app.dto.FileUploadDTO;
+import com.forum.app.dto.request.FileUploadInput;
 import com.forum.app.entity.User;
 import com.forum.app.service.StorageService;
 import com.forum.app.utils.Utility;
@@ -56,7 +56,7 @@ public class FileUploadController {
 	@Operation(summary = "Save a file")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<DocumentResponseDTO> saveFile(@ModelAttribute @Valid FileUploadDTO payload,
+	public ResponseEntity<DocumentResponseDTO> saveFile(@ModelAttribute @Valid FileUploadInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		if (payload.getFile() == null) {
 			throw new NullPointerException(utility.getMessage("forum.message.warn.file", null));

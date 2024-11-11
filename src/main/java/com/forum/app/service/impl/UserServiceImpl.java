@@ -20,10 +20,10 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.forum.app.dto.BasicUserInfoDTO;
-import com.forum.app.dto.ChangePasswordDTO;
-import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.request.ChangePasswordInput;
+import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.dto.MessageDTO;
-import com.forum.app.dto.ResetPasswordDTO;
+import com.forum.app.dto.request.ResetPasswordInput;
 import com.forum.app.dto.RoleDTO;
 import com.forum.app.dto.request.UpdateUserInput;
 import com.forum.app.dto.request.CreateUserInput;
@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
 		dto.setUserName((String) userMap.get(DbColumns.USER_NAME.getColumns()));
 		dto.setReputation(utility.convertToIntType(userMap.get(DbColumns.REPUTATION.getColumns())));
 		String categoriesJson = (String) userMap.get(DbColumns.CATEGORIES.getColumns());
-		List<IdValueDTO> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
+		List<IdValueInput> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
 		dto.setCategory(categories);
 	}
 
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public MessageDTO changePassword(Long id, @Valid ChangePasswordDTO payload) {
+	public MessageDTO changePassword(Long id, @Valid ChangePasswordInput payload) {
 		try {
 			User user = findUser(id);
 			validate.currentPassword(payload.getCurrentPassword(), user.getPassword());
@@ -198,7 +198,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public MessageDTO resetPassword(@Valid ResetPasswordDTO payload) {
+	public MessageDTO resetPassword(@Valid ResetPasswordInput payload) {
 		try {
 			String email = payload.getEmail();
 			User user = findUserByEmail(email);

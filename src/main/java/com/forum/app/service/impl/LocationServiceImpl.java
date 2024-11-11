@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.CityRepository;
 import com.forum.app.repository.CountryRepository;
@@ -25,7 +25,7 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public List<IdValueDTO> getCountries() {
+	public List<IdValueInput> getCountries() {
 		try {
 			return countryRepository.findCountry();
 		} catch (Exception e) {
@@ -34,7 +34,7 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public List<IdValueDTO> getCities(Long id) {
+	public List<IdValueInput> getCities(Long id) {
 		try {
 			return cityRepository.findCity(id);
 		} catch (Exception e) {

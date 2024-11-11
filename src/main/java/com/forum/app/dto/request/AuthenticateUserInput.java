@@ -1,4 +1,4 @@
-package com.forum.app.dto;
+package com.forum.app.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AuthenticateUserDTO {
+public class AuthenticateUserInput {
 	@NotBlank
 	@Email
 	private String email;

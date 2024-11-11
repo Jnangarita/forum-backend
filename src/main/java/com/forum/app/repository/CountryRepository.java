@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.entity.Country;
 
 public interface CountryRepository extends JpaRepository<Country, Long> {
 
-	@Query("SELECT new com.forum.app.dto.IdValueDTO(c.id, c.countryName) FROM Country c")
-	List<IdValueDTO> findCountry();
+	@Query("SELECT new com.forum.app.dto.request.IdValueInput(c.id, c.countryName) FROM Country c")
+	List<IdValueInput> findCountry();
 }

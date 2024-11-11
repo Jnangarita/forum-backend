@@ -1,4 +1,4 @@
-package com.forum.app.dto;
+package com.forum.app.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class CategoryDTO {
+public class CategoryInput {
 	@NotBlank
 	private String categoryName;
 

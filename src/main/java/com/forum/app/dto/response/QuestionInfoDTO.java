@@ -3,7 +3,7 @@ package com.forum.app.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.request.IdValueInput;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionInfoDTO {
-	private List<IdValueDTO> categories;
+	private List<IdValueInput> categories;
 	private LocalDateTime createdAt;
 	private boolean dislike;
 	private Long id;

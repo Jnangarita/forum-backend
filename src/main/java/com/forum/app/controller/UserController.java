@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.BasicUserInfoDTO;
-import com.forum.app.dto.ChangePasswordDTO;
+import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.MessageDTO;
-import com.forum.app.dto.ResetPasswordDTO;
+import com.forum.app.dto.request.ResetPasswordInput;
 import com.forum.app.dto.request.UpdateUserInput;
 import com.forum.app.dto.request.CreateUserInput;
 import com.forum.app.dto.UserResponseDTO;
@@ -100,7 +100,7 @@ public class UserController {
 	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<MessageDTO> changePassword(
 			@Parameter(description = "Id of the user to search") @PathVariable Long id,
-			@RequestBody @Valid ChangePasswordDTO payload) {
+			@RequestBody @Valid ChangePasswordInput payload) {
 		MessageDTO message = userService.changePassword(id, payload);
 		return ResponseEntity.ok(message);
 	}
@@ -109,7 +109,7 @@ public class UserController {
 	@PostMapping("/reset-password")
 	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<MessageDTO> resetPassword(@RequestBody @Valid ResetPasswordDTO payload) {
+	public ResponseEntity<MessageDTO> resetPassword(@RequestBody @Valid ResetPasswordInput payload) {
 		MessageDTO message = userService.resetPassword(payload);
 		return ResponseEntity.ok(message);
 	}

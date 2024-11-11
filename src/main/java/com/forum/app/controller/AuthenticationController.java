@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.forum.app.dto.AuthenticateUserDTO;
+import com.forum.app.dto.request.AuthenticateUserInput;
 import com.forum.app.dto.JwtTokenDTO;
 import com.forum.app.entity.User;
 import com.forum.app.service.impl.TokenService;
@@ -35,7 +35,7 @@ public class AuthenticationController {
 	@Operation(summary = "Authenticate user")
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<JwtTokenDTO> authenticateUser(@RequestBody @Valid AuthenticateUserDTO payload) {
+	public ResponseEntity<JwtTokenDTO> authenticateUser(@RequestBody @Valid AuthenticateUserInput payload) {
 		Authentication authToken = new UsernamePasswordAuthenticationToken(payload.getEmail(), payload.getPassword());
 		var authenticatedUser = authenticationManager.authenticate(authToken);
 		var jwtToken = tokenService.generateToken((User) authenticatedUser.getPrincipal());

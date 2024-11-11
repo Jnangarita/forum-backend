@@ -1,5 +1,6 @@
 package com.forum.app.dto;
 
+import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
 
@@ -11,9 +12,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class UserResponseDTO extends UserInfoDTO {
-	private IdValueDTO city;
+	private IdValueInput city;
 	private String code;
-	private IdValueDTO country;
+	private IdValueInput country;
 	private boolean deleted;
 	private String firstName;
 	private String lastName;

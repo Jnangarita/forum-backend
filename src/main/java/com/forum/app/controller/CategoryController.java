@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.forum.app.dto.CategoryDTO;
+import com.forum.app.dto.request.CategoryInput;
 import com.forum.app.dto.CategoryResponseDTO;
-import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.service.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +44,7 @@ public class CategoryController {
 	@Operation(summary = "Save a category")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody @Valid CategoryDTO payload,
+	public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody @Valid CategoryInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		CategoryResponseDTO category = categoryService.createCategory(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/v1/categories/{id}").buildAndExpand(category.getId()).toUri();
@@ -65,7 +65,7 @@ public class CategoryController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<CategoryResponseDTO> updateCategory(
 			@Parameter(description = "Id of the category to be updated") @PathVariable Long id,
-			@RequestBody @Valid CategoryDTO payload) {
+			@RequestBody @Valid CategoryInput payload) {
 		CategoryResponseDTO category = categoryService.updateCategory(id, payload);
 		return ResponseEntity.ok(category);
 	}
@@ -90,8 +90,8 @@ public class CategoryController {
 	@Operation(summary = "Get category list with ID and name")
 	@GetMapping("/list")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<IdValueDTO>> getCategories() {
-		List<IdValueDTO> categoryList = categoryService.getCategories();
+	public ResponseEntity<List<IdValueInput>> getCategories() {
+		List<IdValueInput> categoryList = categoryService.getCategories();
 		return ResponseEntity.ok(categoryList);
 	}
 }

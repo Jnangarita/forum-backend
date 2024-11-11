@@ -1,4 +1,4 @@
-package com.forum.app.dto;
+package com.forum.app.dto.request;
 
 import javax.validation.constraints.NotBlank;
 
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class FileUploadDTO {
+public class FileUploadInput {
 	private MultipartFile file;
 
 	@NotBlank

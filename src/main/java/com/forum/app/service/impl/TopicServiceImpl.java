@@ -10,13 +10,13 @@ import javax.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.QuestionResponseDTO;
-import com.forum.app.dto.SaveTopicDTO;
+import com.forum.app.dto.request.SaveTopicInput;
 import com.forum.app.dto.TopicResponseDTO;
-import com.forum.app.dto.UpdateTopicDTO;
+import com.forum.app.dto.request.UpdateTopicInput;
 import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.entity.Topic;
 import com.forum.app.enumeration.DbColumns;
@@ -39,7 +39,7 @@ public class TopicServiceImpl implements TopicService {
 
 	@Transactional
 	@Override
-	public TopicResponseDTO createTopic(SaveTopicDTO payload) {
+	public TopicResponseDTO createTopic(SaveTopicInput payload) {
 		try {
 			Topic newQuestion = new Topic();
 			setQuestionData(newQuestion, payload);
@@ -52,7 +52,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 	}
 
-	private void setQuestionData(Topic topic, SaveTopicDTO payload) {
+	private void setQuestionData(Topic topic, SaveTopicInput payload) {
 		topic.setCategoryId(payload.getCategoryId());
 		topic.setTitleQuestion(payload.getTitleQuestion());
 		topic.setQuestion(payload.getQuestion());
@@ -98,7 +98,7 @@ public class TopicServiceImpl implements TopicService {
 
 	@Transactional
 	@Override
-	public TopicResponseDTO updateTopic(Long id, UpdateTopicDTO payload) {
+	public TopicResponseDTO updateTopic(Long id, UpdateTopicInput payload) {
 		try {
 			Topic question = getTopicById(id);
 			populateQuestion(question, payload);
@@ -112,7 +112,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 	}
 
-	private void populateQuestion(Topic question, UpdateTopicDTO payload) {
+	private void populateQuestion(Topic question, UpdateTopicInput payload) {
 		question.setCategoryId(payload.getCategoryId());
 		question.setQuestion(payload.getQuestion());
 	}
@@ -151,7 +151,7 @@ public class TopicServiceImpl implements TopicService {
 		dto.setViews(utility.convertToIntType(question.get(DbColumns.VIEWS.getColumns())));
 		dto.setVotes(utility.convertToIntType(question.get(DbColumns.VOTES.getColumns())));
 		String categoriesJson = (String) question.get(DbColumns.CATEGORIES.getColumns());
-		List<IdValueDTO> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
+		List<IdValueInput> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
 		dto.setCategories(categories);
 	}
 

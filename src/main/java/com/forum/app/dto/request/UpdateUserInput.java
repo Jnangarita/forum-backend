@@ -3,7 +3,6 @@ package com.forum.app.dto.request;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
-import com.forum.app.dto.IdValueDTO;
 import com.forum.app.dto.request.base.UserBaseInput;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +14,8 @@ public class UpdateUserInput extends UserBaseInput {
 	private String profileName;
 
 	@Valid
-	private IdValueDTO country;
+	private IdValueInput country;
 
 	@Valid
-	private IdValueDTO city;
+	private IdValueInput city;
 }

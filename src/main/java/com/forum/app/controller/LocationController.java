@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.forum.app.dto.IdValueDTO;
+import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.service.LocationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,8 +31,8 @@ public class LocationController {
 	@GetMapping("/countries")
 	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<List<IdValueDTO>> getCountryList() {
-		List<IdValueDTO> countries = locationService.getCountries();
+	public ResponseEntity<List<IdValueInput>> getCountryList() {
+		List<IdValueInput> countries = locationService.getCountries();
 		return ResponseEntity.ok(countries);
 	}
 
@@ -40,9 +40,9 @@ public class LocationController {
 	@GetMapping("/{countryId}/cities")
 	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<List<IdValueDTO>> getCityList(
+	public ResponseEntity<List<IdValueInput>> getCityList(
 			@Parameter(description = "Id of the country to search") @PathVariable Long countryId) {
-		List<IdValueDTO> cities = locationService.getCities(countryId);
+		List<IdValueInput> cities = locationService.getCities(countryId);
 		return ResponseEntity.ok(cities);
 	}
 }
