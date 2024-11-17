@@ -36,7 +36,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @RequestMapping("${spring.data.rest.basePath}/v1/users")
 public class UserController {
-
 	private final UserService userService;
 	private final String basePath;
 

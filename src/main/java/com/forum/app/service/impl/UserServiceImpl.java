@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.forum.app.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -39,6 +40,7 @@ import com.forum.app.utils.Utility;
 import com.forum.app.validation.Validate;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 	private final Utility utility;
 	private final UserRepository userRepository;
@@ -65,7 +67,9 @@ public class UserServiceImpl implements UserService {
 		try {
 			validate.confirmPassword(payload.getPassword(), payload.getRepeatPassword());
 			User user = setUserData(payload);
-			return new UserInfoDTO(userRepository.save(user));
+			User newUser = userRepository.save(user);
+			log.info(utility.getMessage("forum.message.info.create.user", new Object[] { newUser.getId() }));
+			return new UserInfoDTO(newUser);
 		} catch (PasswordException e) {
 			throw e;
 		} catch (DataIntegrityViolationException e) {

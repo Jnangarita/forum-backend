@@ -23,9 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = "usuario")
 public class User extends Audit implements UserDetails {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -62,8 +60,9 @@ public class User extends Audit implements UserDetails {
 	@Column(name = "numero_respuestas")
 	private Integer numberResponses;
 
-	@Column(name = "id_rol", nullable = false)
-	private Integer role;
+	@ManyToOne
+	@JoinColumn(name = "id_rol", nullable = false)
+	private Role role;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

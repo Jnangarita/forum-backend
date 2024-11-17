@@ -21,5 +21,5 @@ public class SaveUserInput extends UserBaseInput {
 	@NotNull
 	@Min(value = 1, message = "El rol debe ser 1, 2 o 3.")
 	@Max(value = 3, message = "El rol debe ser 1, 2 o 3.")
-	private Integer role;
+	private Long roleId;
 }
