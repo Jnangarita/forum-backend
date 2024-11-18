@@ -1,18 +1,19 @@
 package com.forum.app.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+import java.io.Serializable;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "ciudades")
-public class City {
+public class City implements Serializable {
+	private static final long serialVersionUID = 3L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +22,8 @@ public class City {
 	@Column(name = "nombre_ciudad", nullable = false, length = 100)
 	private String cityName;
 
-	@Column(name = "pais_id")
-	private Long countryId;
+	@ManyToOne
+	@JoinColumn(name = "pais_id", nullable = false)
+	@JsonBackReference
+	private Country countryId;
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.forum.app.entity.base.Audit;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "usuario")
-public class User extends Audit implements UserDetails {
+public class User extends Audit implements UserDetails, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,11 +49,13 @@ public class User extends Audit implements UserDetails {
 	@Column(name = "contrasena", nullable = false, length = 300)
 	private String password;
 
-	@Column(name = "id_pais", unique = true, nullable = false, length = 50)
-	private Long countryId;
+	@ManyToOne
+	@JoinColumn(name = "id_pais", nullable = false)
+	private Country country;
 
-	@Column(name = "id_ciudad", unique = true, nullable = false, length = 50)
-	private Long cityId;
+	@ManyToOne
+	@JoinColumn(name = "id_ciudad", nullable = false)
+	private City city;
 
 	@Column(name = "numero_preguntas")
 	private Integer numberQuestions;
