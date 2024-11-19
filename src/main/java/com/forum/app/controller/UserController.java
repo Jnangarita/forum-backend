@@ -25,7 +25,7 @@ import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
 import com.forum.app.dto.request.UpdateUserInput;
 import com.forum.app.dto.request.SaveUserInput;
-import com.forum.app.dto.UserResponseDTO;
+import com.forum.app.dto.UserOutput;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.service.UserService;
 
@@ -58,9 +58,9 @@ public class UserController {
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<UserResponseDTO> getUserById(
+	public ResponseEntity<UserOutput> getUserById(
 			@Parameter(description = "Id of the user to search") @PathVariable Long id) {
-		UserResponseDTO user = userService.getUserById(id);
+		UserOutput user = userService.getUserById(id);
 		return ResponseEntity.ok(user);
 	}
 

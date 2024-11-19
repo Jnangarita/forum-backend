@@ -1,5 +1,6 @@
 package com.forum.app.mapper;
 
+import com.forum.app.dto.UserOutput;
 import com.forum.app.dto.request.SaveUserInput;
 import com.forum.app.dto.request.UpdateUserInput;
 import com.forum.app.entity.User;
@@ -16,4 +17,5 @@ public interface UserMapper {
     @Mapping(target = "role", source = "roleId", qualifiedByName = "idToRole")
     User convertDtoToEntity(SaveUserInput userInput);
     void updateUserFromDto(UpdateUserInput userInput, @MappingTarget User user);
+    UserOutput toUserOutput(User user);
 }

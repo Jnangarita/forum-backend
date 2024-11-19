@@ -12,11 +12,11 @@ import lombok.Setter;
 public abstract class UserDTO {
 	private String email;
 	private Long id;
-	private String userName;
+	private String profileName;
 
 	protected UserDTO(User user) {
 		this.email = user.getEmail();
 		this.id = user.getId();
-		this.userName = user.getProfileName();
+		this.profileName = user.getProfileName();
 	}
 }

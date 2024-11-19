@@ -10,14 +10,14 @@ import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
 import com.forum.app.dto.request.UpdateUserInput;
 import com.forum.app.dto.request.SaveUserInput;
-import com.forum.app.dto.UserResponseDTO;
+import com.forum.app.dto.UserOutput;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
 
 public interface UserService {
 	UserInfoDTO createUser(SaveUserInput payload);
 
-	UserResponseDTO getUserById(Long id);
+	UserOutput getUserById(Long id);
 
 	User findUser(Long id);
 

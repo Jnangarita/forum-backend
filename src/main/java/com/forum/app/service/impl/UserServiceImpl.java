@@ -3,6 +3,7 @@ package com.forum.app.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -25,10 +26,9 @@ import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
-import com.forum.app.dto.RoleDTO;
 import com.forum.app.dto.request.UpdateUserInput;
 import com.forum.app.dto.request.SaveUserInput;
-import com.forum.app.dto.UserResponseDTO;
+import com.forum.app.dto.UserOutput;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
 import com.forum.app.enumeration.DbColumns;
@@ -86,36 +86,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserResponseDTO getUserById(Long id) {
+	public UserOutput getUserById(Long id) {
 		try {
-			Map<String, Object> user = userRepository.findUserInformationById(id);
-			UserResponseDTO dto = new UserResponseDTO();
-			setUserByIdData(dto, user);
-			RoleDTO userRole = new RoleDTO();
-			userRole.setId(utility.convertToLongType(user.get(DbColumns.ROLE_ID.getColumns())));
-			userRole.setRoleName(utility.convertToStringType(user.get(DbColumns.ROLE_NAME.getColumns())));
-			dto.setUserRole(userRole);
-			return dto;
+			Optional<User> user = userRepository.findById(id);
+			return userMapper.toUserOutput(user.orElse(null));
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.user", null));
 		}
-	}
-
-	private void setUserByIdData(UserResponseDTO dto, Map<String, Object> user) {
-		dto.setCode(utility.convertToStringType(user.get(DbColumns.CODE.getColumns())));
-		dto.setCountry(utility.convertJsonToIdValueDTO((user.get(DbColumns.COUNTRY.getColumns()).toString())));
-		dto.setCity(utility.convertJsonToIdValueDTO((user.get(DbColumns.CITY.getColumns()).toString())));
-		dto.setEmail(utility.convertToStringType(user.get(DbColumns.EMAIL.getColumns())));
-		dto.setId(utility.convertToLongType(user.get(DbColumns.ID.getColumns())));
-		dto.setNumberQuestions((Integer) user.get(DbColumns.QUESTION_NUMBER.getColumns()));
-		dto.setNumberResponses((Integer) user.get(DbColumns.ANSWER_NUMBER.getColumns()));
-		dto.setPhoto((String) user.get(DbColumns.PHOTO.getColumns()));
-		dto.setDeleted((boolean) user.get(DbColumns.DELETED.getColumns()));
-		dto.setFirstName(utility.convertToStringType(user.get(DbColumns.FIRST_NAME.getColumns())));
-		dto.setLastName(utility.convertToStringType(user.get(DbColumns.LAST_NAME.getColumns())));
-		dto.setUserName(utility.convertToStringType(user.get(DbColumns.USER_NAME.getColumns())));
 	}
 
 	@Override
