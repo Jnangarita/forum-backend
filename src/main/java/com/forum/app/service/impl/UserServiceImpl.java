@@ -21,9 +21,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import com.forum.app.dto.BasicUserInfoDTO;
+import com.forum.app.dto.BasicUserInfoOutput;
 import com.forum.app.dto.request.ChangePasswordInput;
-import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
 import com.forum.app.dto.request.UpdateUserInput;
@@ -31,7 +30,6 @@ import com.forum.app.dto.request.SaveUserInput;
 import com.forum.app.dto.UserOutput;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
-import com.forum.app.enumeration.DbColumns;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.exception.PasswordException;
 import com.forum.app.repository.UserRepository;
@@ -118,12 +116,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<BasicUserInfoDTO> getUserList() {
+	public List<BasicUserInfoOutput> getUserList() {
 		try {
 			List<Map<String, Object>> savedUserList = userRepository.userInfoList();
-			List<BasicUserInfoDTO> userList = new ArrayList<>();
+			List<BasicUserInfoOutput> userList = new ArrayList<>();
 			for (Map<String, Object> userMap : savedUserList) {
-				BasicUserInfoDTO userDto = new BasicUserInfoDTO();
+				BasicUserInfoOutput userDto = new BasicUserInfoOutput();
 				setUserListData(userDto, userMap);
 				userList.add(userDto);
 			}
@@ -133,15 +131,15 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private void setUserListData(BasicUserInfoDTO dto, Map<String, Object> userMap) {
-		dto.setId(utility.convertToLongType(userMap.get(DbColumns.ID.getColumns())));
+	private void setUserListData(BasicUserInfoOutput dto, Map<String, Object> userMap) {
+/*		dto.setId(utility.convertToLongType(userMap.get(DbColumns.ID.getColumns())));
 		dto.setPhoto((String) userMap.get(DbColumns.PHOTO.getColumns()));
 		dto.setCity((String) userMap.get(DbColumns.COUNTRY.getColumns()));
 		dto.setUserName((String) userMap.get(DbColumns.USER_NAME.getColumns()));
 		dto.setReputation(utility.convertToIntType(userMap.get(DbColumns.REPUTATION.getColumns())));
 		String categoriesJson = (String) userMap.get(DbColumns.CATEGORIES.getColumns());
 		List<IdValueInput> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
-		dto.setCategory(categories);
+		dto.setCategory(categories);*/
 	}
 
 	@Transactional

@@ -2,10 +2,11 @@ package com.forum.app.service;
 
 import java.util.List;
 
-import com.forum.app.dto.request.IdValueInput;
+import com.forum.app.entity.City;
+import com.forum.app.entity.Country;
 
 public interface LocationService {
-	List<IdValueInput> getCountries();
+	List<Country> getCountries();
 
-	List<IdValueInput> getCities(Long id);
+	List<City> getCities(Long id);
 }

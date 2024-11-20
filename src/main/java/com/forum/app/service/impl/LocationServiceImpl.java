@@ -2,9 +2,10 @@ package com.forum.app.service.impl;
 
 import java.util.List;
 
+import com.forum.app.entity.City;
+import com.forum.app.entity.Country;
 import org.springframework.stereotype.Service;
 
-import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.CityRepository;
 import com.forum.app.repository.CountryRepository;
@@ -25,7 +26,7 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public List<IdValueInput> getCountries() {
+	public List<Country> getCountries() {
 		try {
 			return countryRepository.findCountry();
 		} catch (Exception e) {
@@ -34,7 +35,7 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public List<IdValueInput> getCities(Long id) {
+	public List<City> getCities(Long id) {
 		try {
 			return cityRepository.findCity(id);
 		} catch (Exception e) {

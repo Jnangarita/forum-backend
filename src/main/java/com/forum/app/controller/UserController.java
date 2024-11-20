@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.forum.app.dto.BasicUserInfoDTO;
+import com.forum.app.dto.BasicUserInfoOutput;
 import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
@@ -79,8 +79,8 @@ public class UserController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<List<BasicUserInfoDTO>> getUserList() {
-		List<BasicUserInfoDTO> userList = userService.getUserList();
+	public ResponseEntity<List<BasicUserInfoOutput>> getUserList() {
+		List<BasicUserInfoOutput> userList = userService.getUserList();
 		return ResponseEntity.ok(userList);
 	}
 

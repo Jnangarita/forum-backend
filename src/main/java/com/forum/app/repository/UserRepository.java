@@ -15,33 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	List<User> findByDeletedFalse();
 
 	@Query(value = "SELECT"
-			+ " u.codigo,"
-			+ " JSON_OBJECT("
-			+ "  'id', p.id,"
-			+ "  'value', p.nombre_pais) AS pais,"
-			+ " JSON_OBJECT("
-			+ "  'id', c.id,"
-			+ "  'value', c.nombre_ciudad) AS ciudad,"
-			+ " u.correo_electronico,"
-			+ " u.id,"
-			+ " u.numero_preguntas,"
-			+ " u.numero_respuestas,"
-			+ " d.ruta_documento AS foto,"
-			+ " u.eliminado,"
-			+ " u.primer_nombre,"
-			+ " u.apellido,"
-			+ " u.nombre_usuario,"
-			+ " r.id AS id_rol,"
-			+ " r.nombre_rol "
-			+ "FROM usuario u "
-			+ "INNER JOIN rol r ON u.id_rol = r.id "
-			+ "LEFT JOIN paises p ON p.id = u.id_pais "
-			+ "LEFT JOIN ciudades c ON c.id = u.id_ciudad "
-			+ "LEFT JOIN documento d ON d.id_usuario = u.id "
-			+ "WHERE u.id = :id", nativeQuery = true)
-	Map<String, Object> findUserInformationById(@Param("id") Long id);
-
-	@Query(value = "SELECT"
 			+ " u.id,"
 			+ " d.ruta_documento AS foto,"
 			+ " u.id_pais,"

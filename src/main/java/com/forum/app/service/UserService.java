@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.forum.app.dto.BasicUserInfoDTO;
+import com.forum.app.dto.BasicUserInfoOutput;
 import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
@@ -23,7 +23,7 @@ public interface UserService {
 
 	UserInfoDTO updateUser(Long id, UpdateUserInput payload);
 
-	List<BasicUserInfoDTO> getUserList();
+	List<BasicUserInfoOutput> getUserList();
 
 	void deleteUser(Long id);
 

@@ -25,5 +25,5 @@ public class City implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "pais_id", nullable = false)
 	@JsonBackReference
-	private Country countryId;
+	private Country country;
 }
