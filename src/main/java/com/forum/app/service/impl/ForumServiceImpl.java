@@ -2,55 +2,57 @@ package com.forum.app.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.forum.app.entity.Answer;
+import com.forum.app.entity.Topic;
+import com.forum.app.mapper.AnswerMapper;
+import com.forum.app.mapper.TopicMapper;
 import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.TopPostDTO;
-import com.forum.app.enumeration.DbColumns;
 import com.forum.app.repository.AnswerRepository;
 import com.forum.app.repository.TopicRepository;
 import com.forum.app.service.ForumService;
-import com.forum.app.utils.Utility;
 
 @Service
 public class ForumServiceImpl implements ForumService {
 
 	private final TopicRepository topicRepository;
 	private final AnswerRepository answerRepository;
-	private final Utility utility;
+	private final TopicMapper topicMapper;
+	private final AnswerMapper answerMapper;
 
-	public ForumServiceImpl(TopicRepository topicRepository, AnswerRepository answerRepository, Utility utility) {
+	public ForumServiceImpl(TopicRepository topicRepository, AnswerRepository answerRepository, TopicMapper topicMapper, AnswerMapper answerMapper) {
 		this.topicRepository = topicRepository;
 		this.answerRepository = answerRepository;
-		this.utility = utility;
+		this.topicMapper = topicMapper;
+		this.answerMapper = answerMapper;
 	}
 
 	@Override
 	public List<TopPostDTO> getTopPost(Long id) {
-		List<Map<String, Object>> questionList = topicRepository.findPostedQuestionByUserId(id);
-		List<Map<String, Object>> answerList = answerRepository.findPostedAnswersByUserId(id);
+		List<Topic> questionList = topicRepository.findByDeletedFalseAndUserId(id);
+		List<Answer> answerList = answerRepository.findByDeletedFalseAndUserId(id);
 		List<TopPostDTO> topPostList = new ArrayList<>();
 		topPostList.addAll(convertToTopPostDTOList(questionList, true));
 		topPostList.addAll(convertToTopPostDTOList(answerList, false));
 		return topPostList;
 	}
 
-	private List<TopPostDTO> convertToTopPostDTOList(List<Map<String, Object>> mapList, boolean isQuestion) {
-		return mapList.stream().map(data -> mapToTopPostDTO(data, isQuestion)).collect(Collectors.toList());
+	private List<TopPostDTO> convertToTopPostDTOList(List<?> entityList, boolean isQuestion) {
+		return entityList.stream().map(entity -> mapToTopPostDTO(entity, isQuestion)).collect(Collectors.toList());
 	}
 
-	private TopPostDTO mapToTopPostDTO(Map<String, Object> data, boolean isQuestion) {
-		TopPostDTO dto = new TopPostDTO();
-		dto.setPostId(utility.convertToLongType(data.get(DbColumns.ID.getColumns())));
-		dto.setPost(isQuestion ? (String) data.get(DbColumns.QUESTION.getColumns())
-				: (String) data.get(DbColumns.ANSWER.getColumns()));
-		dto.setUserId(utility.convertToLongType(data.get(DbColumns.USER_ID.getColumns())));
-		dto.setPostType(((String) data.get(DbColumns.TYPE.getColumns())).charAt(0));
-		dto.setStatus(isQuestion ? ((String) data.get(DbColumns.QUESTION_STATUS.getColumns())).charAt(0)
-				: ((String) data.get(DbColumns.ANSWER_STATUS.getColumns())).charAt(0));
-		dto.setCreationDate(utility.getDate(data, DbColumns.CREATION_DATE.getColumns()));
+	private TopPostDTO mapToTopPostDTO(Object entity, boolean isQuestion) {
+		TopPostDTO dto;
+		if (isQuestion) {
+			Topic topic = (Topic) entity;
+			dto = topicMapper.convertTopicEntityToTopPost(topic);
+		} else {
+			Answer answer = (Answer) entity;
+			dto = answerMapper.convertAnswerEntityToTopPost(answer);
+		}
 		return dto;
 	}
 }

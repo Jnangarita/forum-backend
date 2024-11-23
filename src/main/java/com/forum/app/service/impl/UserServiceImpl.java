@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<BasicUserInfoOutput> getUserList() {
 		try {
-			List<User> savedUserList = userRepository.userInfoList();
+			List<User> savedUserList = userRepository.findByDeletedFalse();
 			List<BasicUserInfoOutput> userList = new ArrayList<>();
 			for (User user : savedUserList) {
 				BasicUserInfoOutput userDto = userMapper.entityToBasicUserInfo(user);

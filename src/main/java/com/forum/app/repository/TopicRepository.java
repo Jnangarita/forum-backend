@@ -9,19 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface TopicRepository extends JpaRepository<Topic, Long> {
-	List<Topic> findByDeletedFalse();
-
-    @Query(value = "SELECT"
-            + " p.id,"
-            + " p.pregunta,"
-            + " p.id_usuario,"
-            + " 'Q' AS tipo,"
-            + " p.estado_pregunta,"
-            + " p.fecha_creacion "
-            + "FROM pregunta p "
-            + "WHERE p.eliminado = FALSE AND p.id_usuario = :id", 
-            nativeQuery = true)
-	List<Map<String, Object>> findPostedQuestionByUserId(@Param("id") Long id);
+	List<Topic> findByDeletedFalseAndUserId(Long id);
 
     @Query(value = "SELECT"
     		+ " pre.id AS id_pregunta,"

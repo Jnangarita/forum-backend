@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TopPostDTO {
-	private LocalDateTime creationDate;
+	private LocalDateTime createdAt;
 	private Long postId;
 	private String post;
 	private char postType;
