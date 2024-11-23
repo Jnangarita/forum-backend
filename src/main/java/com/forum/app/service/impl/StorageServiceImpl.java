@@ -135,7 +135,7 @@ public class StorageServiceImpl implements StorageService {
 
 	private Document setDocumentData(Long userId, String documentType, String documentName, String path) {
 		Document document = new Document();
-		document.setUserId(userId);
+		//document.setUserId(userId); TODO: validar id
 		document.setDocumentType(documentType);
 		document.setDocumentName(documentName);
 		document.setDocumentPath(path);

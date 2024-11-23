@@ -118,28 +118,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<BasicUserInfoOutput> getUserList() {
 		try {
-			List<Map<String, Object>> savedUserList = userRepository.userInfoList();
+			List<User> savedUserList = userRepository.userInfoList();
 			List<BasicUserInfoOutput> userList = new ArrayList<>();
-			for (Map<String, Object> userMap : savedUserList) {
-				BasicUserInfoOutput userDto = new BasicUserInfoOutput();
-				setUserListData(userDto, userMap);
+			for (User user : savedUserList) {
+				BasicUserInfoOutput userDto = userMapper.entityToBasicUserInfo(user);
 				userList.add(userDto);
 			}
 			return userList;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getExceptionMsg(e, "forum.message.error.getting.list.user"));
 		}
-	}
-
-	private void setUserListData(BasicUserInfoOutput dto, Map<String, Object> userMap) {
-/*		dto.setId(utility.convertToLongType(userMap.get(DbColumns.ID.getColumns())));
-		dto.setPhoto((String) userMap.get(DbColumns.PHOTO.getColumns()));
-		dto.setCity((String) userMap.get(DbColumns.COUNTRY.getColumns()));
-		dto.setUserName((String) userMap.get(DbColumns.USER_NAME.getColumns()));
-		dto.setReputation(utility.convertToIntType(userMap.get(DbColumns.REPUTATION.getColumns())));
-		String categoriesJson = (String) userMap.get(DbColumns.CATEGORIES.getColumns());
-		List<IdValueInput> categories = utility.convertJsonToIdValueDTOList(categoriesJson);
-		dto.setCategory(categories);*/
 	}
 
 	@Transactional

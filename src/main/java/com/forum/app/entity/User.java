@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.forum.app.entity.base.Audit;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,10 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "usuario")
-public class User extends Audit implements UserDetails, Serializable {
-
-	private static final long serialVersionUID = 1L;
-
+public class User extends Audit implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -66,6 +62,12 @@ public class User extends Audit implements UserDetails, Serializable {
 	@ManyToOne
 	@JoinColumn(name = "id_rol", nullable = false)
 	private Role role;
+
+	@Column(name = "reputacion")
+	private Integer reputation;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Document> document;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

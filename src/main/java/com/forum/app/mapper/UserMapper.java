@@ -1,5 +1,6 @@
 package com.forum.app.mapper;
 
+import com.forum.app.dto.BasicUserInfoOutput;
 import com.forum.app.dto.UserOutput;
 import com.forum.app.dto.request.SaveUserInput;
 import com.forum.app.dto.request.UpdateUserInput;
@@ -13,9 +14,12 @@ import org.mapstruct.MappingTarget;
 public interface UserMapper {
     @Mapping(target = "numberResponses", constant = "0")
     @Mapping(target = "numberQuestions", constant = "0")
+    @Mapping(target = "reputation", constant = "0")
     @Mapping(target = "profileName", expression = "java(user.getFirstName() + \" \" + user.getLastName())")
     @Mapping(target = "role", source = "roleId", qualifiedByName = "idToRole")
     User convertDtoToEntity(SaveUserInput userInput);
     void updateUserFromDto(UpdateUserInput userInput, @MappingTarget User user);
     UserOutput toUserOutput(User user);
+    @Mapping(target = "photo", source = "user", qualifiedByName = "userPhoto")
+    BasicUserInfoOutput entityToBasicUserInfo(User user);
 }

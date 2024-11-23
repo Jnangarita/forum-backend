@@ -1,4 +1,4 @@
-package com.forum.app.dto.response;
+package com.forum.app.dto.response.base;
 
 import com.forum.app.entity.User;
 

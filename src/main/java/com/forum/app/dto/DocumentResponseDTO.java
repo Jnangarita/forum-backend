@@ -17,7 +17,7 @@ public class DocumentResponseDTO {
 
 	public DocumentResponseDTO(Document document) {
 		this.idDocument = document.getIdDocument();
-		this.userId = document.getUserId();
+		//this.userId = document.getUserId(); TODO: validar id
 		this.documentType = document.getDocumentType();
 		this.documentName = document.getDocumentName();
 		this.documentPath = document.getDocumentPath();
