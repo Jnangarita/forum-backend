@@ -24,8 +24,7 @@ import com.forum.app.dto.BasicUserInfoOutput;
 import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
-import com.forum.app.dto.request.UpdateUserInput;
-import com.forum.app.dto.request.SaveUserInput;
+import com.forum.app.dto.request.UserInput;
 import com.forum.app.dto.UserOutput;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
@@ -60,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserInfoDTO createUser(SaveUserInput payload) {
+	public UserInfoDTO createUser(UserInput payload) {
 		try {
 			validate.confirmPassword(payload.getPassword(), payload.getRepeatPassword());
 			User user = setUserData(payload);
@@ -76,7 +75,7 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private User setUserData(SaveUserInput payload) {
+	private User setUserData(UserInput payload) {
 		User user = userMapper.convertDtoToEntity(payload);
 		setPasswordData(user, payload.getPassword());
 		return user;
@@ -101,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserInfoDTO updateUser(Long id, UpdateUserInput payload) {
+	public UserInfoDTO updateUser(Long id, UserInput payload) {
 		try {
 			User userToUpdated = findUser(id);
 			userMapper.updateUserFromDto(payload, userToUpdated);

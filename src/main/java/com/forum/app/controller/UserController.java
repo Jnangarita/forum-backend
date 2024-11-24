@@ -5,9 +5,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.forum.app.dto.request.groups.CreateGroup;
+import com.forum.app.dto.request.groups.UpdateGroup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +26,7 @@ import com.forum.app.dto.BasicUserInfoOutput;
 import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
-import com.forum.app.dto.request.UpdateUserInput;
-import com.forum.app.dto.request.SaveUserInput;
+import com.forum.app.dto.request.UserInput;
 import com.forum.app.dto.UserOutput;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.service.UserService;
@@ -47,7 +49,8 @@ public class UserController {
 	@Operation(summary = "Save a user")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<UserInfoDTO> createUser(@RequestBody @Valid SaveUserInput payload,
+	public ResponseEntity<UserInfoDTO> createUser(
+			@RequestBody @Validated({CreateGroup.class}) UserInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		UserInfoDTO user = userService.createUser(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/v1/users/{id}").buildAndExpand(user.getId()).toUri();
@@ -70,7 +73,7 @@ public class UserController {
 	@SecurityRequirement(name = "bearer-key")
 	public ResponseEntity<UserInfoDTO> updateUser(
 			@Parameter(description = "Id of the user to search") @PathVariable Long id,
-			@RequestBody @Valid UpdateUserInput payload) {
+			@RequestBody @Validated({UpdateGroup.class}) UserInput payload) {
 		UserInfoDTO user = userService.updateUser(id, payload);
 		return ResponseEntity.ok(user);
 	}

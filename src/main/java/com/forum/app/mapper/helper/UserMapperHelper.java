@@ -1,8 +1,8 @@
 package com.forum.app.mapper.helper;
 
-import com.forum.app.entity.Document;
-import com.forum.app.entity.Role;
-import com.forum.app.entity.User;
+import com.forum.app.entity.*;
+import com.forum.app.repository.CityRepository;
+import com.forum.app.repository.CountryRepository;
 import com.forum.app.repository.RoleRepository;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
@@ -12,9 +12,13 @@ import javax.persistence.EntityNotFoundException;
 @Component
 public class UserMapperHelper {
     private final RoleRepository roleRepository;
+    private final CityRepository cityRepository;
+    private final CountryRepository countryRepository;
 
-    public UserMapperHelper(RoleRepository roleRepository) {
+    public UserMapperHelper(RoleRepository roleRepository, CityRepository cityRepository, CountryRepository countryRepository) {
         this.roleRepository = roleRepository;
+        this.cityRepository = cityRepository;
+        this.countryRepository = countryRepository;
     }
 
     @Named("idToRole")
@@ -32,5 +36,15 @@ public class UserMapperHelper {
                     .orElse(null);
         }
         return null;
+    }
+
+    @Named("idToCity")
+    public City idToCity(Long cityId) {
+        return cityRepository.findById(cityId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Named("idToCountry")
+    public Country idToCountry(Long countryId) {
+        return countryRepository.findById(countryId).orElseThrow(EntityNotFoundException::new);
     }
 }

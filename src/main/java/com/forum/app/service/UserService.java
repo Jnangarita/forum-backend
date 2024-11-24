@@ -8,20 +8,19 @@ import com.forum.app.dto.BasicUserInfoOutput;
 import com.forum.app.dto.request.ChangePasswordInput;
 import com.forum.app.dto.MessageDTO;
 import com.forum.app.dto.request.ResetPasswordInput;
-import com.forum.app.dto.request.UpdateUserInput;
-import com.forum.app.dto.request.SaveUserInput;
+import com.forum.app.dto.request.UserInput;
 import com.forum.app.dto.UserOutput;
 import com.forum.app.dto.response.UserInfoDTO;
 import com.forum.app.entity.User;
 
 public interface UserService {
-	UserInfoDTO createUser(SaveUserInput payload);
+	UserInfoDTO createUser(UserInput payload);
 
 	UserOutput getUserById(Long id);
 
 	User findUser(Long id);
 
-	UserInfoDTO updateUser(Long id, UpdateUserInput payload);
+	UserInfoDTO updateUser(Long id, UserInput payload);
 
 	List<BasicUserInfoOutput> getUserList();
 
