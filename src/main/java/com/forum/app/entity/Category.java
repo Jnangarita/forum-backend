@@ -28,5 +28,5 @@ public class Category extends Audit {
 	private Long createdBy;
 
 	@Column(name = "usuario_modificador")
-	private Long modifiedBy;
+	private Long updatedBy;
 }

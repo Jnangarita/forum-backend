@@ -3,11 +3,12 @@ package com.forum.app.controller;
 import java.net.URI;
 import java.util.List;
 
-import javax.validation.Valid;
-
+import com.forum.app.dto.request.groups.CreateGroup;
+import com.forum.app.dto.request.groups.UpdateGroup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +45,8 @@ public class CategoryController {
 	@Operation(summary = "Save a category")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody @Valid CategoryInput payload,
+	public ResponseEntity<CategoryResponseDTO> createCategory(
+			@RequestBody @Validated({CreateGroup.class}) CategoryInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		CategoryResponseDTO category = categoryService.createCategory(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/v1/categories/{id}").buildAndExpand(category.getId()).toUri();
@@ -65,7 +67,7 @@ public class CategoryController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<CategoryResponseDTO> updateCategory(
 			@Parameter(description = "Id of the category to be updated") @PathVariable Long id,
-			@RequestBody @Valid CategoryInput payload) {
+			@RequestBody @Validated({UpdateGroup.class}) CategoryInput payload) {
 		CategoryResponseDTO category = categoryService.updateCategory(id, payload);
 		return ResponseEntity.ok(category);
 	}
