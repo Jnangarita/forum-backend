@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
+import com.forum.app.mapper.CategoryMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -25,18 +26,19 @@ public class CategoryServiceImpl implements CategoryService {
 
 	private final Utility utility;
 	private final CategoryRepository categoryRepository;
+	private final CategoryMapper categoryMapper;
 
-	public CategoryServiceImpl(Utility utility, CategoryRepository categoryRepository) {
+	public CategoryServiceImpl(Utility utility, CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
 		this.utility = utility;
 		this.categoryRepository = categoryRepository;
+		this.categoryMapper = categoryMapper;
 	}
 
 	@Transactional
 	@Override
 	public CategoryResponseDTO createCategory(CategoryInput payload) {
 		try {
-			Category newCategory = new Category();
-			populateCategory(newCategory, payload);
+			Category newCategory = categoryMapper.convertDtoToEntity(payload);
 			Category category = categoryRepository.save(newCategory);
 			return new CategoryResponseDTO(category);
 		} catch (DataIntegrityViolationException e) {
@@ -44,12 +46,6 @@ public class CategoryServiceImpl implements CategoryService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.category", null));
 		}
-	}
-
-	private void populateCategory(Category category, CategoryInput payload) {
-		category.setCategoryName(payload.getCategoryName());
-		category.setDescription(payload.getDescription());
-		category.setCreatedBy(payload.getCreatedBy());
 	}
 
 	@Override
@@ -73,10 +69,8 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryResponseDTO updateCategory(Long id, CategoryInput payload) {
 		try {
-			// TODO: Actualizar el campo description
 			Category categoryToUpdate = findCategoryById(id);
-			categoryToUpdate.setCategoryName(payload.getCategoryName());
-			categoryToUpdate.setModifiedBy(payload.getCreatedBy());
+			categoryMapper.updateCategoryFromDto(payload, categoryToUpdate);
 			Category category = categoryRepository.save(categoryToUpdate);
 			return new CategoryResponseDTO(category);
 		} catch (EntityNotFoundException e) {
