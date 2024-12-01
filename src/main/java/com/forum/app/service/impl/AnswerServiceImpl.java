@@ -9,8 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.forum.app.dto.request.SaveAnswerInput;
-import com.forum.app.dto.request.UpdateAnswerInput;
+import com.forum.app.dto.request.AnswerInput;
 import com.forum.app.dto.response.AnswerResponseDTO;
 import com.forum.app.entity.Answer;
 import com.forum.app.enumeration.AnswerStatus;
@@ -32,7 +31,7 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Transactional
 	@Override
-	public AnswerResponseDTO createAnswer(SaveAnswerInput payload) {
+	public AnswerResponseDTO createAnswer(AnswerInput payload) {
 		try {
 			Answer newAnswer = new Answer();
 			setAnswer(newAnswer, payload);
@@ -45,7 +44,7 @@ public class AnswerServiceImpl implements AnswerService {
 		}
 	}
 
-	private void setAnswer(Answer dto, SaveAnswerInput payload) {
+	private void setAnswer(Answer dto, AnswerInput payload) {
 		dto.setQuestionId(payload.getQuestionId());
 		dto.setAnswerTxt(payload.getAnswerTxt());
 		dto.setUserId(payload.getUserId());
@@ -71,7 +70,7 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Transactional
 	@Override
-	public AnswerResponseDTO updateAnswer(Long id, UpdateAnswerInput payload) {
+	public AnswerResponseDTO updateAnswer(Long id, AnswerInput payload) {
 		try {
 			Answer updateAnswer = findAnswerById(id);
 			updateAnswer.setAnswerTxt(payload.getAnswerTxt());

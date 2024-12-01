@@ -3,11 +3,12 @@ package com.forum.app.controller;
 import java.net.URI;
 import java.util.List;
 
-import javax.validation.Valid;
-
+import com.forum.app.dto.request.groups.CreateGroup;
+import com.forum.app.dto.request.groups.UpdateGroup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.forum.app.dto.request.SaveAnswerInput;
-import com.forum.app.dto.request.UpdateAnswerInput;
+import com.forum.app.dto.request.AnswerInput;
 import com.forum.app.dto.response.AnswerResponseDTO;
 import com.forum.app.service.AnswerService;
 
@@ -44,7 +44,8 @@ public class AnswerController {
 	@Operation(summary = "Save an answer")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<AnswerResponseDTO> createAnswer(@RequestBody @Valid SaveAnswerInput payload,
+	public ResponseEntity<AnswerResponseDTO> createAnswer(
+			@RequestBody @Validated({CreateGroup.class}) AnswerInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		AnswerResponseDTO answer = answerService.createAnswer(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/answers/{id}").buildAndExpand(answer.getId()).toUri();
@@ -65,7 +66,7 @@ public class AnswerController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<AnswerResponseDTO> updateAnswer(
 			@Parameter(description = "Id of the answer to be updated") @PathVariable Long id,
-			@RequestBody @Valid UpdateAnswerInput payload) {
+			@RequestBody @Validated({UpdateGroup.class}) AnswerInput payload) {
 		AnswerResponseDTO answer = answerService.updateAnswer(id, payload);
 		return ResponseEntity.ok(answer);
 	}
