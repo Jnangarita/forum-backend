@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -40,17 +39,16 @@ import com.forum.app.validation.Validate;
 public class UserServiceImpl implements UserService {
 	private final Utility utility;
 	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender mailSender;
 	private final TemplateEngine templateEngine;
 	private final Validate validate;
 	private final UserMapper userMapper;
 
-	public UserServiceImpl(Utility utility, UserRepository userRepository, PasswordEncoder passwordEncoder,
-						   JavaMailSender mailSender, TemplateEngine templateEngine, Validate validate, UserMapper userMapper) {
+	public UserServiceImpl(Utility utility, UserRepository userRepository,
+						   JavaMailSender mailSender, Validate validate,
+						   TemplateEngine templateEngine, UserMapper userMapper) {
 		this.utility = utility;
 		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
 		this.mailSender = mailSender;
 		this.templateEngine = templateEngine;
 		this.validate = validate;
@@ -62,7 +60,7 @@ public class UserServiceImpl implements UserService {
 	public UserInfoDTO createUser(UserInput payload) {
 		try {
 			validate.confirmPassword(payload.getPassword(), payload.getRepeatPassword());
-			User user = setUserData(payload);
+			User user = userMapper.convertDtoToEntity(payload);
 			User newUser = userRepository.save(user);
 			log.info(utility.getMessage("forum.message.info.create.user", new Object[] { newUser.getId() }));
 			return new UserInfoDTO(newUser);
@@ -73,12 +71,6 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.saving.user", null));
 		}
-	}
-
-	private User setUserData(UserInput payload) {
-		User user = userMapper.convertDtoToEntity(payload);
-		setPasswordData(user, payload.getPassword());
-		return user;
 	}
 
 	@Override
@@ -150,17 +142,13 @@ public class UserServiceImpl implements UserService {
 			User user = findUser(id);
 			validate.currentPassword(payload.getCurrentPassword(), user.getPassword());
 			validate.confirmPassword(payload.getNewPassword(), payload.getConfirmPassword());
-			setPasswordData(user, payload.getNewPassword());
+			user.setPassword(utility.encryptPassword(payload.getNewPassword()));
 			return new MessageDTO(utility.getMessage("forum.message.info.password.updated.successfully", null));
 		} catch (PasswordException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.updating.password", null));
 		}
-	}
-
-	private void setPasswordData(User user, String newPassword) {
-		user.setPassword(passwordEncoder.encode(newPassword));
 	}
 
 	@Transactional
@@ -170,7 +158,7 @@ public class UserServiceImpl implements UserService {
 			String email = payload.getEmail();
 			User user = findUserByEmail(email);
 			String newPassword = utility.generatePassword();
-			setPasswordData(user, newPassword);
+			user.setPassword(utility.encryptPassword(newPassword));
 			String template = emailTemplate(user.getFirstName(), newPassword);
 			sendMail(email, template);
 			return new MessageDTO(utility.getMessage("forum.message.info.password.reset.successfully", null));

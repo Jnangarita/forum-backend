@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,11 +28,14 @@ public class Utility {
 
 	private final MessageSource messageSource;
 	private final ObjectMapper objectMapper;
+	private final PasswordEncoder passwordEncoder;
 	private static final SecureRandom randomNum = new SecureRandom();
 
-	public Utility(MessageSource messageSource, ObjectMapper objectMapper) {
+	public Utility(MessageSource messageSource, ObjectMapper objectMapper,
+				   PasswordEncoder passwordEncoder) {
 		this.messageSource = messageSource;
 		this.objectMapper = objectMapper;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	public String getCustomErrorMessage(DataIntegrityViolationException e) {
@@ -107,5 +111,9 @@ public class Utility {
 
 	public String convertToStringType(Object column) {
 		return column != null ? column.toString() : null;
+	}
+
+	public String encryptPassword(String password){
+		return passwordEncoder.encode(password);
 	}
 }

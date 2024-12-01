@@ -16,6 +16,7 @@ public interface UserMapper {
     @Mapping(target = "reputation", constant = "0")
     @Mapping(target = "profileName", expression = "java(user.getFirstName() + \" \" + user.getLastName())")
     @Mapping(target = "role", source = "roleId", qualifiedByName = "idToRole")
+    @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
     User convertDtoToEntity(UserInput userInput);
     @Mapping(target = "city", source = "cityId", qualifiedByName = "idToCity")
     @Mapping(target = "country", source = "countryId", qualifiedByName = "idToCountry")
