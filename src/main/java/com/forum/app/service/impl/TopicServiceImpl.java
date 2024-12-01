@@ -14,9 +14,8 @@ import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.QuestionResponseDTO;
-import com.forum.app.dto.request.SaveTopicInput;
+import com.forum.app.dto.request.TopicInput;
 import com.forum.app.dto.TopicResponseDTO;
-import com.forum.app.dto.request.UpdateTopicInput;
 import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.entity.Topic;
 import com.forum.app.enumeration.DbColumns;
@@ -39,7 +38,7 @@ public class TopicServiceImpl implements TopicService {
 
 	@Transactional
 	@Override
-	public TopicResponseDTO createTopic(SaveTopicInput payload) {
+	public TopicResponseDTO createTopic(TopicInput payload) {
 		try {
 			Topic newQuestion = new Topic();
 			setQuestionData(newQuestion, payload);
@@ -52,7 +51,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 	}
 
-	private void setQuestionData(Topic topic, SaveTopicInput payload) {
+	private void setQuestionData(Topic topic, TopicInput payload) {
 		topic.setCategoryId(payload.getCategoryId());
 		topic.setTitleQuestion(payload.getTitleQuestion());
 		topic.setQuestion(payload.getQuestion());
@@ -98,7 +97,7 @@ public class TopicServiceImpl implements TopicService {
 
 	@Transactional
 	@Override
-	public TopicResponseDTO updateTopic(Long id, UpdateTopicInput payload) {
+	public TopicResponseDTO updateTopic(Long id, TopicInput payload) {
 		try {
 			Topic question = getTopicById(id);
 			populateQuestion(question, payload);
@@ -112,7 +111,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 	}
 
-	private void populateQuestion(Topic question, UpdateTopicInput payload) {
+	private void populateQuestion(Topic question, TopicInput payload) {
 		question.setCategoryId(payload.getCategoryId());
 		question.setQuestion(payload.getQuestion());
 	}

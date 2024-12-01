@@ -3,11 +3,12 @@ package com.forum.app.controller;
 import java.net.URI;
 import java.util.List;
 
-import javax.validation.Valid;
-
+import com.forum.app.dto.request.groups.CreateGroup;
+import com.forum.app.dto.request.groups.UpdateGroup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +24,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.QuestionResponseDTO;
-import com.forum.app.dto.request.SaveTopicInput;
+import com.forum.app.dto.request.TopicInput;
 import com.forum.app.dto.TopicResponseDTO;
-import com.forum.app.dto.request.UpdateTopicInput;
 import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.service.TopicService;
 
@@ -49,7 +49,8 @@ public class TopicController {
 	@Operation(summary = "Save a question")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<TopicResponseDTO> createTopic(@RequestBody @Valid SaveTopicInput payload,
+	public ResponseEntity<TopicResponseDTO> createTopic(
+			@RequestBody @Validated({CreateGroup.class}) TopicInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
 		TopicResponseDTO topic = topicService.createTopic(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/topics/{id}").buildAndExpand(topic.getId()).toUri();
@@ -70,7 +71,7 @@ public class TopicController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<TopicResponseDTO> updateTopic(
 			@Parameter(description = "Id of the topic to be updated") @PathVariable Long id,
-			@RequestBody @Valid UpdateTopicInput payload) {
+			@RequestBody @Validated({UpdateGroup.class}) TopicInput payload) {
 		TopicResponseDTO topic = topicService.updateTopic(id, payload);
 		return ResponseEntity.ok(topic);
 	}
