@@ -23,9 +23,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
-import com.forum.app.dto.QuestionResponseDTO;
+import com.forum.app.dto.QuestionOutput;
 import com.forum.app.dto.request.TopicInput;
-import com.forum.app.dto.TopicResponseDTO;
+import com.forum.app.dto.TopicOutput;
 import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.service.TopicService;
 
@@ -49,10 +49,10 @@ public class TopicController {
 	@Operation(summary = "Save a question")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<TopicResponseDTO> createTopic(
+	public ResponseEntity<TopicOutput> createTopic(
 			@RequestBody @Validated({CreateGroup.class}) TopicInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
-		TopicResponseDTO topic = topicService.createTopic(payload);
+		TopicOutput topic = topicService.createTopic(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/topics/{id}").buildAndExpand(topic.getId()).toUri();
 		return ResponseEntity.created(url).body(topic);
 	}
@@ -69,10 +69,10 @@ public class TopicController {
 	@Operation(summary = "Update a question")
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<TopicResponseDTO> updateTopic(
+	public ResponseEntity<TopicOutput> updateTopic(
 			@Parameter(description = "Id of the topic to be updated") @PathVariable Long id,
 			@RequestBody @Validated({UpdateGroup.class}) TopicInput payload) {
-		TopicResponseDTO topic = topicService.updateTopic(id, payload);
+		TopicOutput topic = topicService.updateTopic(id, payload);
 		return ResponseEntity.ok(topic);
 	}
 
@@ -105,9 +105,9 @@ public class TopicController {
 	@GetMapping("/")
 	@ResponseStatus(HttpStatus.OK)
 	@SecurityRequirement(name = "bearer-key")
-	public ResponseEntity<List<QuestionResponseDTO>> getQuestionListByCategory(
+	public ResponseEntity<List<QuestionOutput>> getQuestionListByCategory(
 			@RequestParam(required = true) String category) {
-		List<QuestionResponseDTO> questionList = topicService.questionListByCategory(category);
+		List<QuestionOutput> questionList = topicService.questionListByCategory(category);
 		return ResponseEntity.ok(questionList);
 	}
 }

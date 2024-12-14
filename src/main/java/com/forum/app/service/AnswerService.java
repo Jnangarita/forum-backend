@@ -3,19 +3,19 @@ package com.forum.app.service;
 import java.util.List;
 
 import com.forum.app.dto.request.AnswerInput;
-import com.forum.app.dto.response.AnswerResponseDTO;
+import com.forum.app.dto.response.AnswerOutput;
 import com.forum.app.entity.Answer;
 
 public interface AnswerService {
-	AnswerResponseDTO createAnswer(AnswerInput payload);
+	AnswerOutput createAnswer(AnswerInput payload);
 
-	AnswerResponseDTO getAnswerById(Long id);
+	AnswerOutput getAnswerById(Long id);
 
 	Answer findAnswerById(Long id);
 
-	AnswerResponseDTO updateAnswer(Long id, AnswerInput payload);
+	AnswerOutput updateAnswer(Long id, AnswerInput payload);
 
-	List<AnswerResponseDTO> getAnswerList();
+	List<AnswerOutput> getAnswerList();
 
 	void deleteAnswer(Long id);
 }

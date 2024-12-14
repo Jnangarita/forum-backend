@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.forum.app.dto.request.AnswerInput;
-import com.forum.app.dto.response.AnswerResponseDTO;
+import com.forum.app.dto.response.AnswerOutput;
 import com.forum.app.service.AnswerService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,10 +44,10 @@ public class AnswerController {
 	@Operation(summary = "Save an answer")
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<AnswerResponseDTO> createAnswer(
+	public ResponseEntity<AnswerOutput> createAnswer(
 			@RequestBody @Validated({CreateGroup.class}) AnswerInput payload,
 			UriComponentsBuilder uriComponentsBuilder) {
-		AnswerResponseDTO answer = answerService.createAnswer(payload);
+		AnswerOutput answer = answerService.createAnswer(payload);
 		URI url = uriComponentsBuilder.path(basePath + "/answers/{id}").buildAndExpand(answer.getId()).toUri();
 		return ResponseEntity.created(url).body(answer);
 	}
@@ -55,27 +55,27 @@ public class AnswerController {
 	@Operation(summary = "Gets an answer by id")
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<AnswerResponseDTO> getAnswer(
+	public ResponseEntity<AnswerOutput> getAnswer(
 			@Parameter(description = "Id of the answer to search") @PathVariable Long id) {
-		AnswerResponseDTO answer = answerService.getAnswerById(id);
+		AnswerOutput answer = answerService.getAnswerById(id);
 		return ResponseEntity.ok(answer);
 	}
 
 	@Operation(summary = "Update an answer")
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<AnswerResponseDTO> updateAnswer(
+	public ResponseEntity<AnswerOutput> updateAnswer(
 			@Parameter(description = "Id of the answer to be updated") @PathVariable Long id,
 			@RequestBody @Validated({UpdateGroup.class}) AnswerInput payload) {
-		AnswerResponseDTO answer = answerService.updateAnswer(id, payload);
+		AnswerOutput answer = answerService.updateAnswer(id, payload);
 		return ResponseEntity.ok(answer);
 	}
 
 	@Operation(summary = "Get the list of answers")
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<AnswerResponseDTO>> getAnswerList() {
-		List<AnswerResponseDTO> answerList = answerService.getAnswerList();
+	public ResponseEntity<List<AnswerOutput>> getAnswerList() {
+		List<AnswerOutput> answerList = answerService.getAnswerList();
 		return ResponseEntity.ok(answerList);
 	}
 

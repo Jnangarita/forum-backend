@@ -3,21 +3,21 @@ package com.forum.app.service;
 import java.util.List;
 
 import com.forum.app.dto.request.CategoryInput;
-import com.forum.app.dto.CategoryResponseDTO;
+import com.forum.app.dto.CategoryOutput;
 import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.entity.Category;
 
 public interface CategoryService {
 
-	CategoryResponseDTO createCategory(CategoryInput payload);
+	CategoryOutput createCategory(CategoryInput payload);
 
-	CategoryResponseDTO getCategoryById(Long id);
+	CategoryOutput getCategoryById(Long id);
 
 	Category findCategoryById(Long id);
 
-	CategoryResponseDTO updateCategory(Long id, CategoryInput payload);
+	CategoryOutput updateCategory(Long id, CategoryInput payload);
 
-	List<CategoryResponseDTO> getCategoryList();
+	List<CategoryOutput> getCategoryList();
 
 	void deleteCategory(Long id);
 

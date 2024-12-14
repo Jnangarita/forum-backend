@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
-import com.forum.app.dto.QuestionResponseDTO;
+import com.forum.app.dto.QuestionOutput;
 import com.forum.app.dto.request.TopicInput;
-import com.forum.app.dto.TopicResponseDTO;
+import com.forum.app.dto.TopicOutput;
 import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.entity.Topic;
 import com.forum.app.enumeration.DbColumns;
@@ -38,12 +38,12 @@ public class TopicServiceImpl implements TopicService {
 
 	@Transactional
 	@Override
-	public TopicResponseDTO createTopic(TopicInput payload) {
+	public TopicOutput createTopic(TopicInput payload) {
 		try {
 			Topic newQuestion = new Topic();
 			setQuestionData(newQuestion, payload);
 			Topic topic = topicRepository.save(newQuestion);
-			return new TopicResponseDTO(topic);
+			return new TopicOutput(topic);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
@@ -97,11 +97,11 @@ public class TopicServiceImpl implements TopicService {
 
 	@Transactional
 	@Override
-	public TopicResponseDTO updateTopic(Long id, TopicInput payload) {
+	public TopicOutput updateTopic(Long id, TopicInput payload) {
 		try {
 			Topic question = getTopicById(id);
 			populateQuestion(question, payload);
-			return new TopicResponseDTO(question);
+			return new TopicOutput(question);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (DataIntegrityViolationException e) {
@@ -121,24 +121,24 @@ public class TopicServiceImpl implements TopicService {
 		try {
 			Integer totalQuestions = topicRepository.getNumberQuestion();
 			List<Map<String, Object>> savedQuestionList = topicRepository.getQuestionList();
-			List<QuestionResponseDTO> questionList = populateQuestionList(savedQuestionList);
+			List<QuestionOutput> questionList = populateQuestionList(savedQuestionList);
 			return new QuestionListDTO(totalQuestions, questionList);
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.question", null));
 		}
 	}
 
-	private List<QuestionResponseDTO> populateQuestionList(List<Map<String, Object>> list) {
-		List<QuestionResponseDTO> questionList = new ArrayList<>();
+	private List<QuestionOutput> populateQuestionList(List<Map<String, Object>> list) {
+		List<QuestionOutput> questionList = new ArrayList<>();
 		for (Map<String, Object> questionMap : list) {
-			QuestionResponseDTO questionDto = new QuestionResponseDTO();
+			QuestionOutput questionDto = new QuestionOutput();
 			populateQuestionDto(questionDto, questionMap);
 			questionList.add(questionDto);
 		}
 		return questionList;
 	}
 
-	private void populateQuestionDto(QuestionResponseDTO dto, Map<String, Object> question) {
+	private void populateQuestionDto(QuestionOutput dto, Map<String, Object> question) {
 		dto.setAnswers(utility.convertToIntType(question.get(DbColumns.ANSWER.getColumns())));
 		dto.setQuestionId(utility.convertToIntType(question.get(DbColumns.QUESTION_ID.getColumns())));
 		dto.setQuestionTitle((String) question.get(DbColumns.TITLE_QUESTION.getColumns()));
@@ -198,7 +198,7 @@ public class TopicServiceImpl implements TopicService {
 	}
 
 	@Override
-	public List<QuestionResponseDTO> questionListByCategory(String category) {
+	public List<QuestionOutput> questionListByCategory(String category) {
 		try {
 			List<Map<String, Object>> savedQuestionList = topicRepository.getQuestionByCategory(category);
 			return populateQuestionList(savedQuestionList);

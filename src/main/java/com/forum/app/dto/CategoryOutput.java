@@ -11,14 +11,14 @@ import com.forum.app.entity.Category;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponseDTO {
+public class CategoryOutput {
 	private String categoryName;
 	private String description;
 	private Long id;
 	private Integer numberQuestion;
 	private LocalDateTime time;
 
-	public CategoryResponseDTO(Category category) {
+	public CategoryOutput(Category category) {
 		this.id = category.getId();
 		this.categoryName = category.getCategoryName();
 		this.description = category.getDescription();

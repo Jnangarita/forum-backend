@@ -8,11 +8,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TopicResponseDTO extends ResponseDTO {
+public class TopicOutput extends ResponseDTO {
 	private String question;
 	private char questionStatus;
 
-	public TopicResponseDTO(Topic topic) {
+	public TopicOutput(Topic topic) {
 		super(topic.getCreatedAt(), topic.isDeleted(), topic.getId(), topic.getUpdatedAt());
 		this.question = topic.getQuestion();
 		this.questionStatus = topic.getQuestionStatus();

@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class QuestionListDTO {
 	private Integer totalQuestions;
-	private List<QuestionResponseDTO> questionList;
+	private List<QuestionOutput> questionList;
 }

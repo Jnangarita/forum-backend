@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionResponseDTO {
+public class QuestionOutput {
 	private Integer answers;
 	private List<IdValueInput> categories;
 	private String photo;

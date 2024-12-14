@@ -10,7 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.request.AnswerInput;
-import com.forum.app.dto.response.AnswerResponseDTO;
+import com.forum.app.dto.response.AnswerOutput;
 import com.forum.app.entity.Answer;
 import com.forum.app.enumeration.AnswerStatus;
 import com.forum.app.exception.OwnRuntimeException;
@@ -31,12 +31,12 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Transactional
 	@Override
-	public AnswerResponseDTO createAnswer(AnswerInput payload) {
+	public AnswerOutput createAnswer(AnswerInput payload) {
 		try {
 			Answer newAnswer = new Answer();
 			setAnswer(newAnswer, payload);
 			Answer answer = answerRepository.save(newAnswer);
-			return new AnswerResponseDTO(answer);
+			return new AnswerOutput(answer);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
@@ -52,10 +52,10 @@ public class AnswerServiceImpl implements AnswerService {
 	}
 
 	@Override
-	public AnswerResponseDTO getAnswerById(Long id) {
+	public AnswerOutput getAnswerById(Long id) {
 		try {
 			Answer answer = findAnswerById(id);
-			return new AnswerResponseDTO(answer);
+			return new AnswerOutput(answer);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
@@ -70,12 +70,12 @@ public class AnswerServiceImpl implements AnswerService {
 
 	@Transactional
 	@Override
-	public AnswerResponseDTO updateAnswer(Long id, AnswerInput payload) {
+	public AnswerOutput updateAnswer(Long id, AnswerInput payload) {
 		try {
 			Answer updateAnswer = findAnswerById(id);
 			updateAnswer.setAnswerTxt(payload.getAnswerTxt());
 			Answer answer = answerRepository.save(updateAnswer);
-			return new AnswerResponseDTO(answer);
+			return new AnswerOutput(answer);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (DataIntegrityViolationException e) {
@@ -86,12 +86,12 @@ public class AnswerServiceImpl implements AnswerService {
 	}
 
 	@Override
-	public List<AnswerResponseDTO> getAnswerList() {
+	public List<AnswerOutput> getAnswerList() {
 		try {
 			List<Answer> savedAnswerList = answerRepository.findByDeletedFalse();
-			List<AnswerResponseDTO> answerList = new ArrayList<>();
+			List<AnswerOutput> answerList = new ArrayList<>();
 			for (Answer answer : savedAnswerList) {
-				AnswerResponseDTO answerDto = new AnswerResponseDTO(answer);
+				AnswerOutput answerDto = new AnswerOutput(answer);
 				answerList.add(answerDto);
 			}
 			return answerList;

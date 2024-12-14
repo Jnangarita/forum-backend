@@ -12,7 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.forum.app.dto.request.CategoryInput;
-import com.forum.app.dto.CategoryResponseDTO;
+import com.forum.app.dto.CategoryOutput;
 import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.entity.Category;
 import com.forum.app.enumeration.DbColumns;
@@ -36,11 +36,11 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Transactional
 	@Override
-	public CategoryResponseDTO createCategory(CategoryInput payload) {
+	public CategoryOutput createCategory(CategoryInput payload) {
 		try {
 			Category newCategory = categoryMapper.convertDtoToEntity(payload);
 			Category category = categoryRepository.save(newCategory);
-			return new CategoryResponseDTO(category);
+			return new CategoryOutput(category);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
@@ -49,10 +49,10 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryResponseDTO getCategoryById(Long id) {
+	public CategoryOutput getCategoryById(Long id) {
 		try {
 			Category category = findCategoryById(id);
-			return new CategoryResponseDTO(category);
+			return new CategoryOutput(category);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
@@ -67,12 +67,12 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Transactional
 	@Override
-	public CategoryResponseDTO updateCategory(Long id, CategoryInput payload) {
+	public CategoryOutput updateCategory(Long id, CategoryInput payload) {
 		try {
 			Category categoryToUpdate = findCategoryById(id);
 			categoryMapper.updateCategoryFromDto(payload, categoryToUpdate);
 			Category category = categoryRepository.save(categoryToUpdate);
-			return new CategoryResponseDTO(category);
+			return new CategoryOutput(category);
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (DataIntegrityViolationException e) {
@@ -83,12 +83,12 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public List<CategoryResponseDTO> getCategoryList() {
+	public List<CategoryOutput> getCategoryList() {
 		try {
 			List<Map<String, Object>> savedCategoryList = categoryRepository.findCategoryByDeletedFalse();
-			List<CategoryResponseDTO> categoryList = new ArrayList<>();
+			List<CategoryOutput> categoryList = new ArrayList<>();
 			for (Map<String, Object> category : savedCategoryList) {
-				CategoryResponseDTO categoryDto = new CategoryResponseDTO();
+				CategoryOutput categoryDto = new CategoryOutput();
 				populateCategoryResponseDto(category, categoryDto);
 				categoryList.add(categoryDto);
 			}
@@ -98,7 +98,7 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 	}
 
-	private void populateCategoryResponseDto(Map<String, Object> categoryMap, CategoryResponseDTO dto) {
+	private void populateCategoryResponseDto(Map<String, Object> categoryMap, CategoryOutput dto) {
 		dto.setId(utility.convertToLongType(categoryMap.get(DbColumns.ID.getColumns())));
 		dto.setCategoryName((String) categoryMap.get(DbColumns.CATEGORY_NAME.getColumns()));
 		dto.setDescription((String) categoryMap.get(DbColumns.DESCRIPTION.getColumns()));

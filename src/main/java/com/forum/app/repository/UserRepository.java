@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<User> findByDeletedFalse();
 
-	@Query(value = "SELECT * FROM usuario u WHERE correo_electronico = :email", nativeQuery = true)
+	@Query(value = "SELECT u FROM User u WHERE u.email = :email")
 	User getUserByEmail(@Param("email")String email);
 }
