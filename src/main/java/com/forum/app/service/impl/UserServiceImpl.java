@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
 			helper.setText(content, true);
 			mailSender.send(mimeMessage);
 		} catch (MessagingException e) {
-			throw new OwnRuntimeException(utility.getMessage("forum.message.error.error.sending.email", null));
+			throw new OwnRuntimeException(utility.getMessage("forum.message.error.sending.email", null));
 		}
 	}
 }

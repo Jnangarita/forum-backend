@@ -1,30 +1,32 @@
 package com.forum.app.utils;
 
-import java.security.SecureRandom;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.exception.OwnRuntimeException;
-
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class Utility {
 
 	private static final String JSON_FORMAT_ERROR_MSG = "forum.message.error.casting.string.to.json.format";
+	private static final String ALGORITHM = "AES/ECB/PKCS5Padding";
 
 	private final MessageSource messageSource;
 	private final ObjectMapper objectMapper;
@@ -115,5 +117,18 @@ public class Utility {
 
 	public String encryptPassword(String password){
 		return passwordEncoder.encode(password);
+	}
+
+	public String decodeString(String encryptedString, String base64Key) {
+		try {
+			byte[] decodedKey = Base64.getDecoder().decode(base64Key);
+			SecretKeySpec secretKey = new SecretKeySpec(decodedKey, "AES");
+			Cipher cipher = Cipher.getInstance(ALGORITHM);
+			cipher.init(Cipher.DECRYPT_MODE, secretKey);
+			byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedString));
+			return new String(decryptedBytes);
+		} catch (Exception e) {
+			throw new OwnRuntimeException(getMessage("forum.message.error.decrypting.string", new Object[] { encryptedString }));
+		}
 	}
 }
