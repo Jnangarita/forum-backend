@@ -18,8 +18,8 @@ public class Validate {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public void currentPassword(String newPassword, String confirmPassword) {
-		if (!passwordEncoder.matches(newPassword, confirmPassword)) {
+	public void currentPassword(String currentPassword, String userPassword) {
+		if (!passwordEncoder.matches(currentPassword, userPassword)) {
 			throw new PasswordException(utility.getMessage("forum.message.warn.incorrect.password", null));
 		}
 	}

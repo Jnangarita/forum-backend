@@ -1,17 +1,22 @@
 package com.forum.app.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
+import com.forum.app.dto.BasicUserInfoOutput;
+import com.forum.app.dto.MessageDTO;
+import com.forum.app.dto.UserOutput;
+import com.forum.app.dto.request.ChangePasswordInput;
+import com.forum.app.dto.request.ResetPasswordInput;
+import com.forum.app.dto.request.UserInput;
+import com.forum.app.dto.response.UserInfoDTO;
+import com.forum.app.entity.User;
+import com.forum.app.exception.OwnRuntimeException;
+import com.forum.app.exception.PasswordException;
 import com.forum.app.mapper.UserMapper;
+import com.forum.app.repository.UserRepository;
+import com.forum.app.service.UserService;
+import com.forum.app.utils.Utility;
+import com.forum.app.validation.Validate;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,24 +24,19 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import com.forum.app.dto.BasicUserInfoOutput;
-import com.forum.app.dto.request.ChangePasswordInput;
-import com.forum.app.dto.MessageDTO;
-import com.forum.app.dto.request.ResetPasswordInput;
-import com.forum.app.dto.request.UserInput;
-import com.forum.app.dto.UserOutput;
-import com.forum.app.dto.response.UserInfoDTO;
-import com.forum.app.entity.User;
-import com.forum.app.exception.OwnRuntimeException;
-import com.forum.app.exception.PasswordException;
-import com.forum.app.repository.UserRepository;
-import com.forum.app.service.UserService;
-import com.forum.app.utils.Utility;
-import com.forum.app.validation.Validate;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
+	private final String secretKey;
 	private final Utility utility;
 	private final UserRepository userRepository;
 	private final JavaMailSender mailSender;
@@ -44,9 +44,11 @@ public class UserServiceImpl implements UserService {
 	private final Validate validate;
 	private final UserMapper userMapper;
 
-	public UserServiceImpl(Utility utility, UserRepository userRepository,
-						   JavaMailSender mailSender, Validate validate,
-						   TemplateEngine templateEngine, UserMapper userMapper) {
+	public UserServiceImpl(@Value("${secret.key}") String secretKey, Utility utility,
+						   UserRepository userRepository, JavaMailSender mailSender,
+						   Validate validate, TemplateEngine templateEngine,
+						   UserMapper userMapper) {
+		this.secretKey = secretKey;
 		this.utility = utility;
 		this.userRepository = userRepository;
 		this.mailSender = mailSender;
@@ -140,9 +142,12 @@ public class UserServiceImpl implements UserService {
 	public MessageDTO changePassword(Long id, @Valid ChangePasswordInput payload) {
 		try {
 			User user = findUser(id);
-			validate.currentPassword(payload.getCurrentPassword(), user.getPassword());
-			validate.confirmPassword(payload.getNewPassword(), payload.getConfirmPassword());
-			user.setPassword(utility.encryptPassword(payload.getNewPassword()));
+			String currentPassword = utility.decodeString(payload.getCurrentPassword(), secretKey);
+			String newPassword = utility.decodeString(payload.getNewPassword(), secretKey);
+			String confirmPassword = utility.decodeString(payload.getConfirmPassword(), secretKey);
+			validate.currentPassword(currentPassword, user.getPassword());
+			validate.confirmPassword(newPassword, confirmPassword);
+			user.setPassword(utility.encryptPassword(newPassword));
 			return new MessageDTO(utility.getMessage("forum.message.info.password.updated.successfully", null));
 		} catch (PasswordException e) {
 			throw e;
