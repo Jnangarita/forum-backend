@@ -16,7 +16,6 @@ import com.forum.app.service.UserService;
 import com.forum.app.utils.Utility;
 import com.forum.app.validation.Validate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -36,7 +35,6 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
-	private final String secretKey;
 	private final Utility utility;
 	private final UserRepository userRepository;
 	private final JavaMailSender mailSender;
@@ -44,11 +42,9 @@ public class UserServiceImpl implements UserService {
 	private final Validate validate;
 	private final UserMapper userMapper;
 
-	public UserServiceImpl(@Value("${secret.key}") String secretKey, Utility utility,
-						   UserRepository userRepository, JavaMailSender mailSender,
-						   Validate validate, TemplateEngine templateEngine,
-						   UserMapper userMapper) {
-		this.secretKey = secretKey;
+	public UserServiceImpl(Utility utility, UserRepository userRepository,
+						   JavaMailSender mailSender, Validate validate,
+						   TemplateEngine templateEngine, UserMapper userMapper) {
 		this.utility = utility;
 		this.userRepository = userRepository;
 		this.mailSender = mailSender;
@@ -98,8 +94,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User userToUpdated = findUser(id);
 			userMapper.updateUserFromDto(payload, userToUpdated);
-			User user = userRepository.save(userToUpdated);
-			return new UserInfoDTO(user);
+			return new UserInfoDTO(userRepository.save(userToUpdated));
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
@@ -142,9 +137,9 @@ public class UserServiceImpl implements UserService {
 	public MessageDTO changePassword(Long id, @Valid ChangePasswordInput payload) {
 		try {
 			User user = findUser(id);
-			String currentPassword = utility.decodeString(payload.getCurrentPassword(), secretKey);
-			String newPassword = utility.decodeString(payload.getNewPassword(), secretKey);
-			String confirmPassword = utility.decodeString(payload.getConfirmPassword(), secretKey);
+			String currentPassword = utility.decodeString(payload.getCurrentPassword());
+			String newPassword = utility.decodeString(payload.getNewPassword());
+			String confirmPassword = utility.decodeString(payload.getConfirmPassword());
 			validate.currentPassword(currentPassword, user.getPassword());
 			validate.confirmPassword(newPassword, confirmPassword);
 			user.setPassword(utility.encryptPassword(newPassword));

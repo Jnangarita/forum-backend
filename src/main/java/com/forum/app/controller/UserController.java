@@ -1,39 +1,28 @@
 package com.forum.app.controller;
 
-import java.net.URI;
-import java.util.List;
-
-import javax.validation.Valid;
-
+import com.forum.app.dto.BasicUserInfoOutput;
+import com.forum.app.dto.MessageDTO;
+import com.forum.app.dto.UserOutput;
+import com.forum.app.dto.request.ChangePasswordInput;
+import com.forum.app.dto.request.ResetPasswordInput;
+import com.forum.app.dto.request.UserInput;
 import com.forum.app.dto.request.groups.CreateGroup;
 import com.forum.app.dto.request.groups.UpdateGroup;
+import com.forum.app.dto.response.UserInfoDTO;
+import com.forum.app.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.forum.app.dto.BasicUserInfoOutput;
-import com.forum.app.dto.request.ChangePasswordInput;
-import com.forum.app.dto.MessageDTO;
-import com.forum.app.dto.request.ResetPasswordInput;
-import com.forum.app.dto.request.UserInput;
-import com.forum.app.dto.UserOutput;
-import com.forum.app.dto.response.UserInfoDTO;
-import com.forum.app.service.UserService;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("${spring.data.rest.basePath}/v1/users")

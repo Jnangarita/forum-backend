@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.exception.OwnRuntimeException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class Utility {
+	private final String secretKey;
 
 	private static final String JSON_FORMAT_ERROR_MSG = "forum.message.error.casting.string.to.json.format";
 	private static final String ALGORITHM = "AES/ECB/PKCS5Padding";
@@ -33,8 +35,9 @@ public class Utility {
 	private final PasswordEncoder passwordEncoder;
 	private static final SecureRandom randomNum = new SecureRandom();
 
-	public Utility(MessageSource messageSource, ObjectMapper objectMapper,
+	public Utility(@Value("${secret.key}") String secretKey, MessageSource messageSource, ObjectMapper objectMapper,
 				   PasswordEncoder passwordEncoder) {
+		this.secretKey = secretKey;
 		this.messageSource = messageSource;
 		this.objectMapper = objectMapper;
 		this.passwordEncoder = passwordEncoder;
@@ -94,15 +97,6 @@ public class Utility {
 		}
 	}
 
-	public IdValueInput convertJsonToIdValueDTO(String jsonString) {
-		try {
-			return objectMapper.readValue(jsonString, new TypeReference<IdValueInput>() {
-			});
-		} catch (JsonProcessingException e) {
-			throw new OwnRuntimeException(getMessage(JSON_FORMAT_ERROR_MSG, null));
-		}
-	}
-
 	public Long convertToLongType(Object column) {
 		return column != null ? ((Number) column).longValue() : null;
 	}
@@ -111,20 +105,16 @@ public class Utility {
 		return column != null ? ((Number) column).intValue() : null;
 	}
 
-	public String convertToStringType(Object column) {
-		return column != null ? column.toString() : null;
-	}
-
 	public String encryptPassword(String password){
 		return passwordEncoder.encode(password);
 	}
 
-	public String decodeString(String encryptedString, String base64Key) {
+	public String decodeString(String encryptedString) {
 		try {
-			byte[] decodedKey = Base64.getDecoder().decode(base64Key);
-			SecretKeySpec secretKey = new SecretKeySpec(decodedKey, "AES");
+			byte[] decodedKey = Base64.getDecoder().decode(secretKey);
+			SecretKeySpec key = new SecretKeySpec(decodedKey, "AES");
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
-			cipher.init(Cipher.DECRYPT_MODE, secretKey);
+			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedString));
 			return new String(decryptedBytes);
 		} catch (Exception e) {
