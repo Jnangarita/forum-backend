@@ -37,9 +37,8 @@ public class AuthenticationController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<JwtTokenDTO> authenticateUser(@RequestBody @Valid AuthenticateUserInput payload) {
-		String user = utility.decodeString(payload.getEmail(), secretKey);
 		String password = utility.decodeString(payload.getPassword(), secretKey);
-		Authentication authToken = new UsernamePasswordAuthenticationToken(user, password);
+		Authentication authToken = new UsernamePasswordAuthenticationToken(payload.getEmail(), password);
 		var authenticatedUser = authenticationManager.authenticate(authToken);
 		var jwtToken = tokenService.generateToken((User) authenticatedUser.getPrincipal());
 		return ResponseEntity.ok(new JwtTokenDTO(jwtToken));
