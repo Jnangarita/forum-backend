@@ -1,21 +1,11 @@
 package com.forum.app.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
-
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
-
-import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.dto.PopularQuestionDTO;
 import com.forum.app.dto.QuestionListDTO;
 import com.forum.app.dto.QuestionOutput;
-import com.forum.app.dto.request.TopicInput;
 import com.forum.app.dto.TopicOutput;
+import com.forum.app.dto.request.IdValueInput;
+import com.forum.app.dto.request.TopicInput;
 import com.forum.app.dto.response.QuestionInfoDTO;
 import com.forum.app.entity.Topic;
 import com.forum.app.enumeration.DbColumns;
@@ -24,6 +14,14 @@ import com.forum.app.exception.OwnRuntimeException;
 import com.forum.app.repository.TopicRepository;
 import com.forum.app.service.TopicService;
 import com.forum.app.utils.Utility;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class TopicServiceImpl implements TopicService {
@@ -51,6 +49,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 	}
 
+	// TODO crear el mapper
 	private void setQuestionData(Topic topic, TopicInput payload) {
 		topic.setCategoryId(payload.getCategoryId());
 		topic.setTitleQuestion(payload.getTitleQuestion());
@@ -120,7 +119,7 @@ public class TopicServiceImpl implements TopicService {
 	public QuestionListDTO getTopicList() {
 		try {
 			Integer totalQuestions = topicRepository.getNumberQuestion();
-			List<Map<String, Object>> savedQuestionList = topicRepository.getQuestionList();
+			List<Map<String, Object>> savedQuestionList = topicRepository.getTopicList(null);
 			List<QuestionOutput> questionList = populateQuestionList(savedQuestionList);
 			return new QuestionListDTO(totalQuestions, questionList);
 		} catch (Exception e) {
@@ -200,7 +199,7 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public List<QuestionOutput> questionListByCategory(String category) {
 		try {
-			List<Map<String, Object>> savedQuestionList = topicRepository.getQuestionByCategory(category);
+			List<Map<String, Object>> savedQuestionList = topicRepository.getTopicList(category);
 			return populateQuestionList(savedQuestionList);
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.question", null));
