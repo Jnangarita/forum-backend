@@ -11,9 +11,6 @@ import java.util.Map;
 public interface TopicRepository extends JpaRepository<Topic, Long> {
 	List<Topic> findByDeletedFalseAndUserId(Long id);
 
-    @Query(value = "SELECT COUNT(*) FROM pregunta;", nativeQuery = true)
-    Integer getNumberQuestion();
-
     @Query(value = "SELECT"
     		+ " pre.id,"
     		+ " doc.ruta_documento AS foto,"

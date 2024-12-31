@@ -35,8 +35,8 @@ public class Utility {
 	private final PasswordEncoder passwordEncoder;
 	private static final SecureRandom randomNum = new SecureRandom();
 
-	public Utility(@Value("${secret.key}") String secretKey, MessageSource messageSource, ObjectMapper objectMapper,
-				   PasswordEncoder passwordEncoder) {
+	public Utility(@Value("${secret.key}") String secretKey, MessageSource messageSource,
+				   ObjectMapper objectMapper, PasswordEncoder passwordEncoder) {
 		this.secretKey = secretKey;
 		this.messageSource = messageSource;
 		this.objectMapper = objectMapper;
@@ -105,7 +105,7 @@ public class Utility {
 		return column != null ? ((Number) column).intValue() : null;
 	}
 
-	public String encryptPassword(String password){
+	public String encryptPassword(String password) {
 		return passwordEncoder.encode(password);
 	}
 
@@ -118,7 +118,20 @@ public class Utility {
 			byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedString));
 			return new String(decryptedBytes);
 		} catch (Exception e) {
-			throw new OwnRuntimeException(getMessage("forum.message.error.decrypting.string", new Object[] { encryptedString }));
+			throw new OwnRuntimeException(getMessage("forum.message.error.decrypting.string", new Object[]{encryptedString}));
+		}
+	}
+
+	public LocalDateTime convertToLocalDateTime(Object value) {
+		return value != null ? ((Timestamp) value).toLocalDateTime() : null;
+	}
+
+	public List<IdValueInput> convertJsonToIdValueInputList(String json) {
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.readValue(json, new TypeReference<List<IdValueInput>>() {});
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error converting JSON to IdValueInput list", e);// TODO personalizar la excepción
 		}
 	}
 }
