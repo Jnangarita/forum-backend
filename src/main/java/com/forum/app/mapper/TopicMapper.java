@@ -49,7 +49,7 @@ public interface TopicMapper {
 
     @Mapping(target = "titleQuestion", ignore = true)
     @Mapping(target = "userId", ignore = true)
-    void topicInputToEntityUpdate(TopicInput payload, @MappingTarget Topic topic);
+    Topic topicInputToEntityUpdate(TopicInput payload, @MappingTarget Topic topic);
 
     @Mapping(target = "answers", source = "respuesta", qualifiedByName = "mapToString")
     @Mapping(target = "questionId", source = "id_pregunta", qualifiedByName = "mapToInteger")

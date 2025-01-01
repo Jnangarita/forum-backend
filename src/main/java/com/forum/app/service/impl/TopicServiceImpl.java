@@ -39,8 +39,7 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public TopicOutput createTopic(TopicInput payload) {
 		try {
-			Topic topic = topicRepository.save(topicMapper.topicInputToEntity(payload));
-			return new TopicOutput(topic);
+			return new TopicOutput(topicRepository.save(topicMapper.topicInputToEntity(payload)));
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMostSpecificCause().getMessage());
 		} catch (Exception e) {
@@ -51,8 +50,7 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public QuestionInfoDTO getTopic(Long id) {
 		try {
-			Map<String, Object> question = topicRepository.getInfoQuestion(id);
-			return topicMapper.mapToDto(question);
+			return topicMapper.mapToDto(topicRepository.getInfoQuestion(id));
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (Exception e) {
@@ -64,9 +62,7 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public TopicOutput updateTopic(Long id, TopicInput payload) {
 		try {
-			Topic question = getTopicById(id);
-			topicMapper.topicInputToEntityUpdate(payload, question);
-			return new TopicOutput(question);
+			return new TopicOutput(topicMapper.topicInputToEntityUpdate(payload, getTopicById(id)));
 		} catch (EntityNotFoundException e) {
 			throw new EntityNotFoundException();
 		} catch (DataIntegrityViolationException e) {
@@ -79,8 +75,7 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public QuestionListDTO getTopicList() {
 		try {
-			List<Map<String, Object>> savedQuestionList = topicRepository.getTopicList(null);
-			List<QuestionOutput> questionList = populateQuestionList(savedQuestionList);
+			List<QuestionOutput> questionList = populateQuestionList(topicRepository.getTopicList(null));
 			return new QuestionListDTO(questionList.size(), questionList);
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.question", null));
@@ -132,8 +127,7 @@ public class TopicServiceImpl implements TopicService {
 	@Override
 	public List<QuestionOutput> questionListByCategory(String category) {
 		try {
-			List<Map<String, Object>> savedQuestionList = topicRepository.getTopicList(category);
-			return populateQuestionList(savedQuestionList);
+			return populateQuestionList(topicRepository.getTopicList(category));
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.list.question", null));
 		}
