@@ -1,11 +1,13 @@
 package com.forum.app.dto.request;
 
-import javax.validation.constraints.*;
-
 import com.forum.app.dto.request.groups.CreateGroup;
 import com.forum.app.dto.request.groups.UpdateGroup;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -35,8 +37,9 @@ public class UserInput {
 	@NotBlank(groups = {CreateGroup.class})
 	private String repeatPassword;
 
-	@NotNull(groups = {CreateGroup.class})
-	@Min(value = 1, message = "El rol debe ser 1, 2 o 3.")
-	@Max(value = 3, message = "El rol debe ser 1, 2 o 3.")
-	private Long roleId;
+	public UserInput(String email, String firstName, String lastName) {
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
 }

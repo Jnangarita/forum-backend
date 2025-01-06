@@ -15,14 +15,17 @@ public interface UserMapper {
     @Mapping(target = "numberQuestions", constant = "0")
     @Mapping(target = "reputation", constant = "0")
     @Mapping(target = "profileName", expression = "java(user.getFirstName() + \" \" + user.getLastName())")
-    @Mapping(target = "role", source = "roleId", qualifiedByName = "idToRole")
+    @Mapping(target = "role", constant = "3", qualifiedByName = "idToRole") // TODO: Pasar una constante en lugar del 3
     @Mapping(target = "password", source = "password", qualifiedByName = "encodePassword")
     User convertDtoToEntity(UserInput userInput);
+
     @Mapping(target = "city", source = "cityId", qualifiedByName = "idToCity")
     @Mapping(target = "country", source = "countryId", qualifiedByName = "idToCountry")
     @Mapping(target = "password", ignore = true)
     void updateUserFromDto(UserInput userInput, @MappingTarget User user);
+
     UserOutput toUserOutput(User user);
+
     @Mapping(target = "photo", source = "user", qualifiedByName = "userPhoto")
     BasicUserInfoOutput entityToBasicUserInfo(User user);
 }

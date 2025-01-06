@@ -1,8 +1,10 @@
 package com.forum.app.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.forum.app.dto.request.IdValueInput;
 import com.forum.app.exception.OwnRuntimeException;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,19 +29,17 @@ import java.util.regex.Pattern;
 public class Utility {
 	private final String secretKey;
 
-	private static final String JSON_FORMAT_ERROR_MSG = "forum.message.error.casting.string.to.json.format";
 	private static final String ALGORITHM = "AES/ECB/PKCS5Padding";
 
 	private final MessageSource messageSource;
-	private final ObjectMapper objectMapper;
+
 	private final PasswordEncoder passwordEncoder;
 	private static final SecureRandom randomNum = new SecureRandom();
 
 	public Utility(@Value("${secret.key}") String secretKey, MessageSource messageSource,
-				   ObjectMapper objectMapper, PasswordEncoder passwordEncoder) {
+				   PasswordEncoder passwordEncoder) {
 		this.secretKey = secretKey;
 		this.messageSource = messageSource;
-		this.objectMapper = objectMapper;
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -88,15 +88,6 @@ public class Utility {
 		return result.get(column) != null ? ((Timestamp) result.get(column)).toLocalDateTime() : null;
 	}
 
-	public List<IdValueInput> convertJsonToIdValueDTOList(String jsonString) {
-		try {
-			return objectMapper.readValue(jsonString, new TypeReference<List<IdValueInput>>() {
-			});
-		} catch (JsonProcessingException e) {
-			throw new OwnRuntimeException(getMessage(JSON_FORMAT_ERROR_MSG, null));
-		}
-	}
-
 	public Long convertToLongType(Object column) {
 		return column != null ? ((Number) column).longValue() : null;
 	}
@@ -132,6 +123,17 @@ public class Utility {
 			return mapper.readValue(json, new TypeReference<List<IdValueInput>>() {});
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("Error converting JSON to IdValueInput list", e);// TODO personalizar la excepción
+		}
+	}
+
+	public String convertToJsonFormat(Object dto) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+			return objectMapper.writeValueAsString(dto);
+		} catch (JsonProcessingException e) {
+			return "{\"error\":\"Failed to serialize payload\"}"; // TODO personalizar el mensaje
 		}
 	}
 }
