@@ -30,7 +30,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -81,22 +80,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserOutput getUserById(Long id) {
-		log.info("Inicio del proceso para buscar el usuario con ID: {} ", id);
+		log.info(utility.getMessage("forum.message.info.starting.search.user", new Object[] { id }));
 		try {
 			User user = findUser(id);
-			validateEntity(user, id);
-			log.info("Encontro el usuario con ID: {}", id);
+			validate.entity(user, id);
+			log.info(utility.getMessage("forum.message.info.found.user", new Object[] { id }));
 			return userMapper.toUserOutput(user);
 		} catch (EntityNotFoundException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getMessage("forum.message.error.getting.user", null));
-		}
-	}
-
-	public void validateEntity(Object obj, Long id) {
-		if (obj == null) {
-			throw new EntityNotFoundException("El usuario con el ID " + id + " no existe en la base de datos"); // TODO: ajustar el mensaje
 		}
 	}
 
@@ -112,10 +105,10 @@ public class UserServiceImpl implements UserService {
 		log.info("Inicio el proceso para actualizar el usuario con el ID {} y el payload es: \n {}", id, showSecureUserPayload(payload));
 		try {
 			User userToUpdated = findUser(id);
-			validateEntity(userToUpdated, id);
+			validate.entity(userToUpdated, id);
 			userMapper.updateUserFromDto(payload, userToUpdated);
 			User user = userRepository.save(userToUpdated);
-			log.info("El usuario con el ID: {} se ha actualizado correctamente", id);
+			log.info(utility.getMessage("forum.message.info.updated.user", new Object[] { id }));
 			return new UserInfoDTO(user);
 		} catch (EntityNotFoundException e) {
 			throw e;
@@ -126,16 +119,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<BasicUserInfoOutput> getUserList() {
-		log.info("Inicio el proceso para obtener el listado de usuarios activos");
+		log.info(utility.getMessage("forum.message.info.starting.get.user", null));
 		try {
 			List<User> savedUserList = userRepository.findByDeletedFalse();
-			log.info("Se encontraron {} usuarios activos en la base de datos", savedUserList.size());
+			log.info(utility.getMessage("forum.message.info.list.size.user", new Object[] { savedUserList.size() }));
 			List<BasicUserInfoOutput> userList = new ArrayList<>();
 			for (User user : savedUserList) {
 				BasicUserInfoOutput userDto = userMapper.entityToBasicUserInfo(user);
 				userList.add(userDto);
 			}
-			log.info("El proceso para obtener el listado de usuarios activos finalizó correctamente");
+			log.info(utility.getMessage("forum.message.info.obtained.list.user", null));
 			return userList;
 		} catch (Exception e) {
 			throw new OwnRuntimeException(utility.getExceptionMsg(e, "forum.message.error.getting.list.user"));
@@ -145,13 +138,13 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public void deleteUser(Long id) {
-		log.info("Inicio el proceso para eliminar el usuario con ID: {}", id);
+		log.info(utility.getMessage("forum.message.info.delete.user", new Object[] { id }));
 		try {
 			User user = findUser(id);
-			validateEntity(user, id);
+			validate.entity(user, id);
 			if (!user.isDeleted()) {
 				user.setDeleted(true);
-				log.info("El usuario con el ID: {} se elimino correctamente", id);
+				log.info(utility.getMessage("forum.message.info.user.deleted.successfully", new Object[] { id }));
 			}
 		} catch (EntityNotFoundException e) {
 			throw e;
@@ -163,7 +156,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public MessageDTO changePassword(Long id, @Valid ChangePasswordInput payload) {
-		log.info("Inicio el proceso para modificar la contraseña del usuario con ID: {}", id);
+		log.info(utility.getMessage("forum.message.info.update.password", new Object[] { id }));
 		try {
 			User user = findUser(id);
 			String currentPassword = utility.decodeString(payload.getCurrentPassword());
@@ -172,7 +165,7 @@ public class UserServiceImpl implements UserService {
 			validate.currentPassword(currentPassword, user.getPassword());
 			validate.confirmPassword(newPassword, confirmPassword);
 			user.setPassword(utility.encryptPassword(newPassword));
-			log.info("La contraseña del usuario con el ID: {} se actualizo correctamente", id);
+			log.info(utility.getMessage("forum.message.info.update.password.successfully", new Object[] { id }));
 			return new MessageDTO(utility.getMessage("forum.message.info.password.updated.successfully", null));
 		} catch (PasswordException e) {
 			throw e;
@@ -184,7 +177,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public MessageDTO resetPassword(@Valid ResetPasswordInput payload) {
-		log.info("Inicio el proceso para restablecer la contraseña del usuario con el email: {}", payload.getEmail());
+		log.info(utility.getMessage("forum.message.info.reset.password", new Object[] { payload.getEmail() }));
 		try {
 			String email = payload.getEmail();
 			User user = findUserByEmail(email);
@@ -192,7 +185,7 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(utility.encryptPassword(newPassword));
 			String template = emailTemplate(user.getFirstName(), newPassword);
 			sendMail(email, template);
-			log.info("La contraseña del usuario con el email: {} se ha restablecido correctamente", payload.getEmail());
+			log.info(utility.getMessage("forum.message.info.update.reset.successfully", new Object[] { email }));
 			return new MessageDTO(utility.getMessage("forum.message.info.password.reset.successfully", null));
 		} catch (NullPointerException e) {
 			throw e;

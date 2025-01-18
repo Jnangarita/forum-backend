@@ -1,11 +1,12 @@
 package com.forum.app.validation;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
 import com.forum.app.entity.User;
 import com.forum.app.exception.PasswordException;
 import com.forum.app.utils.Utility;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityNotFoundException;
 
 @Component
 public class Validate {
@@ -33,6 +34,12 @@ public class Validate {
 	public void emptyEmail(User user, String email) {
 		if (user == null) {
 			throw new NullPointerException(utility.getMessage("forum.message.warn.null.email", new Object[] { email }));
+		}
+	}
+
+	public void entity(Object obj, Long id) {
+		if (obj == null) {
+			throw new EntityNotFoundException(utility.getMessage("forum.message.error.user.not.exist.database", new Object[] { id }));
 		}
 	}
 }
