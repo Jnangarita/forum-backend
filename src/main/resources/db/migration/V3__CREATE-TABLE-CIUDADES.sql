@@ -151,4 +151,7 @@ INSERT INTO ciudades (id, nombre_ciudad, pais_id) VALUES
 	(102, 'Bayamón', 21),
 	(103, 'Carolina', 21),
 	(104, 'Ponce', 21),
-	(105, 'Caguas', 21);
+	(105, 'Caguas', 21),
+
+    -- Otro
+    (106, 'Otro', 22);

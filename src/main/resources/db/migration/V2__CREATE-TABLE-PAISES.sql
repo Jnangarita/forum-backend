@@ -25,4 +25,5 @@ INSERT INTO paises (id, nombre_pais, codigo_pais) VALUES
 	(18, 'España', 'ESP'),
 	(19, 'Uruguay', 'URY'),
 	(20, 'Venezuela', 'VEN'),
-	(21, 'Puerto Rico', 'PRI');
+	(21, 'Puerto Rico', 'PRI'),
+	(22, 'Otro', '?');
