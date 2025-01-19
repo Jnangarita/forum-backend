@@ -55,6 +55,6 @@ public class UserMapperHelper {
 
     @Named("encodePassword")
     public String encodePassword(String password) {
-        return utility.encryptPassword(password);
+        return utility.encryptPassword(utility.decodeString(password));
     }
 }
